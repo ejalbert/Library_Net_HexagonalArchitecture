@@ -1,10 +1,10 @@
 # {Project Name}
 
-> Replace `{Project Name}` with the concrete project folder name (e.g., `YourApp.Api`).
+> Replace `{Project Name}` with the concrete project folder name (e.g., `LibraryManagement.Api`).
 
 ## Purpose
 
-- Briefly describe the responsibilities of this project.
+- Briefly describe the responsibilities of this project (catalogue service, circulation worker, patron portal, etc.).
 - Identify whether it is a domain/application component, an adapter, or a test suite.
 
 ## Dependencies
@@ -38,13 +38,13 @@ Replace the commands above with the actual steps for this project and verify the
 ## Tests
 
 - This project is paired with `{Project}.Tests` using xUnit (add bUnit for UI adapters) and Moq for doubles.
-- Document how to execute the relevant test suites from this directory, including integration tests when the project connects to external services or acts as a system entry point.
-- Ensure every class containing business logic has corresponding tests; DTOs or simple markers without logic can be excluded.
+- Document how to execute the relevant test suites from this directory, including integration tests when the project connects to external services (e.g., catalogue database, notification provider) or acts as a system entry point.
+- Ensure every class containing business logic—loan calculations, patron validation, search orchestration—has corresponding tests; DTOs or simple markers without logic can be excluded.
 
 ## Integration Points
 
 - List inbound or outbound ports implemented/consumed by this project.
-- Call out external systems, queues, or databases touched by the adapters.
+- Call out external systems, queues, or databases touched by the adapters (e.g., MARC importer, message broker for overdue notices).
 
 ## Environment & Configuration
 

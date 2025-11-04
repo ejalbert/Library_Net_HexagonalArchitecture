@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thanks for helping build the Hexagonal Architecture Template project! This guide explains how to get started and the expectations for contributions.
+Thanks for helping build the Hexagonal Library Management System! This guide explains how to get started and the expectations for contributions aimed at catalogue, circulation, and patron-focused features.
 
 ## Prerequisites
 
@@ -18,15 +18,15 @@ Thanks for helping build the Hexagonal Architecture Template project! This guide
 ## Coding Standards
 
 - Follow idiomatic C# conventions (PascalCase for types, camelCase for locals).
-- Keep domain entities persistence-agnostic.
+- Keep library domain entities (books, copies, patrons, reservations) persistence-agnostic.
 - Minimise static state; prefer dependency injection.
-- Write XML doc comments only when it clarifies non-obvious logic.
+- Write XML doc comments only when it clarifies non-obvious logic, such as circulation policies or fine calculations.
 
 ## Testing
 
 - Every project must have a sibling `{Project}.Tests` project using xUnit (and bUnit for UI components when applicable) with Moq available for test doubles.
-- Classes containing business logic require dedicated test classes; lightweight wrappers or DTOs without logic may omit tests.
-- Projects that integrate with external services (databases, queues, caches) or act as system entry points must include integration tests validating those boundaries.
+- Classes containing business logic—such as loan rule evaluators, cataloguing workflows, or notification schedulers—require dedicated test classes; lightweight wrappers or DTOs without logic may omit tests.
+- Projects that integrate with external services (integrated library systems, email/SMS gateways, discovery layers) or act as system entry points must include integration tests validating those boundaries.
 - Add or update tests for all new behaviour and ensure `dotnet test` passes locally before pushing.
 
 ## Documentation

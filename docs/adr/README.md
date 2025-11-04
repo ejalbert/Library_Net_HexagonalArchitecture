@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-Use this directory to store Architecture Decision Records (ADRs). Each record captures context, decision, and consequences for significant choices.
+Use this directory to store Architecture Decision Records (ADRs). Each record captures context, decision, and consequences for significant choices across the Library Management System.
 
 ## How to Add an ADR
 
@@ -25,7 +25,7 @@ Use this directory to store Architecture Decision Records (ADRs). Each record ca
 
 ## Consequences
 
-{What becomes easier or harder because of this decision?}
+{What becomes easier or harder because of this decision for library staff, patrons, and infrastructure?}
 ```
 
 Supersede old decisions instead of deleting them so the project history remains traceable.
