@@ -4,11 +4,14 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "applicationUrl": "http://localhost:0",
+      "launchBrowser": true,
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+      "applicationUrl": "http://localhost:5007",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "Development",        
+        "PERSISTENCEMONGO__CONNECTIONSTRING": "mongodb://localhost:62268",
+        "PERSISTENCEMONGO__DATABASENAME": "library_management"
+      }      
     },
     "https": {
       "commandName": "Project",

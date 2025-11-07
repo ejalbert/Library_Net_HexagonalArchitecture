@@ -1,0 +1,13 @@
+﻿services:
+  librarymanagement.web:
+    image: librarymanagement.web
+    build:
+      context: .
+      dockerfile: src/LibraryManagement.Web/LibraryManagement.Web/Dockerfile
+
+  librarymanagement.web.client:
+    image: librarymanagement.web.client
+    build:
+      context: .
+      dockerfile: src/LibraryManagement.Web/LibraryManagement.Web.Client/Dockerfile
+
