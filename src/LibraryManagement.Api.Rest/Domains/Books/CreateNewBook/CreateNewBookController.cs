@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 
-public class CreateNewBookController(ICreateNewBookUseCase createNewBookUseCase) : ICreateNewBookController
+public class CreateNewBookController(ICreateNewBookUseCase createNewBookUseCase, IBookDtoMapper mapper) : ICreateNewBookController
 {
     public async Task<IResult> CreateNewBook(CreateNewBookRequestDto requestDto)
     {
@@ -14,6 +14,6 @@ public class CreateNewBookController(ICreateNewBookUseCase createNewBookUseCase)
             new CreateNewBookCommand(requestDto.Title)
         );
 
-        return Results.Ok(book);
+        return Results.Ok(mapper.ToDto(book));
     }
 }
