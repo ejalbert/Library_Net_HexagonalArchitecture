@@ -1,5 +1,7 @@
-namespace LibraryManagement.Api.Rest.Client.Domain.Books.CreateNewBook;
+using System.ComponentModel.DataAnnotations;
+
+namespace LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 
 public record CreateNewBookRequestDto(
-    string Title
+    [Required][MinLength(1)] string Title
 );

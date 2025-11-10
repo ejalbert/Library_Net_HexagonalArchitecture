@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using LibraryManagement.Api.Rest.Client.Domain.Books.CreateNewBook;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 
 namespace LibraryManagement.Api.Rest.Client.Domain.Books;

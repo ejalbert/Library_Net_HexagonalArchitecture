@@ -1,5 +1,5 @@
 using LibraryManagement.Api.Rest.Client.Domain.Books;
-using LibraryManagement.Api.Rest.Client.Domain.Books.CreateNewBook;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
