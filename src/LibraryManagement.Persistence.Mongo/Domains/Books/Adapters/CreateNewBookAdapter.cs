@@ -1,5 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Domain.Domains.Books.CreateNewBook;
+using LibraryManagement.Domain.Domains.Books.Create;
 
 namespace LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 

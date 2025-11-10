@@ -1,4 +1,4 @@
-namespace LibraryManagement.Domain.Domains.Books.GetSingleBook;
+namespace LibraryManagement.Domain.Domains.Books.GetSingle;
 
 internal class GetSingleBookService(IGetSingleBookPort getSingleBookPort) : IGetSingleBookUseCase
 {

@@ -1,5 +1,6 @@
-using LibraryManagement.Domain.Domains.Books.CreateNewBook;
-using LibraryManagement.Domain.Domains.Books.GetSingleBook;
+using LibraryManagement.Domain.Domains.Books.Create;
+using LibraryManagement.Domain.Domains.Books.GetSingle;
+using LibraryManagement.Domain.Domains.Books.Search;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManagement.Domain.Domains.Books;
@@ -10,7 +11,7 @@ internal static class BookServiceRegistration
     {
         return services
             .AddScoped<ICreateNewBookUseCase, CreateNewBookService>()
-            .AddScoped<IGetSingleBookUseCase, GetSingleBookService>();
-        
+            .AddScoped<IGetSingleBookUseCase, GetSingleBookService>()
+            .AddScoped<ISearchBooksUseCase, SearchBooksService>();
     } 
 }

@@ -1,3 +1,4 @@
+using LibraryManagement.Api.Rest.Client.Domain.Books.CreateNewBook;
 using Microsoft.AspNetCore.Http;
 
 namespace LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;

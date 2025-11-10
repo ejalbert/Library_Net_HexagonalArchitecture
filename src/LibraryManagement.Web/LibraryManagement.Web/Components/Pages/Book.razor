@@ -1,0 +1,9 @@
+@page "/Book"
+<h3>Book</h3>
+
+@foreach(var book in BookDetails)
+{
+    <div @key="book.Id" class="book-item">
+        <h4>@book.Title</h4>
+    </div>
+}

@@ -1,5 +1,4 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Domain.Domains.Books.CreateNewBook;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

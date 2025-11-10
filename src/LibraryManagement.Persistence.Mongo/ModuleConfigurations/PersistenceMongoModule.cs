@@ -1,5 +1,4 @@
-﻿using LibraryManagement.Domain.Domains.Books.CreateNewBook;
-using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
+﻿using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 using Microsoft.Extensions.Configuration;

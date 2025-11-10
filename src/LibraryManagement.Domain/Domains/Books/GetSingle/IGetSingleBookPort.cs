@@ -1,4 +1,4 @@
-namespace LibraryManagement.Domain.Domains.Books.GetSingleBook;
+namespace LibraryManagement.Domain.Domains.Books.GetSingle;
 
 public interface IGetSingleBookPort
 {

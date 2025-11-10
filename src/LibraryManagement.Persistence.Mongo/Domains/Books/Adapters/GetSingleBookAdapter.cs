@@ -1,5 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Domain.Domains.Books.GetSingleBook;
+using LibraryManagement.Domain.Domains.Books.GetSingle;
 using MongoDB.Driver;
 
 namespace LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;

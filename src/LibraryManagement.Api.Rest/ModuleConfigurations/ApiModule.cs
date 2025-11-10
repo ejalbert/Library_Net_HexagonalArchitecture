@@ -1,5 +1,4 @@
 ﻿using LibraryManagement.Api.Rest.Domains.Books;
-using LibraryManagement.Domain.Domains.Books.CreateNewBook;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using Microsoft.AspNetCore.Builder;
@@ -31,7 +30,11 @@ public static class ApiModule
             services.Configure(configureOptions);
         }
 
-        services.AddOpenApi().AddBookServices();
+        services
+            .AddOpenApi()
+            .AddValidation()
+            .AddProblemDetails()
+            .AddBookServices();
        
         
         return moduleRegistrator;

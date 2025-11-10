@@ -1,4 +1,4 @@
-namespace LibraryManagement.Domain.Domains.Books.CreateNewBook;
+namespace LibraryManagement.Domain.Domains.Books.Create;
 
 public interface ICreateNewBookUseCase
 {

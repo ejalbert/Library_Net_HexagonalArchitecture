@@ -1,6 +1,9 @@
+using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.CreateNewBook;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
+using LibraryManagement.Api.Rest.Domains.Books.Search;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +17,7 @@ internal static class BookServices
     {
         services.AddScoped<IBookDtoMapper, BookDtoMapper>()
         .AddScoped<ICreateNewBookController, CreateNewBookController>()
+        .AddScoped<ISearchBooksController, SearchBooksController>()
         .AddScoped<IGetBookController, GetBookController>();
         
         return services;
@@ -21,7 +25,7 @@ internal static class BookServices
     
     internal static WebApplication UseBookServices(this WebApplication app)
     {
-        var group = app.MapGroup("/api/v1/books").WithGroupName("Books");
+        var group = app.MapGroup("/api").MapGroup("/v1/books").WithGroupName("Books");
             
             group
             .MapPost("", ([FromBody]CreateNewBookRequestDto requestDto, ICreateNewBookController controller) => controller.CreateNewBook(requestDto))
@@ -30,7 +34,14 @@ internal static class BookServices
             .Produces<BookDto>();
             
             group.MapGet("{id}", (string id, IGetBookController controller) => controller.GetBookById(id))
+                .WithName("Get Book By Id")
+                .WithDescription("Get a single book by its unique identifier")
                 .Produces<BookDto>();
+
+            group.MapPost("/search", ([FromBody]SearchBooksRequestDto requestDto, ISearchBooksController controller) => controller.SearchBooks(requestDto))
+                .WithName("Search Books")
+                .WithDescription("Search for books in the library")
+                .Produces<SearchBooksResponseDto>();
         
         return app;
     }

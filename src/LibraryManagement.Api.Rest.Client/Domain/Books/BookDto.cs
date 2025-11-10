@@ -1,4 +1,4 @@
-namespace LibraryManagement.Api.Rest.Client.Domain.Books.CreateNewBook;
+namespace LibraryManagement.Api.Rest.Client.Domain.Books;
 
 public class BookDto
 {

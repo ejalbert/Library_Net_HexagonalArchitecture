@@ -1,5 +1,6 @@
-using LibraryManagement.Domain.Domains.Books.CreateNewBook;
-using LibraryManagement.Domain.Domains.Books.GetSingleBook;
+using LibraryManagement.Domain.Domains.Books.Create;
+using LibraryManagement.Domain.Domains.Books.GetSingle;
+using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,7 @@ internal static class RegisterBookServices
             .AddScoped<IBookEntityMapper, BookEntityMapper>()
             .AddScoped<IBookCollection, BookCollection>()
             .AddScoped<ICreateNewBookPort, CreateNewBookAdapter>()
+            .AddScoped<ISearchBooksPort, SearchBooksAdapter>()
             .AddScoped<IGetSingleBookPort, GetSingleBookAdapter>();
         
     }

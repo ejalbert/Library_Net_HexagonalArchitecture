@@ -1,4 +1,4 @@
-using LibraryManagement.Api.Rest.Client.Domain.Books.CreateNewBook;
+using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Domain.Domains.Books;
 using Riok.Mapperly.Abstractions;
 
