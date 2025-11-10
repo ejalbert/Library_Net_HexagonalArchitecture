@@ -1,3 +1,4 @@
+using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.CreateNewBook;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,7 @@ public static class DomainModule
             moduleRegistrator.Services.Configure(configureOptions);
         }
 
-        moduleRegistrator.Services.AddScoped<ICreateNewBookUseCase, CreateNewBookService>();
+        moduleRegistrator.Services.AddBookServices();
         
         return moduleRegistrator;
     } 

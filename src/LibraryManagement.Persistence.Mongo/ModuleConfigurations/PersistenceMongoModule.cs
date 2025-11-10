@@ -1,7 +1,7 @@
 ﻿using LibraryManagement.Domain.Domains.Books.CreateNewBook;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
-using LibraryManagement.Persistence.Mongo.Domains.Books.CreateNewBook;
+using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,12 +41,9 @@ public static class PersistenceMongoModule
             
             return mongoClient.GetDatabase(options.DatabaseName);
         });
-        
-        
-        //Register Book Services
-        moduleRegistrator.Services.AddScoped<IBookEntityMapper, BookEntityMapper>();
-        moduleRegistrator.Services.AddScoped<IBookCollection, BookCollection>();
-        moduleRegistrator.Services.AddScoped<ICreateNewBookPort, CreateNewBookAdapter>();
+
+
+        moduleRegistrator.Services.AddBookServices();
         
         return moduleRegistrator;
     }

@@ -1,7 +1,7 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.CreateNewBook;
 
-namespace LibraryManagement.Persistence.Mongo.Domains.Books.CreateNewBook;
+namespace LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 
 public class CreateNewBookAdapter(IBookCollection bookCollection, IBookEntityMapper bookEntityMapper) : ICreateNewBookPort
 {
