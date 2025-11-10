@@ -1,0 +1,65 @@
+@using System
+@using System.Linq
+@using System.Net
+@using System.Net.Http
+@using System.Net.Http.Json
+@using LibraryManagement.Api.Rest.Client
+@using LibraryManagement.Api.Rest.Client.Domain.Books
+@using LibraryManagement.Api.Rest.Client.Domain.Books.Search
+@using LibraryManagement.Web.Components.Pages
+
+@inherits TestContext
+
+@code {
+    [Fact]
+    public void Book_page_displays_books_returned_by_search_endpoint_impl()
+    {
+        var expectedBooks = new[]
+        {
+            new BookDto { Id = "1", Title = "Clean Code" },
+            new BookDto { Id = "2", Title = "Domain-Driven Design" }
+        };
+        RegisterRestClient(new SearchBooksResponseDto(expectedBooks));
+
+        var cut = Render(@<Book />);
+        cut.WaitForState(() => cut.FindAll(".book-item").Count == expectedBooks.Length);
+
+        var renderedTitles = cut.FindAll("h4").Select(h => h.TextContent.Trim()).ToArray();
+        Assert.Equal(expectedBooks.Select(book => book.Title), renderedTitles);
+    }
+
+    private void RegisterRestClient(SearchBooksResponseDto response)
+    {
+        Services.AddScoped<IRestAPiClient>(_ =>
+        {
+            var handler = new StubHttpMessageHandler(response);
+            return new RestApiClient(new HttpClient(handler)
+            {
+                BaseAddress = new Uri("http://localhost")
+            });
+        });
+    }
+
+    private sealed class StubHttpMessageHandler : HttpMessageHandler
+    {
+        private readonly SearchBooksResponseDto _response;
+
+        public StubHttpMessageHandler(SearchBooksResponseDto response)
+        {
+            _response = response;
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            if (request.Method == HttpMethod.Post && request.RequestUri?.AbsolutePath == "/api/v1/books/search")
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = JsonContent.Create(_response)
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        }
+    }
+}
