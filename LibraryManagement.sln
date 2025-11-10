@@ -56,6 +56,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -258,6 +260,18 @@ Global
 		{573E3892-3E24-4B5B-98E3-2CE942AFFFCC}.Release|x64.Build.0 = Release|Any CPU
 		{573E3892-3E24-4B5B-98E3-2CE942AFFFCC}.Release|x86.ActiveCfg = Release|Any CPU
 		{573E3892-3E24-4B5B-98E3-2CE942AFFFCC}.Release|x86.Build.0 = Release|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Debug|x64.Build.0 = Debug|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Debug|x86.Build.0 = Debug|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Release|x64.ActiveCfg = Release|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Release|x64.Build.0 = Release|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Release|x86.ActiveCfg = Release|Any CPU
+		{B8F6D225-A3C7-47D5-8B04-C7124D46DFA8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
