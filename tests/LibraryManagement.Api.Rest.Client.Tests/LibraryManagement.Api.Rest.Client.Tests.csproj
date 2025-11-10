@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj" />
+      <ProjectReference Include="..\LibraryManagement.Tests.Abstractions\LibraryManagement.Tests.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

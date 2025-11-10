@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\LibraryManagement.Persistence.Mongo\LibraryManagement.Persistence.Mongo.csproj" />
+      <ProjectReference Include="..\..\src\LibraryManagement.ModuleBootstrapper.AspNetCore\LibraryManagement.ModuleBootstrapper.AspNetCore.csproj" />
       <ProjectReference Include="..\LibraryManagement.Tests.Abstractions\LibraryManagement.Tests.Abstractions.csproj" />
     </ItemGroup>
 

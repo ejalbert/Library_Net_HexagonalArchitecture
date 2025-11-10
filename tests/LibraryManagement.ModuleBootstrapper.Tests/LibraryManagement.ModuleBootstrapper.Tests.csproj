@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\LibraryManagement.ModuleBootstrapper\LibraryManagement.ModuleBootstrapper.csproj" />
+      <ProjectReference Include="..\LibraryManagement.Tests.Abstractions\LibraryManagement.Tests.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
