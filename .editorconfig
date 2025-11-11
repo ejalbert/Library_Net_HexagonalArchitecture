@@ -1,0 +1,9 @@
+# Two or more consecutive blank lines: Remove down to one blank line.
+dotnet_diagnostic.SA1507.severity = error
+
+# Blank line immediately before or after a { line: remove it.
+dotnet_diagnostic.SA1505.severity = error
+dotnet_diagnostic.SA1509.severity = error
+
+# Blank line immediately before a } line: remove it.
+dotnet_diagnostic.SA1508.severity = error
