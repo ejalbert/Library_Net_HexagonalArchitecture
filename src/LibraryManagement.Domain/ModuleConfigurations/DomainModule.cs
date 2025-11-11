@@ -16,16 +16,16 @@ public static class DomainModule
 
         moduleRegistrator.Services.AddOptions<DomainModuleOptions>().Configure(options =>
         {
-            options.Test =  optionsFromEnv.Test;
+            options.Test = optionsFromEnv.Test;
         });
-        
-        if(configureOptions != null)
+
+        if (configureOptions != null)
         {
             moduleRegistrator.Services.Configure(configureOptions);
         }
 
         moduleRegistrator.Services.AddBookServices();
-        
+
         return moduleRegistrator;
-    } 
+    }
 }

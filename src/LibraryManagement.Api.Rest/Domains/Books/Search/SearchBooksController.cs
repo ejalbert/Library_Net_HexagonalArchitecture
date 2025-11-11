@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LibraryManagement.Api.Rest.Domains.Books.Search;
 
-public  interface ISearchBooksController
+public interface ISearchBooksController
 {
     Task<IResult> SearchBooks(SearchBooksRequestDto requestDto, CancellationToken cancellationToken = default);
 }
@@ -15,7 +15,7 @@ public class SearchBooksController(ISearchBooksUseCase searchBooksUseCase, IBook
     public async Task<IResult> SearchBooks(SearchBooksRequestDto requestDto, CancellationToken cancellationToken = default)
     {
         var books = await searchBooksUseCase.Search(new SearchBooksCommand(requestDto.SearchTerm));
-        
+
         return Results.Ok(new SearchBooksResponseDto(books.Select(mapper.ToDto)));
     }
 }

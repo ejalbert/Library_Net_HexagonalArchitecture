@@ -8,7 +8,7 @@ public interface IBookEntityMapper
     Book ToDomain(BookEntity bookEntity);
     BookEntity ToEntity(Book book);
 }
-    
+
 
 [Mapper]
 public partial class BookEntityMapper : IBookEntityMapper

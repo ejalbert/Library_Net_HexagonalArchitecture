@@ -7,8 +7,8 @@ public class CreateNewBookAdapter(IBookCollection bookCollection, IBookEntityMap
 {
     public async Task<Book> Create(string title)
     {
-        BookEntity bookEntity = new(){ Title = title };
-        
+        BookEntity bookEntity = new() { Title = title };
+
         await bookCollection.Collection.InsertOneAsync(bookEntity);
 
         return bookEntityMapper.ToDomain(bookEntity);

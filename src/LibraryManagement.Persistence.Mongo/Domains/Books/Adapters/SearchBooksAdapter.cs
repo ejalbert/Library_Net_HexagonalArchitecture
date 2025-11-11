@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 
-public class SearchBooksAdapter(IBookCollection bookCollection, IBookEntityMapper mapper):ISearchBooksPort
+public class SearchBooksAdapter(IBookCollection bookCollection, IBookEntityMapper mapper) : ISearchBooksPort
 {
     public async Task<IEnumerable<Book>> Search(string? searchTerm)
     {

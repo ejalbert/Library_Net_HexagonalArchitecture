@@ -15,7 +15,7 @@ public static class WebModule
             .AddRazorComponents()
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();
-        
+
         return builder;
     }
 
@@ -34,7 +34,7 @@ public static class WebModule
             app.UseHsts();
         }
 
-        
+
         app.UseAntiforgery();
 
         app.MapStaticAssets();
@@ -42,7 +42,7 @@ public static class WebModule
             .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()
             .AddAdditionalAssemblies(typeof(LibraryManagement.Web.Client._Imports).Assembly);
-        
+
         return configurator;
     }
 }

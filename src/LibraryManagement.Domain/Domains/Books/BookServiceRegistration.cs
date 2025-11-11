@@ -13,5 +13,5 @@ internal static class BookServiceRegistration
             .AddScoped<ICreateNewBookUseCase, CreateNewBookService>()
             .AddScoped<IGetSingleBookUseCase, GetSingleBookService>()
             .AddScoped<ISearchBooksUseCase, SearchBooksService>();
-    } 
+    }
 }

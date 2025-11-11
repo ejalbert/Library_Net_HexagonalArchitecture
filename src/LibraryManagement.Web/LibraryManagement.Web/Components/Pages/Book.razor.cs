@@ -7,10 +7,7 @@ namespace LibraryManagement.Web.Components.Pages;
 
 public partial class Book(IRestAPiClient restAPiClient) : ComponentBase
 {
-    
 
-
-    
     private IEnumerable<BookDto> BookDetails { get; set; } = [];
 
     protected override async Task OnInitializedAsync()

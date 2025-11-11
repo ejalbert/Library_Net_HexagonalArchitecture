@@ -15,15 +15,15 @@ public class CreateNewBookControllerTests
     public async Task CreateNewBook_ReturnsOkWithBookFromUseCase()
     {
         var book = new Book { Id = "book-id", Title = "The Hobbit" };
-        var expected = new BookDto(){Id = book.Id, Title = book.Title};
+        var expected = new BookDto() { Id = book.Id, Title = book.Title };
         var useCaseMock = new Mock<ICreateNewBookUseCase>();
         useCaseMock
             .Setup(x => x.Create(It.IsAny<CreateNewBookCommand>()))
             .ReturnsAsync(book);
-        
+
         var mapperMock = new Mock<IBookDtoMapper>();
-            mapperMock.Setup(x=>x.ToDto(It.IsAny<Book>())).Returns(new BookDto { Id = book.Id, Title = book.Title });
-        
+        mapperMock.Setup(x => x.ToDto(It.IsAny<Book>())).Returns(new BookDto { Id = book.Id, Title = book.Title });
+
         var controller = new CreateNewBookController(useCaseMock.Object, mapperMock.Object);
         var request = new CreateNewBookRequestDto("The Hobbit");
 

@@ -8,10 +8,10 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
 {
     private const string BasePath = "api/v1/books";
     private readonly HttpClient _httpClient = client.HttpClient;
-    
+
     public async Task<BookDto> Create(CreateNewBookRequestDto requestDto, CancellationToken cancellationToken = default)
     {
-        var response = await client.HttpClient.PostAsJsonAsync($"{BasePath}",  requestDto, cancellationToken);
+        var response = await client.HttpClient.PostAsJsonAsync($"{BasePath}", requestDto, cancellationToken);
 
         return (await response.Content.ReadFromJsonAsync<BookDto>(cancellationToken: cancellationToken))!;
     }
@@ -26,7 +26,7 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
         var response = await _httpClient.PostAsJsonAsync($"{BasePath}/search", requestDto, cancellationToken);
 
         response.EnsureSuccessStatusCode();
-        
+
         return (await response.Content.ReadFromJsonAsync<SearchBooksResponseDto>(cancellationToken))!;
     }
 }

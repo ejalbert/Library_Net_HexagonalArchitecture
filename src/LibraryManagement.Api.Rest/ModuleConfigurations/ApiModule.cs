@@ -24,8 +24,8 @@ public static class ApiModule
         {
             options.BasePath = optionsFromEnv.BasePath ?? "/api";
         });
-        
-        if(configureOptions != null)
+
+        if (configureOptions != null)
         {
             services.Configure(configureOptions);
         }
@@ -35,16 +35,16 @@ public static class ApiModule
             .AddValidation()
             .AddProblemDetails()
             .AddBookServices();
-       
-        
+
+
         return moduleRegistrator;
     }
-    
+
     public static IModuleConfigurator UseRestApiModule(this IModuleConfigurator configurator)
     {
         var app = configurator.App;
         var options = app.Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<RestApiModuleOptions>>().Value;
-        
+
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();

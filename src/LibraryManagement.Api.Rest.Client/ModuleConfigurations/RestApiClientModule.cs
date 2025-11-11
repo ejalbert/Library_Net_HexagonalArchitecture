@@ -15,21 +15,21 @@ public static class RestApiClientModule
 
         services.AddOptions<RestApiClientModuleOptions>().Configure(options =>
         {
-            options.BasePath =  optionsFromEnv.BasePath ?? "http://localhost:5007/api";
+            options.BasePath = optionsFromEnv.BasePath ?? "http://localhost:5007/api";
         });
-        
-        if(configureOptions != null)
+
+        if (configureOptions != null)
         {
             services.Configure(configureOptions);
         }
-        
-        services.AddHttpClient<IRestAPiClient, RestApiClient>( (serviceProvider, client) =>
+
+        services.AddHttpClient<IRestAPiClient, RestApiClient>((serviceProvider, client) =>
         {
             var options = serviceProvider.GetRequiredService<IOptions<RestApiClientModuleOptions>>().Value;
-            
+
             client.BaseAddress = new Uri(options.BasePath);
         });
-        
+
         return services;
-    } 
+    }
 }

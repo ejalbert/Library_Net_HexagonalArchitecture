@@ -11,8 +11,8 @@ namespace LibraryManagement.Persistence.Mongo.ModuleConfigurations;
 
 public static class PersistenceMongoModule
 {
-    
-    public  static IModuleRegistrator<TApplicationBuilder> AddPersistenceMongoModule<TApplicationBuilder>(this IModuleRegistrator<TApplicationBuilder> moduleRegistrator, Action<PersistenceMongoModuleOptions>? configureOptions = null) where TApplicationBuilder : IHostApplicationBuilder
+
+    public static IModuleRegistrator<TApplicationBuilder> AddPersistenceMongoModule<TApplicationBuilder>(this IModuleRegistrator<TApplicationBuilder> moduleRegistrator, Action<PersistenceMongoModuleOptions>? configureOptions = null) where TApplicationBuilder : IHostApplicationBuilder
     {
         PersistenceMongoModuleEnvConfiguration optionsFromEnv = new();
         moduleRegistrator.ConfigurationManager.GetSection("PersistenceMongo").Bind(optionsFromEnv);
@@ -22,12 +22,12 @@ public static class PersistenceMongoModule
             options.ConnectionString = optionsFromEnv.ConnectionString ?? "mongodb://localhost:20027";
             options.DatabaseName = optionsFromEnv.DatabaseName ?? "library_management";
         });
-        
-        if(configureOptions != null)
+
+        if (configureOptions != null)
         {
             moduleRegistrator.Services.Configure(configureOptions);
         }
-        
+
 
         moduleRegistrator.Services.AddSingleton<MongoClient>(serviceProvider =>
         {
@@ -37,13 +37,13 @@ public static class PersistenceMongoModule
         {
             var options = serviceProvider.GetRequiredService<IOptions<PersistenceMongoModuleOptions>>().Value;
             var mongoClient = serviceProvider.GetRequiredService<MongoClient>();
-            
+
             return mongoClient.GetDatabase(options.DatabaseName);
         });
 
 
         moduleRegistrator.Services.AddBookServices();
-        
+
         return moduleRegistrator;
     }
 }

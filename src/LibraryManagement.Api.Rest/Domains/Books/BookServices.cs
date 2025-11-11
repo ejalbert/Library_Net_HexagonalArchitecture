@@ -19,30 +19,30 @@ internal static class BookServices
         .AddScoped<ICreateNewBookController, CreateNewBookController>()
         .AddScoped<ISearchBooksController, SearchBooksController>()
         .AddScoped<IGetBookController, GetBookController>();
-        
+
         return services;
     }
-    
+
     internal static WebApplication UseBookServices(this WebApplication app)
     {
         var group = app.MapGroup("/api").MapGroup("/v1/books").WithGroupName("Books");
-            
-            group
-            .MapPost("", ([FromBody]CreateNewBookRequestDto requestDto, ICreateNewBookController controller) => controller.CreateNewBook(requestDto))
-            .WithName("Create New Book")
-            .WithDescription("Create a new book in the library")
-            .Produces<BookDto>();
-            
-            group.MapGet("{id}", (string id, IGetBookController controller) => controller.GetBookById(id))
-                .WithName("Get Book By Id")
-                .WithDescription("Get a single book by its unique identifier")
-                .Produces<BookDto>();
 
-            group.MapPost("/search", ([FromBody]SearchBooksRequestDto requestDto, ISearchBooksController controller) => controller.SearchBooks(requestDto))
-                .WithName("Search Books")
-                .WithDescription("Search for books in the library")
-                .Produces<SearchBooksResponseDto>();
-        
+        group
+        .MapPost("", ([FromBody] CreateNewBookRequestDto requestDto, ICreateNewBookController controller) => controller.CreateNewBook(requestDto))
+        .WithName("Create New Book")
+        .WithDescription("Create a new book in the library")
+        .Produces<BookDto>();
+
+        group.MapGet("{id}", (string id, IGetBookController controller) => controller.GetBookById(id))
+            .WithName("Get Book By Id")
+            .WithDescription("Get a single book by its unique identifier")
+            .Produces<BookDto>();
+
+        group.MapPost("/search", ([FromBody] SearchBooksRequestDto requestDto, ISearchBooksController controller) => controller.SearchBooks(requestDto))
+            .WithName("Search Books")
+            .WithDescription("Search for books in the library")
+            .Produces<SearchBooksResponseDto>();
+
         return app;
     }
 }

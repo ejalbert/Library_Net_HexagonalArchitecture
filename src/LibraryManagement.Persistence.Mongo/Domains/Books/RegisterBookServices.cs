@@ -16,6 +16,6 @@ internal static class RegisterBookServices
             .AddScoped<ICreateNewBookPort, CreateNewBookAdapter>()
             .AddScoped<ISearchBooksPort, SearchBooksAdapter>()
             .AddScoped<IGetSingleBookPort, GetSingleBookAdapter>();
-        
+
     }
 }

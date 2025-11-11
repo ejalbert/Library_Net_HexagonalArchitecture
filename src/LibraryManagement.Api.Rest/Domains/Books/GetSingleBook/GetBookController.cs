@@ -7,7 +7,7 @@ public class GetBookController(IGetSingleBookUseCase getSingleBookUseCase) : IGe
 {
     public async Task<IResult> GetBookById(string id)
     {
-        var book =  await getSingleBookUseCase.Get(
+        var book = await getSingleBookUseCase.Get(
             new GetSingleBookCommand(id)
         );
 
