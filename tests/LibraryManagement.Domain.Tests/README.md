@@ -1,54 +1,17 @@
 # LibraryManagement.Domain.Tests
 
-## Purpose
+xUnit test project reserved for domain-level unit tests. No fixtures exist yet because the domain currently exposes straightforward pass-through use cases.
 
-- xUnit test suite covering aggregates, entities, value objects, and policies in `LibraryManagement.Domain`.
-- Ensures domain invariants hold without relying on infrastructure concerns.
+## Planned Coverage
 
-## Dependencies
-
-- Depends on `LibraryManagement.Domain` via project reference.
-- Requires NuGet packages `xunit`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`, and `coverlet.collector` (restored via `dotnet restore`).
-
-## Directory Layout
-
-```
-LibraryManagement.Domain.Tests/
-  LibraryManagement.Domain.Tests.csproj
-  README.md
-  UnitTest1.cs
-```
+- Validation of `CreateNewBookService`, `SearchBooksService`, and `GetSingleBookService` once invariants are introduced.
+- Behaviour around identifiers, policies, and errors as additional aggregates are implemented.
 
 ## Commands
 
 ```bash
-# Restore required packages
-dotnet restore
-
-# Run all domain tests
+# Execute domain tests once scenarios exist
 dotnet test
 ```
 
-## Tests
-
-- Add meaningful unit tests per aggregate/policy (loan limits, hold prioritisation, fine calculation, etc.).
-- Use data-driven tests where policies require multiple scenarios.
-
-## Integration Points
-
-- Exercises only domain logic; avoid infrastructure dependencies.
-- Emit domain events for verification through in-memory handlers when necessary.
-
-## Environment & Configuration
-
-- No environment configuration required. Tests must remain deterministic and self-contained.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/ai-collaboration.md`
-- `../../docs/project-roadmap.md`
-
-## Maintenance Notes
-
-- Replace `UnitTest1` with real test classes mapped to domain types.
+Add meaningful tests alongside domain changes and update this README accordingly.

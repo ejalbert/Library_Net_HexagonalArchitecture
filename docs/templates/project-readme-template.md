@@ -37,9 +37,9 @@ Replace the commands above with the actual steps for this project and verify the
 
 ## Tests
 
-- This project is paired with `{Project}.Tests` using xUnit (add bUnit for UI adapters) and Moq for doubles.
-- Document how to execute the relevant test suites from this directory, including integration tests when the project connects to external services (e.g., catalogue database, notification provider) or acts as a system entry point.
-- Ensure every class containing business logic—loan calculations, patron validation, search orchestration—has corresponding tests; DTOs or simple markers without logic can be excluded.
+- Pair every project with `{Project}.Tests` using xUnit (plus bUnit for UI adapters) and Moq for doubles.
+- Document how to execute the relevant test suites from this directory, including integration tests when the project connects to external services (e.g., MongoDB).
+- **For Blazor component tests, create `.razor` files with matching `.razor.cs` partials** so bUnit discovers the tests (see `tests/LibraryManagement.Web.Tests` for an example).
 
 ## Integration Points
 
@@ -50,7 +50,7 @@ Replace the commands above with the actual steps for this project and verify the
 
 - Document required environment variables or settings files.
 - Note how configuration is supplied when running in local and distributed environments.
-- Reference shared Docker Compose services (e.g., ``../../docker-compose.yml``) that provision development dependencies such as MongoDB or Redis and include commands to start/stop them when needed.
+- Reference shared Docker Compose services (e.g., ``../../compose.yaml``) that provision development dependencies.
 
 ## Related Documentation
 

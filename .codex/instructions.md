@@ -1,41 +1,45 @@
 # Codex CLI Instructions
 
-This file guides Codex-based agents working in the repository via the Codex CLI harness.
+Guidance for Codex-based agents working inside this repository.
 
-## Repository Context
+## Repository Snapshot
 
-- Building a digital library system using .NET 9 with hexagonal architecture.
-- Layer boundaries: Domain (pure), Application (use cases), Infrastructure (adapters), Delivery (API/CLI).
-- Documentation sources: `README.md`, `docs/architecture.md`, `docs/ai-collaboration.md`, `docs/project-roadmap.md`.
+- Solution targets .NET 10 preview and is structured around modules.
+- Modules currently composed by the host (`LibraryManagement.Application`):
+  - `LibraryManagement.Domain` – book aggregate with create/search/get use cases.
+  - `LibraryManagement.Persistence.Mongo` – MongoDB adapters plus Testcontainers-backed tests.
+  - `LibraryManagement.Api.Rest` – minimal API endpoints under `/api/v1/books`.
+  - `LibraryManagement.Api.Rest.Client` – shared DTOs + typed HTTP clients.
+  - `LibraryManagement.Web` / `.Client` – Blazor Server + WebAssembly front end calling the REST API through the shared client.
+- Module bootstrapper libraries (`LibraryManagement.ModuleBootstrapper*`) keep registration consistent across hosts.
+
+Keep these facts in mind when proposing changes so documentation and code stay aligned.
 
 ## Operating Principles
 
-1. **Keep domain isolated** – no infrastructure references within domain projects.
-2. **Prefer clarity over code generation** – explain rationale before writing files.
-3. **Sync docs** – update architecture notes, ADRs, and roadmap when decisions or status change.
-4. **Use plans** – outline multi-step work before making changes (skip only for trivial edits).
-5. **Respect existing changes** – never revert user modifications unintentionally.
+1. **Preserve domain purity** – domain projects may only depend on BCL + module abstractions; infrastructure adapters implement outbound ports.
+2. **Update docs + READMEs** – every project has a README that must match the current implementation. Re-run this whenever behaviour changes.
+3. **Respect module boundaries** – register services via the appropriate `Add*Module()` extension and expose runtime behaviour through `Use*Module()`.
+4. **Sync REST contracts** – update both the API module and the REST client when changing DTOs or routes.
+5. **Testing parity** – create/update tests next to the code (domain, adapters, clients, UI). Mongo adapter tests rely on Docker/Testcontainers.
+6. **Blazor test discovery** – component tests must live in `.razor` files with matching `.razor.cs` partials (see `tests/LibraryManagement.Web.Tests/Components/BookPageTests.*`).
 
 ## Command Usage
 
-- Use `dotnet format` and `dotnet test` to validate changes when relevant.
-- Prefer `rg` for searching and `dotnet new` for scaffolding when needed.
-- Keep commands idempotent; avoid interactive prompts.
+- Use `dotnet build`/`dotnet test` from the project directory for targeted validation.
+- Run `dotnet test tests/LibraryManagement.Persistence.Mongo.Tests/...` with Docker running to execute Mongo integration tests.
+- Prefer `rg` for search, `dotnet new` for scaffolding when needed, and keep commands idempotent.
 
-## Deliverable Style
+## Deliverable Expectations
 
-- Responses should be concise, with bullet summaries of changes and verification steps.
-- Reference files with inline paths (`path/to/file:line`).
-- Offer next steps when natural (tests, ADR updates, deployment checks).
+- Responses should explain intent before showing code and cite file paths.
+- Reference docs such as `docs/architecture.md`, `docs/project-roadmap.md`, and `docs/ai-collaboration.md` when guiding contributors.
+- Surface TODOs or follow-ups explicitly so the backlog stays visible.
 
-## Testing & Quality
+## Safety & Review
 
-- Add or update tests alongside new behaviour.
-- For integration work, coordinate adapters via application ports and document assumptions.
+- Never revert user changes without consent; honour existing worktree modifications.
+- Confirm with the user before destructive commands (`rm`, `git reset`, etc.).
+- Highlight ambiguities or missing requirements rather than guessing.
 
-## Safety Checks
-
-- Confirm destructive commands with the user before running (`rm`, `git reset`, etc.).
-- Highlight ambiguities, missing requirements, or potential regressions.
-
-Following these guidelines keeps Codex agents aligned with human contributors and other AI assistants.
+Following these instructions keeps Codex agents aligned with human contributors and other AI assistants.

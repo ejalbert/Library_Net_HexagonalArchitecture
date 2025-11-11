@@ -1,58 +1,51 @@
 # LibraryManagement.Api.Rest.Client
 
-## Purpose
+Shared DTOs and typed HTTP clients that mirror the REST delivery module. Consumers (UI, workers, tests) depend on this package to avoid duplicating contract knowledge.
 
-- Provides shared REST client contracts (DTOs, request builders, typed clients) that mirror the server-side API.
-- Enables other delivery adapters or external services to consume the Library Management REST API without duplicating models.
-- Serves as the single source of truth for serialization rules and API-specific constants.
+## Key Capabilities
+
+- Defines `BookDto`, `CreateNewBookRequestDto`, and `SearchBooksRequest/ResponseDto` types.
+- Implements `IBooksClient` with `Create`, `Get`, and `Search` operations that call `/api/v1/books` endpoints.
+- Provides `IRestAPiClient` plus `AddRestApiHttpClient()` so hosts can register a configured `HttpClient` based on the `RestApi` configuration section.
+- Includes a helper extension (`restAPiClient.Books`) to obtain the typed client from an injected `IRestAPiClient`.
 
 ## Dependencies
 
-- Targets .NET 9.0 with implicit usings and nullable reference types enabled.
-- Intentionally avoids runtime dependencies today so it can be referenced by any host or test project.
-- Add HTTP or serialization packages (e.g., `System.Net.Http.Json`, `Refit`) as clients evolve.
+- `Microsoft.Extensions.Http` – used to register the typed `HttpClient` inside DI.
+- `LibraryManagement.ModuleBootstrapper` – makes the configuration helper align with the rest of the module system.
 
 ## Directory Layout
 
 ```
 LibraryManagement.Api.Rest.Client/
-  Class1.cs
-  LibraryManagement.Api.Rest.Client.csproj
-  README.md
+  Domain/Books/
+    BookDto.cs
+    BooksClient.cs
+    IBooksClient.cs
+    Create/
+    Search/
+  ModuleConfigurations/
+    RestApiClientModule*.cs
+  RestApiClient.cs
+  IRestAPiClient.cs
 ```
 
 ## Commands
 
 ```bash
-# Restore and build the client contracts
-dotnet restore
+# Build the client library
 dotnet build
 
-# Run the paired contract tests
+# Execute the paired contract tests
 dotnet test ../../tests/LibraryManagement.Api.Rest.Client.Tests/LibraryManagement.Api.Rest.Client.Tests.csproj
 ```
 
 ## Tests
 
-- `LibraryManagement.Api.Rest.Client.Tests` exercises serialization, contract shape, and helper clients.
-- Add snapshot or contract tests any time breaking changes to public DTOs are considered.
+`LibraryManagement.Api.Rest.Client.Tests` uses custom `HttpMessageHandler` doubles to assert that the typed client issues the correct HTTP verbs, URLs, and payloads. It also ensures failures (e.g., 500 responses) throw meaningful exceptions.
 
-## Integration Points
+## Configuration
 
-- Referenced by `LibraryManagement.Api.Rest` (server) to avoid drift between server DTOs and published contracts.
-- Additional consumers can reference this package for compile-time safety when calling the API.
+`AddRestApiHttpClient()` binds the `RestApi` configuration section and defaults the base URL to `http://localhost:5007/api` when nothing is supplied. Override it per environment (e.g., `RestApi__BasePath=https://catalogue.local/api`).
 
-## Environment & Configuration
-
-- No runtime configuration. Keep the assembly free of environment-specific branching to remain reusable.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/project-roadmap.md`
-- `../../docs/ai-collaboration.md`
-
-## Maintenance Notes
-
-- Replace `Class1` with cohesive namespaces for each API area (Catalogue, Circulation, Patrons, etc.).
-- Maintain semantic versioning when the package is eventually published to an artefact feed.
+Keep this README updated as additional REST areas (circulation, patrons, etc.) are added.

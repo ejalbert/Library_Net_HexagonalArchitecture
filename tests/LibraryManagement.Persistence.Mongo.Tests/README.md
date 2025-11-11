@@ -1,50 +1,18 @@
 # LibraryManagement.Persistence.Mongo.Tests
 
-## Purpose
+Covers the MongoDB adapter end-to-end using xUnit and Testcontainers. The suite validates mapper logic and adapter behaviour for the `Books` aggregate.
 
-- xUnit suite focused on the MongoDB persistence adapter.
-- Provides integration coverage for repositories, mapper utilities, and outbound ports backed by Mongo.
+## Notable Fixtures
 
-## Dependencies
-
-- References `LibraryManagement.Persistence.Mongo` to exercise the real adapters.
-- Uses `xunit`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`, and `coverlet.collector`.
-
-## Directory Layout
-
-```
-LibraryManagement.Persistence.Mongo.Tests/
-  LibraryManagement.Persistence.Mongo.Tests.csproj
-  UnitTest1.cs
-  README.md
-```
+- `MongoDbContainerFixture` spins up MongoDB 7 via Testcontainers, provides isolated databases per test, and drops them during teardown.
+- `BookAdaptersIntegrationTests` verify create/get/search flows against a real Mongo instance.
+- Dedicated unit tests assert Mapperly-generated mappings and `SearchBooksAdapter` filtering behaviour.
 
 ## Commands
 
 ```bash
-# Restore and run persistence tests
-dotnet restore
+# Requires Docker running locally
 dotnet test
 ```
 
-## Tests
-
-- Start by covering the `CreateNewBook` adapter and `IBookCollection` logic using an in-memory or containerized Mongo instance.
-- Add fixtures that seed sample catalogues so CRUD behaviour can be asserted deterministically.
-- Record test data schemas in `docs/adr` when significant modelling choices are made.
-
-## Environment & Configuration
-
-- Use `PersistenceMongo` configuration overrides to point at a local Mongo instance (default `mongodb://localhost:20027`).
-- Consider using testcontainers or docker-compose profiles for reproducible integration testing.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/ai-collaboration.md`
-- `../../docs/project-roadmap.md`
-
-## Maintenance Notes
-
-- Replace `UnitTest1` with suites dedicated to each aggregate (books, patrons, loans) as adapters are written.
-- Include resilience tests once retry policies or transactions are added.
+Expect Docker to pull the `mongo:7.0` image the first time the suite runs.

@@ -1,47 +1,17 @@
 # LibraryManagement.Api.Rest.Client.Tests
 
-## Purpose
+Validates the typed REST client contracts using xUnit. Each test injects a custom `HttpMessageHandler` to assert outbound HTTP requests and simulate server responses.
 
-- xUnit test suite that protects the public REST client contracts from accidental breaking changes.
-- Exercises serialization helpers, typed HTTP clients, and DTO-level validation rules.
+## Current Coverage
 
-## Dependencies
-
-- References `LibraryManagement.Api.Rest.Client` to test the same contracts consumed by external callers.
-- Uses `xunit`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`, and `coverlet.collector` for execution and coverage.
-
-## Directory Layout
-
-```
-LibraryManagement.Api.Rest.Client.Tests/
-  LibraryManagement.Api.Rest.Client.Tests.csproj
-  UnitTest1.cs
-  README.md
-```
+- `BooksClientTests` cover `Create`, `Get`, and `Search` flows plus error handling (non-success responses throw `HttpRequestException`).
+- `TestHttpMessageHandler` centralises request interception so scenarios remain deterministic.
 
 ## Commands
 
 ```bash
-# Restore and run the client contract tests
-dotnet restore
+# Run client contract tests
 dotnet test
 ```
 
-## Tests
-
-- Add scenarios for every DTO or helper once implemented (serialization, optional fields, enums).
-- Validate backward compatibility by loading sample payloads exported from the API.
-
-## Environment & Configuration
-
-- No external services are required. Use in-memory JSON payloads or HTTP handlers for deterministic tests.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/ai-collaboration.md`
-- `../../docs/project-roadmap.md`
-
-## Maintenance Notes
-
-- Replace `UnitTest1` with focused test classes such as `BooksClientTests` or `CheckoutContractsTests` as soon as implementations exist.
+Extend the suite whenever new DTOs or typed clients are added to the package.

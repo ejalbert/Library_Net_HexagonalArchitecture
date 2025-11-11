@@ -1,66 +1,51 @@
 # LibraryManagement.Application
 
-## Purpose
+ASP.NET Core host that composes every module (domain, Mongo persistence, REST API, and Blazor UI).
 
-- ASP.NET Core host that boots catalogue, circulation, patron services, and administration modules in a single process.
-- Provides REST endpoints and shared middleware for branch, staff, and patron-facing integrations.
+## Responsibilities
 
-## Dependencies
+- Bootstraps the module system via `InitializeApplicationModuleConfiguration()`.
+- Registers the Domain, Mongo persistence, REST API, and Blazor Web modules.
+- Hosts middleware such as HTTPS redirection and delegates endpoint registration to modules.
 
-- Depends on ASP.NET Core runtime packages referenced in the project file.
-- Coordinates domain logic via `LibraryManagement.Domain` (project reference to be added once aggregates exist).
-- Architecture guidance: `../../docs/architecture.md`.
-
-## Directory Layout
+## Project Layout
 
 ```
 LibraryManagement.Application/
-  LibraryManagement.Application.csproj
-  Program.cs
-  appsettings.json
-  appsettings.Development.json
-  Properties/
-  README.md
+  Program.cs                     # Module composition root
+  appsettings*.json              # Host + module configuration (RestApi, PersistenceMongo)
+  Properties/launchSettings.json # Local profiles
 ```
 
 ## Commands
 
 ```bash
-# Restore (requires NuGet connectivity)
+# Restore dependencies
 dotnet restore
 
-# Build
+# Build the host
 dotnet build
 
-# Run the web host
+# Run the composed API + UI
 dotnet run
-
-# Execute paired tests
-dotnet test ../../tests/LibraryManagement.Application.Tests/LibraryManagement.Application.Tests.csproj
 ```
+
+## Configuration
+
+- `RestApi:BasePath` – forwarded to the REST delivery module and REST client.
+- `PersistenceMongo:ConnectionString` / `DatabaseName` – consumed by the Mongo module when constructing `MongoClient` and `IMongoDatabase`.
+- `Domain:Test` – sample option showing how the Domain module binds configuration (extend/rename once meaningful settings exist).
+
+Use `dotnet user-secrets` or environment variables for local overrides when testing against remote infrastructure.
 
 ## Tests
 
-- Paired with `LibraryManagement.Application.Tests` (xUnit).
-- Add integration tests for HTTP endpoints, module bootstrapping, and adapter wiring.
-- Include component/integration tests for module-specific behaviours as they emerge.
+`LibraryManagement.Application.Tests` exists but does not contain scenarios yet. Populate it with ASP.NET Core host tests (e.g., health checks, module wiring) before shipping functionality.
 
-## Integration Points
+## Related Modules
 
-- Hosts inbound HTTP ports; maps to application services that orchestrate domain logic.
-- Will consume outbound adapters (persistence, messaging) through dependency injection when implemented.
+- `LibraryManagement.Api.Rest`: maps `/api/v1/books` endpoints.
+- `LibraryManagement.Persistence.Mongo`: implements book persistence ports.
+- `LibraryManagement.Web`: serves the Blazor UI that calls the REST API via the shared REST client.
 
-## Environment & Configuration
-
-- Default configuration stored in `appsettings.json`; environment overrides in `appsettings.Development.json`.
-- Express deployment configuration via environment variables or additional `appsettings.{Environment}.json` files.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/project-roadmap.md`
-- `../../docs/ai-collaboration.md`
-
-## Maintenance Notes
-
-- Remove the template weather forecast endpoint and replace it with module-specific endpoints during initial implementation.
+Keep this README updated whenever additional modules are added to the host.

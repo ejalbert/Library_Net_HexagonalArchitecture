@@ -1,62 +1,29 @@
 # LibraryManagement.ModuleBootstrapper
 
-## Purpose
+Lightweight infrastructure for wiring modules into any `IHostApplicationBuilder`. Hosts call `InitializeApplicationModuleConfiguration()` to obtain an `IModuleRegistrator`, and modules add their registrations through extension methods.
 
-- Core infrastructure for composing application modules in a host-agnostic way.
-- Provides `IModuleRegistrator` abstractions that expose `IServiceCollection`, configuration, and hosting metadata to each module.
-- Supplies helper extensions (e.g., `InitializeApplicationModuleConfiguration`) to streamline startup inside console or ASP.NET Core hosts.
+## Responsibilities
 
-## Dependencies
-
-- Targets .NET 9 with implicit usings and nullable reference types enabled.
-- Depends on `Microsoft.Extensions.Configuration.Binder` for options binding and `Microsoft.Extensions.Hosting.Abstractions` for host metadata.
-- Referenced by domain, persistence, and delivery adapters to share the same module wiring contract.
-
-## Directory Layout
-
-```
-LibraryManagement.ModuleBootstrapper/
-  Extensions/
-    ApplicationBuilderExtensions.cs
-  ModuleRegistrators/
-    IModuleRegistrator.cs
-    ModuleRegistrator.cs
-  LibraryManagement.ModuleBootstrapper.csproj
-  README.md
-```
+- Defines `IModuleRegistrator` and `ModuleRegistrator<TBuilder>` exposing `IServiceCollection`, `IConfigurationManager`, and `IHostEnvironment`.
+- Supplies `ApplicationBuilderExtensions.InitializeApplicationModuleConfiguration()` used by every host in the solution.
+- Serves as the common dependency for domain, persistence, and delivery modules so they can share the same bootstrapping experience.
 
 ## Commands
 
 ```bash
-# Restore and build the bootstrapper library
-dotnet restore
+# Build the bootstrapper library
 dotnet build
 
-# Run paired unit tests
+# Run associated tests
 dotnet test ../../tests/LibraryManagement.ModuleBootstrapper.Tests/LibraryManagement.ModuleBootstrapper.Tests.csproj
 ```
 
 ## Tests
 
-- `LibraryManagement.ModuleBootstrapper.Tests` exercises the registrator contract and ensures service/configuration accessors behave predictably.
-- Expand coverage as lifecycle hooks (ordering, conditional registration, diagnostics) are introduced.
+`LibraryManagement.ModuleBootstrapper.Tests` verifies the registrator correctly surfaces the builder services/configuration/environment. Expand coverage as ordering/diagnostics features are added.
 
 ## Integration Points
 
-- Called from `LibraryManagement.Application` (and future hosts) to expose builder context to modules.
-- Consumed by persistence, domain, and delivery modules to register services with zero knowledge of the host type beyond `IHostApplicationBuilder`.
+Any host (console, worker, ASP.NET Core) can call the extension to start module registration. Modules should remain thin wrappers that only depend on the abstractions defined here.
 
-## Environment & Configuration
-
-- Does not define configuration of its own but exposes `IConfigurationManager` and `IHostEnvironment` so modules can bind their sections.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/project-roadmap.md`
-- `../../docs/ai-collaboration.md`
-
-## Maintenance Notes
-
-- Consider adding diagnostics (logging of module registration) and validation helpers once modules grow.
-- Keep the API minimal to avoid leaking ASP.NET Core-specific concepts into non-web hosts.
+Keep this README updated if module lifecycle management grows beyond simple service registration.

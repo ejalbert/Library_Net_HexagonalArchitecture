@@ -1,46 +1,42 @@
 # Copilot Instructions
 
-These notes prime GitHub Copilot (Chat & IDE) with the context that guides this repository.
+Prime GitHub Copilot (Chat & IDE) with the context that guides this repository.
 
 ## Project Snapshot
 
-- Solution: .NET 9 hexagonal architecture for a library domain.
-- Key layers: Domain (core logic), Application (use cases), Infrastructure (adapters), Delivery (API/CLI).
-- Tests: xUnit with FluentAssertions; integration coverage for adapters.
+- .NET 10 solution built around modules: domain, Mongo persistence, REST delivery, REST client, Blazor Web, workspace bootstrapper.
+- Current vertical slice: managing books end-to-end (create/search/get) via REST + Mongo + Blazor.
+- Tests rely on xUnit, bUnit (for Blazor), Moq, and Testcontainers for Mongo integration.
 
 ## Development Guardrails
 
-- Preserve domain purity: no infrastructure dependencies inside `Library.Domain`.
-- Surface domain invariants through rich domain types instead of primitive obsession.
-- Keep adapters thin; route requests through application ports.
-- Update documentation (`README.md`, `docs/architecture.md`, `docs/adr/`) when behaviour or decisions change.
+- Keep the domain layer framework agnostic; infrastructure adapters implement outbound ports and are composed through `Add*Module()`.
+- Update `docs/architecture.md`, READMEs, and ADRs whenever behaviour or dependencies change.
+- Maintain parity between the REST API and the REST client package whenever DTOs or routes evolve.
+- **Blazor tests**: write component tests as `.razor` files with `.razor.cs` code-behind (see `BookPageTests`) so the runner discovers them.
 
 ## Coding Conventions
 
-- C# style: PascalCase for types, camelCase for locals/parameters, suffix interfaces with `I` only when necessary.
-- Prefer immutable value objects; use records where it fits the intent.
-- Use dependency injection; avoid static singletons.
-- Tests should read Given/When/Then.
+- C# defaults: PascalCase for types, camelCase for locals/parameters, expression-bodied members when clear.
+- Prefer dependency injection over statics; register services through the module bootstrapper.
+- Use Mapperly for DTO/entity mapping where practical.
 
 ## Workflow Expectations
 
-- Default branch is `main`; work on feature branches and squash merge.
-- Run `dotnet format` and `dotnet test` before opening a PR.
-- Capture significant choices as ADRs in `docs/adr/`.
-- Maintain AI-friendly TODOs: `TODO(agent): reason` with actionable context.
+- Base branch: `main`. Work on feature branches and squash merge.
+- Run targeted `dotnet test` (including Mongo Testcontainers) plus `dotnet format` before opening a PR.
+- Record significant choices as ADRs in `docs/adr/`.
 
-## Response Guidance (Chat)
+## Response Guidance
 
-When proposing changes:
-
-1. Summarise the intent before showing code.
-2. Limit diffs to affected files and explain why.
-3. Provide validation steps (`dotnet test`, etc.).
-4. Flag uncertainties or follow-up tasks explicitly.
+1. Summarise the intent before presenting code.
+2. Show only the relevant diffs/files and explain why each change matters.
+3. Provide validation steps (tests/commands) tailored to the touched projects.
+4. Call out uncertainties or required follow-ups.
 
 ## Non-Goals
 
-- Do not introduce frameworks that tightly couple the domain (e.g., direct EF Core entities in domain layer).
-- Avoid generating boilerplate without discussing its necessity.
+- Do not introduce infrastructure-specific dependencies into the domain.
+- Avoid adding frameworks that bypass the module system or duplicate REST contracts.
 
 Keep responses concise, architecture-aware, and aligned with the roadmap in `docs/project-roadmap.md`.

@@ -1,67 +1,64 @@
 # LibraryManagement.Api.Rest
 
-## Purpose
+Delivery module that exposes domain capabilities via minimal APIs. The current implementation publishes `/api/v1/books` endpoints that forward to the book use cases.
 
-- Provides the REST delivery adapter for the hexagonal architecture.
-- Hosts HTTP controllers, DTO mappers, and OpenAPI metadata for catalogue, circulation, and admin scenarios.
-- Encapsulates configuration needed to plug REST endpoints into any ASP.NET Core host via the module bootstrapper.
+## Key Capabilities
 
-## Dependencies
-
-- References `LibraryManagement.Api.Rest.Client` for DTOs and request/response contracts.
-- References `LibraryManagement.Domain` for domain orchestration.
-- References `LibraryManagement.ModuleBootstrapper.AspNetCore` to align with the module registration pipeline.
-- Uses the `Microsoft.AspNetCore.OpenApi` package to expose Swagger endpoints.
+- Registers REST services through `AddRestApiModule()` and wires endpoints via `UseRestApiModule()`.
+- Binds `RestApiModuleOptions` from configuration, defaulting to `/api` when not provided.
+- Adds OpenAPI/Swagger in Development to document endpoints.
+- Maps book endpoints for create, get-by-id, and search scenarios using DTOs from the REST client package and Mapperly-based mappers.
 
 ## Directory Layout
 
 ```
 LibraryManagement.Api.Rest/
-  Domains/
-    Books/
+  Domains/Books/
+    BookServices.cs
+    BookDtoMapper.cs
+    CreateNewBook/*.cs
+    GetSingleBook/*.cs
+    Search/*.cs
   ModuleConfigurations/
     ApiModule.cs
     RestApiModuleEnvConfiguration.cs
     RestApiModuleOptions.cs
-  LibraryManagement.Api.Rest.csproj
-  README.md
 ```
 
 ## Commands
 
 ```bash
-# Restore and build the REST adapter
-dotnet restore
+# Build the REST module
 dotnet build
 
-# Execute the paired integration tests
+# Execute module tests
 dotnet test ../../tests/LibraryManagement.Api.Rest.Tests/LibraryManagement.Api.Rest.Tests.csproj
 ```
 
+## Dependencies
+
+- `LibraryManagement.Api.Rest.Client` for shared DTOs and request models.
+- `LibraryManagement.Domain` for the use-case interfaces.
+- `LibraryManagement.ModuleBootstrapper.AspNetCore` so the module plugs into any ASP.NET Core host.
+- `Microsoft.AspNetCore.OpenApi` for OpenAPI metadata.
+
+## Configuration
+
+Set `RestApi:BasePath` in host configuration to control the route prefix. When omitted, the module uses `/api` and then appends its group (`/v1/books`).
+
 ## Tests
 
-- Validated by `LibraryManagement.Api.Rest.Tests` using NUnit.
-- Add component/integration tests per controller to ensure correct routing, model binding, and status codes.
-- Cover DTO mappers so contract drift between server and client packages is detected early.
+`LibraryManagement.Api.Rest.Tests` verifies:
+
+- Option binding precedence (configuration vs. delegate overrides).
+- Service registration (controllers, mappers, DTO mapping).
+- Endpoint templates via a minimal WebApplication builder.
+
+Extend coverage with request/response validation as more endpoints are added.
 
 ## Integration Points
 
-- Use `builder.InitializeApplicationModuleConfiguration().AddRestApiModule()` inside the host project to register REST services.
-- Use `app.UseApplicationModules().UseRestApiModule()` to wire middleware, routing, and OpenAPI exposure.
-- Exposes `IBookDtoMapper` and similar abstractions for other domains.
+- Inbound adapters: minimal APIs defined in `BookServices.cs`.
+- Outbound: depends on domain use cases (`ICreateNewBookUseCase`, etc.); there is no direct persistence coupling.
 
-## Environment & Configuration
-
-- Binds the `RestApi` configuration section to `RestApiModuleOptions` (currently `BasePath`).
-- Default base path is `/api`. Override per environment via `appsettings.{Environment}.json` or environment variables (`RestApi__BasePath`).
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/project-roadmap.md`
-- `../../docs/ai-collaboration.md`
-
-## Maintenance Notes
-
-- Replace the placeholder book endpoints with real catalogue/circulation controllers as use cases mature.
-- Keep OpenAPI descriptions in sync with the shared client package so consumers remain compatible.
+Document additional endpoint groups here whenever new domains are exposed.

@@ -1,31 +1,31 @@
 # Architecture Decision Records
 
-Use this directory to store Architecture Decision Records (ADRs). Each record captures context, decision, and consequences for significant choices across the Library Management System.
+Use this directory to capture significant architectural choices (e.g., persistence technology, hosting model, module conventions). No ADRs have been recorded yet—add one whenever a decision materially impacts the system.
 
 ## How to Add an ADR
 
-1. Copy the template below into a new file named `NNNN-short-title.md`, where `NNNN` is a zero-padded sequence number (e.g., `0001-initialize-domain.md`).
-2. Fill in each section with clear, concise language.
-3. Link the ADR from relevant documentation or pull requests.
+1. Copy the template below into a new Markdown file.
+2. Name the file `NNNN-short-title.md` where `NNNN` is a zero-padded sequence (e.g., `0001-select-mongo-adapter.md`).
+3. Fill in the sections and link to the ADR from relevant docs or pull requests.
 
 ```
 # {title}
 
 - Status: {proposed | accepted | superseded}
-- Deciders: {list of people / roles}
+- Deciders: {people / roles}
 - Date: {YYYY-MM-DD}
 
 ## Context
 
-{What is motivating the decision? Which forces are at play?}
+{What is motivating the decision?}
 
 ## Decision
 
-{What is the outcome of the decision?}
+{What was decided and why?}
 
 ## Consequences
 
-{What becomes easier or harder because of this decision for library staff, patrons, and infrastructure?}
+{What becomes easier or harder because of this choice?}
 ```
 
-Supersede old decisions instead of deleting them so the project history remains traceable.
+Supersede old ADRs instead of deleting them so project history stays traceable.

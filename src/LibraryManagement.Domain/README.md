@@ -1,54 +1,55 @@
 # LibraryManagement.Domain
 
-## Purpose
+Contains the core domain model and use cases. The current focus is the `Books` aggregate, which exposes ports for creating, searching, and retrieving titles.
 
-- Implements the core library domain model: catalogued items, copies, patrons, loans, reservations, and policies.
-- Hosts aggregates, value objects, domain services, and events with no infrastructure dependencies.
+## Responsibilities
+
+- Defines the `Book` entity plus associated commands (`CreateNewBookCommand`, `SearchBooksCommand`, `GetSingleBookCommand`).
+- Implements use-case services that depend on outbound ports: `ICreateNewBookPort`, `ISearchBooksPort`, and `IGetSingleBookPort`.
+- Provides the `DomainModule` extension so hosts can register domain services via the module bootstrapper and bind options (`DomainModuleOptions`).
 
 ## Dependencies
 
-- Depends only on BCL types and other domain-specific packages once introduced.
-- Reference shared architectural guidance at `../../docs/architecture.md`.
+- `Riok.Mapperly` for mapper generation (used by downstream adapters such as Mongo persistence).
+- `LibraryManagement.ModuleBootstrapper` for the module registration abstractions.
+- No infrastructure dependencies are referenced directly.
 
 ## Directory Layout
 
 ```
 LibraryManagement.Domain/
-  LibraryManagement.Domain.csproj
-  README.md
-  Class1.cs
+  Domains/Books/
+    Book.cs
+    BookServiceRegistration.cs
+    Create/...
+    Search/...
+    GetSingle/...
+  ModuleConfigurations/
+    DomainModule.cs
+    DomainModuleOptions.cs
 ```
 
 ## Commands
 
 ```bash
-# Build
+# Build the domain assembly
 dotnet build
 
-# Run tests for paired project
+# Run the paired tests (currently a placeholder project)
 dotnet test ../../tests/LibraryManagement.Domain.Tests/LibraryManagement.Domain.Tests.csproj
 ```
 
 ## Tests
 
-- Paired with `LibraryManagement.Domain.Tests` (xUnit). Add unit tests for every aggregate, policy, or domain service.
-- Tests validate invariants such as loan limits, reservation queues, fine calculation, and availability rules.
+`LibraryManagement.Domain.Tests` has not been populated yet. Add unit tests for each use case before expanding the aggregate (e.g., validation, policy enforcement, identifier generation).
+
+## Configuration
+
+`DomainModuleOptions` currently exposes a sample `Test` property. Replace it with meaningful switches (e.g., feature flags) when domain behaviour needs runtime toggles.
 
 ## Integration Points
 
-- Exposes domain events consumed by the application layer.
-- Consumed by outbound ports defined in `LibraryManagement.Application`.
+- Inbound ports implemented by delivery adapters: REST controllers call `ICreateNewBookUseCase`, `ISearchBooksUseCase`, etc.
+- Outbound ports implemented by `LibraryManagement.Persistence.Mongo` and future infrastructure adapters.
 
-## Environment & Configuration
-
-- No runtime configuration. Domain logic must remain deterministic and framework agnostic.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/project-roadmap.md`
-- `../../docs/adr/`
-
-## Maintenance Notes
-
-- Replace `Class1` with meaningful domain types before committing functional code.
+Document any new aggregates or invariants in `docs/architecture.md` as the domain grows.

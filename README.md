@@ -1,75 +1,97 @@
 # Hexagonal Library Management System
 
-A .NET 9-based reference implementation of a modular Library Management System designed around Hexagonal (Ports and Adapters) architecture principles. The goal of this repository is to model core library workflows—cataloguing, circulation, patron services, and policy enforcement—while keeping the domain logic independent from delivery and infrastructure concerns.
+A .NET 10 reference implementation of a modular Library Management System centred on Hexagonal (Ports & Adapters) architecture. The solution currently delivers a vertical slice for managing books end-to-end: domain use cases, MongoDB persistence adapters, a REST delivery module, a typed REST client, and a Blazor UI that consumes the API.
 
-## Status
+## Current Status
 
-> **Early setup** – Repository scaffolding and documentation only. Library domain modelling and adapters will follow once architecture decisions are ratified.
+- ✅ Module bootstrapper libraries (`LibraryManagement.ModuleBootstrapper*`) let any host compose modules in a consistent way.
+- ✅ Domain `Books` aggregate exposes create, search, and get use cases plus outbound ports for persistence.
+- ✅ MongoDB adapter persists books, including Mapperly-powered mappings and tested Testcontainers coverage.
+- ✅ REST API module maps minimal API endpoints under `/api/v1/books`, uses the domain use cases, and publishes OpenAPI metadata.
+- ✅ REST client package ships a typed `IBooksClient` plus DI-friendly configuration helpers.
+- ✅ Blazor host (`LibraryManagement.Web` + `.Client`) renders the book listing by calling the REST client and is tested with bUnit.
+- 🚧 Additional domains (patrons, circulation, policies) still need to be modelled.
 
-## Vision & Scope
+See `docs/project-roadmap.md` for upcoming milestones.
 
-- Support rich domain modelling for library assets (books, media, digital subscriptions), patrons, and circulation policies.
-- Provide modular application services for catalogue search, checkouts, returns, reservations, and administrative workflows (REST API first, other adapters later).
-- Embrace Hexagonal architecture to keep the library domain model isolated, portable, and host-agnostic.
-- Enable collaborative development with both human and AI assistants so library-specific knowledge stays accurate and shared.
-- Optimise for distributed deployment scenarios (branch libraries, self-service kiosks, cloud-hosted catalogues) without coupling core logic to infrastructure choices.
+## Solution Layout
 
-## Architecture Overview
+```
+src/
+  LibraryManagement.Application           # ASP.NET Core host that composes every module
+  LibraryManagement.Domain                # Domain model + use cases (currently books)
+  LibraryManagement.Persistence.Mongo     # MongoDB outbound adapters
+  LibraryManagement.Api.Rest              # REST delivery module (minimal APIs)
+  LibraryManagement.Api.Rest.Client       # Shared DTOs + typed HttpClient wrappers
+  LibraryManagement.Web                   # Blazor Server entry point
+  LibraryManagement.Web/LibraryManagement.Web.Client  # Blazor WebAssembly client bundle
+  LibraryManagement.ModuleBootstrapper*   # Module registration/configuration helpers
 
-The project will be organised into these primary layers:
+tests/
+  LibraryManagement.Persistence.Mongo.Tests        # Integration + mapping tests
+  LibraryManagement.Api.Rest.Tests                 # Module registration and routing tests
+  LibraryManagement.Api.Rest.Client.Tests          # Typed client contract tests
+  LibraryManagement.Web.Tests                      # bUnit component tests (Book page)
+  LibraryManagement.ModuleBootstrapper*.Tests      # Bootstrapper regression tests
+  LibraryManagement.Application.Tests              # Placeholder for future host tests
+```
 
-- **Domain** – Entities, value objects, domain events, aggregates, and library policies (e.g., loan rules, hold queues). Contains the behaviour for assets, patrons, and circulation with no external dependencies.
-- **Application** – Use cases, input/output ports, and orchestrations. Coordinates domain logic for scenarios like `CheckOutItem`, `PlaceHold`, and `RegisterPatron` and defines service contracts.
-- **Infrastructure** – Persistence, messaging, search indexing, and external integrations (e.g., MARC import, identity providers) implemented via adapters.
-- **Delivery Adapters** – API controllers, CLI tools, scheduled jobs, or future interfaces (self-check stations, staff dashboards) that invoke application ports. The primary application project is an ASP.NET Core host that boots every module together for cohesive deployments.
+## Running the Application
 
-The default host loads catalogue, circulation, patron, and administration modules in a single process. This all-in-one startup consumes more CPU and memory, but it simplifies environments that favour a consolidated deployment over microservices. Individual modules can still be extracted into stand-alone hosts when a distributed topology or peak load mitigation requires additional scalability.
+```bash
+# Restore every project
+dotnet restore
 
-See `docs/architecture.md` for more detailed guidance once implementation begins.
+# Run the integrated host (REST API + Mongo + Blazor)
+dotnet run --project src/LibraryManagement.Application/LibraryManagement.Application.csproj
+```
 
-## Distributed Hosting & Scalability Strategy
+The host wires modules in `Program.cs` via `InitializeApplicationModuleConfiguration()` and the fluent `Add*Module()` extensions. Configuration is read from the usual ASP.NET Core providers:
 
-- Keep inbound ports and delivery adapters stateless so the catalogue API, circulation desks, and staff portals can scale across multiple library branches.
-- Design outbound adapters (catalogue persistence, patron notification channels, discovery/search engines) behind contracts that support swapping providers without touching the domain or application layers.
-- Containerise infrastructure pieces early; start with Docker Compose and evolve towards orchestration platforms such as Kubernetes or Azure Container Apps to support multi-branch deployments.
-- Leverage domain events and application ports to support asynchronous workflows such as waitlist promotion, overdue reminders, and inter-library loans.
-- Balance resource consumption by running the all-in-one ASP.NET Core host where operational simplicity is paramount, and scale out by running selected modules as stand-alone services in distributed environments experiencing peak usage.
-- Treat observability (logging, tracing, metrics) as adapters so operational insights remain consistent across hosting environments.
+- `RestApi` section -> REST base path (defaults to `/api`).
+- `PersistenceMongo` section -> Mongo connection string + database (defaults to `mongodb://localhost:20027`, `library_management`).
+- `RestApi:BasePath` is also used by the REST client module to set the typed `HttpClient` base address.
 
-## Getting Started
+Use `compose.yaml` to build the Blazor server and WebAssembly client containers once you are ready to deploy UI artifacts independently.
 
-1. Install the [.NET 9 SDK](https://dotnet.microsoft.com/download).
-2. Clone this repository.
-3. Review the documentation in the `docs/` folder to understand the library domain conventions before adding code.
-4. Provision development services via Docker Compose (catalogue database, cache, messaging) once the compose file is available.
+## Tests
 
-_Planned tooling_: `dotnet` CLI, Docker Compose, xUnit for tests, FluentAssertions, and Entity Framework Core (or alternative storage adapter) once requirements stabilise.
+```bash
+# MongoDB adapters (uses Testcontainers -> requires Docker running)
+dotnet test tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagement.Persistence.Mongo.Tests.csproj
+
+# REST API module behaviour
+dotnet test tests/LibraryManagement.Api.Rest.Tests/LibraryManagement.Api.Rest.Tests.csproj
+
+# Typed REST client contracts
+dotnet test tests/LibraryManagement.Api.Rest.Client.Tests/LibraryManagement.Api.Rest.Client.Tests.csproj
+
+# Blazor components (bUnit)
+dotnet test tests/LibraryManagement.Web.Tests/LibraryManagement.Web.Tests.csproj
+```
+
+> **Blazor testing rule** – Define each component test as a `.razor` file with a matching partial `.razor.cs` code-behind so the bUnit test runner can discover it (see `tests/LibraryManagement.Web.Tests/Components/BookPageTests.razor*`).
 
 ## Development Workflow
 
-- Prefer driving features by domain use cases (e.g., “As a patron, I can renew a borrowed item”).
-- Keep adapters thin; business rules (loan limits, fine calculations, inventory rules) live in the domain.
-- Provide comprehensive tests per layer (unit for domain/application, integration for adapters) that capture circulation and catalogue scenarios.
-- Document decisions in `docs/adr/` (Architecture Decision Records) when non-trivial, especially when they impact library policies or integrations.
+1. Add or update domain logic first (entities, ports, use cases) inside `LibraryManagement.Domain`.
+2. Register outbound adapters (e.g., Mongo) via module extensions so hosts stay ignorant of infrastructure details.
+3. Surface capabilities through delivery adapters such as the REST module and Blazor UI.
+4. Mirror each project with a `{Project}.Tests` counterpart; integration adapters should exercise real dependencies through Testcontainers when possible.
+5. Keep docs (`docs/architecture.md`, `docs/ai-collaboration.md`, ADRs) current whenever behaviour changes.
 
-### Branching & Version Control
+### Tooling
 
-- `main` holds releasable code.
-- Create feature branches for work; squash merge when ready.
-- Use conventional commits where possible (`feat:`, `fix:`, etc.).
+- .NET SDK 10 preview (align with the `TargetFramework` in each `.csproj`).
+- MongoDB 7 (local instance or container) for manual testing; automated tests run against Testcontainers.
+- xUnit + FluentAssertions + Moq in most test projects; bUnit for component tests.
+- Mapperly generates DTO/entity mappers inside Domain and Persistence projects.
 
-## Working with AI Coding Agents
+## Documentation
 
-AI-assisted development is welcome. Shared guidelines live in `docs/ai-collaboration.md`:
+- **Architecture**: `docs/architecture.md` – layering rules, module catalogue, deployment considerations.
+- **Roadmap**: `docs/project-roadmap.md` – milestone tracking with the current state checked off.
+- **AI Collaboration**: `docs/ai-collaboration.md` – how humans and agents should work together (includes the Blazor testing rule).
+- **ADRs**: `docs/adr/` – record significant decisions.
 
-- Keep documentation and code comments up to date so AI agents have accurate context.
-- Use TODO notes sparingly and keep them actionable.
-- Prefer deterministic scripts/commands that can be executed by automation.
-
-## Contributing
-
-Refer to `CONTRIBUTING.md` for coding standards, testing expectations, and review workflow.
-
-## License
-
-To be determined.
+Please keep READMEs and docs synchronized with the code whenever behaviour or dependencies change so future contributors (human or AI) can trust this repository.

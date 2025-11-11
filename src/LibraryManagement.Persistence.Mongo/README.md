@@ -1,69 +1,64 @@
 # LibraryManagement.Persistence.Mongo
 
-## Purpose
+MongoDB adapter that implements the outbound ports defined by the domain layer. The current slice stores and queries books.
 
-- MongoDB persistence adapter for the library domain.
-- Implements repository-style abstractions for catalogued books (and future aggregates) plus the outbound ports they require.
-- Provides a module configuration entry point so Mongo services can be registered consistently via the bootstrapper.
+## Responsibilities
+
+- Provides `PersistenceMongoModule` to register MongoDB dependencies (client, database, options) through the module bootstrapper.
+- Implements `IBookCollection`, `BookEntity`, and Mapperly-powered conversions between entities and domain models.
+- Supplies adapters for `ICreateNewBookPort`, `IGetSingleBookPort`, and `ISearchBooksPort`.
 
 ## Dependencies
 
-- References `LibraryManagement.Domain` to satisfy outbound port interfaces (e.g., `ICreateNewBookPort`).
-- Uses `MongoDB.Driver` and `MongoDB.EntityFrameworkCore` to interact with MongoDB clusters.
-- Relies on `LibraryManagement.ModuleBootstrapper` through extension methods invoked by consuming hosts.
+- `MongoDB.Driver` / `MongoDB.EntityFrameworkCore` for data access.
+- `LibraryManagement.Domain` for the outbound port interfaces and domain models.
+- `LibraryManagement.ModuleBootstrapper` to align with the module registration flow.
 
 ## Directory Layout
 
 ```
 LibraryManagement.Persistence.Mongo/
   Abstractions/
-  Domains/
-    Books/
+    AbstractCollection.cs
+    IAbstractCollection.cs
+  Domains/Books/
+    BookEntity.cs
+    BookEntityMapper.cs
+    BookCollection.cs
+    Adapters/*.cs
   ModuleConfigurations/
-    PersistenceMongoModule.cs
-    PersistenceMongoModuleEnvConfiguration.cs
-    PersistenceMongoModuleOptions.cs
-  LibraryManagement.Persistence.Mongo.csproj
-  README.md
+    PersistenceMongoModule*.cs
 ```
 
 ## Commands
 
 ```bash
-# Restore and build the MongoDB adapter
-dotnet restore
+# Build the adapter
 dotnet build
 
-# Run the paired persistence tests
+# Run integration + mapping tests
 dotnet test ../../tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagement.Persistence.Mongo.Tests.csproj
 ```
 
+## Configuration
+
+`PersistenceMongoModule` binds `PersistenceMongo:ConnectionString` and `DatabaseName`, defaulting to `mongodb://localhost:20027` and `library_management`. Module consumers can override these via configuration or delegate options.
+
 ## Tests
 
-- `LibraryManagement.Persistence.Mongo.Tests` will house xUnit-based integration tests that boot Mongo (local or containerised) and validate adapters end-to-end.
-- Add contract tests for each outbound port to ensure mapping consistency between domain entities and Mongo collections.
+`LibraryManagement.Persistence.Mongo.Tests` covers:
+
+- Mapper correctness (`BookEntityMapperTests`).
+- Unit tests for each adapter (create, search, get).
+- Integration tests that spin up MongoDB 7 with Testcontainers to verify persistence end-to-end.
+
+Ensure Docker is running before executing the integration suite.
 
 ## Integration Points
 
-- Call `builder.InitializeApplicationModuleConfiguration().AddPersistenceMongoModule()` to register Mongo services within any host.
-- Provides DI registrations for `MongoClient`, `IMongoDatabase`, mapper types, and adapter implementations (e.g., `CreateNewBookAdapter`).
-- Works alongside other infrastructure modules through the shared bootstrapper contracts.
+The module registers:
 
-## Environment & Configuration
+- `MongoClient` (singleton) and scoped `IMongoDatabase`.
+- Book-specific services (collection, mapper, adapters).
 
-- Reads the `PersistenceMongo` configuration section into `PersistenceMongoModuleOptions` with defaults:
-  - `ConnectionString`: `mongodb://localhost:20027`
-  - `DatabaseName`: `library_management`
-- Override via environment variables (`PersistenceMongo__ConnectionString`, `PersistenceMongo__DatabaseName`) or appsettings files per environment.
-
-## Related Documentation
-
-- `../../docs/architecture.md`
-- `../../docs/project-roadmap.md`
-- `../../docs/ai-collaboration.md`
-- `../../docs/adr/` when persistence-specific decisions are recorded.
-
-## Maintenance Notes
-
-- Flesh out the `Domains` folder with concrete collections (Patrons, Loans, Reservations) as those aggregates mature.
-- Revisit connection management and resilience policies (retry, health checks) once operational requirements are defined.
+Add additional collections/adapters here as new aggregates move into MongoDB.

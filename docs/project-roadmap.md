@@ -1,47 +1,50 @@
-# Project Roadmap (Draft)
+# Project Roadmap
 
-## Milestone 0 – Foundation
+This roadmap tracks milestones for the book-focused vertical slice and highlights upcoming work for additional domains (patrons, circulation, policies).
 
-- [x] Repository documentation scaffolding
-- [ ] Establish .NET solution structure (`LibraryManagement.Domain`, `LibraryManagement.Application`, etc.) with paired `{Project}.Tests` projects and READMEs created during scaffolding
-- [ ] Configure continuous integration workflow
+## Milestone 0 – Foundation ✅
 
-## Milestone 1 – Core Domain
+- [x] Repository + documentation scaffolding.
+- [x] Establish .NET solution with module bootstrapper, domain, persistence, delivery, and test projects.
+- [x] Compose modules inside an ASP.NET Core host.
 
-- [ ] Model core aggregates, entities, and value objects for library assets, patrons, loans, reservations, and fines
-- [ ] Implement domain services to enforce circulation policies (loan periods, renewal limits, hold queues)
-- [ ] Add unit tests for core invariants including availability rules and patron eligibility checks
+## Milestone 1 – Book Domain (In Progress)
 
-## Milestone 2 – Application Services
+- [x] Model the `Book` aggregate with create/search/get use cases.
+- [x] Expose outbound ports for persistence adapters.
+- [ ] Add validation/invariants (e.g., duplicate detection, title rules).
+- [ ] Add domain unit tests that cover behaviours beyond pass-through commands.
 
-- [ ] Define use-case commands/queries (borrow, return, search, manage patrons)
-- [ ] Implement application ports and DTOs for circulation, catalogue management, and patron account workflows
-- [ ] Introduce in-memory repositories for testing policy enforcement without infrastructure dependencies
+## Milestone 2 – Persistence Adapter (Book Slice) ✅
 
-## Milestone 3 – API Adapter
+- [x] Implement MongoDB adapters for the book ports.
+- [x] Provide Mapperly mappings and typed collections.
+- [x] Add Testcontainers-based integration tests plus unit tests for mappers/adapters.
 
-- [ ] Scaffold an ASP.NET Core host that runs every module (catalogue, circulation, patrons, administration) within a single process
-- [ ] Map endpoints to application services for catalogue search, checkout, renewals, holds, and patron management
-- [ ] Add integration tests and OpenAPI documentation describing library workflows, noting the resource trade-offs of the all-in-one host
+## Milestone 3 – REST Delivery ✅
 
-## Milestone 4 – Persistence Adapter
+- [x] Map `/api/v1/books` endpoints via the REST module.
+- [x] Publish OpenAPI in Development and expose typed controllers.
+- [x] Add module tests for option binding, DI registrations, and routing.
 
-- [ ] Introduce relational database adapter (EF Core or alternative) capturing catalogue items, copies, patrons, and circulation history
-- [ ] Configure migrations and seeding for sample branches and inventory
-- [ ] Strengthen integration tests with test containers
-- [ ] Add Docker Compose services (e.g., PostgreSQL, Redis) to support local development and integration testing
+## Milestone 4 – Client & UI (In Progress)
 
-## Milestone 5 – Distributed Hosting & Scalability
+- [x] Ship `IBooksClient` in the REST client package with HTTP helpers.
+- [x] Register the client inside the Blazor Web module and fetch books for the `Book` page.
+- [x] Cover the Blazor component with bUnit tests.
+- [ ] Replace boilerplate components (Counter/Weather) with real pages.
+- [ ] Add CRUD flows (create/edit book) through the UI.
 
-- [ ] Containerise delivery and infrastructure adapters (Dockerfiles, Compose baseline)
-- [ ] Document deployment topology options (single branch, multi-branch, public catalogue, staff intranet)
-- [ ] Introduce messaging or eventing strategy aligned with application ports (e.g., outbox, message broker adapter) for notifications and waitlist management
-- [ ] Exercise horizontal scaling scenarios in staging environments, including branch-specific load
+## Milestone 5 – Additional Domains (Planned)
 
-## Milestone 6 – Quality & Operations
+- [ ] Model patrons, circulation policies, and reservations.
+- [ ] Extend persistence adapters + REST endpoints for those domains.
+- [ ] Capture decisions as ADRs when introducing new infrastructure or workflows.
 
-- [ ] Implement observability (logging, metrics) that surfaces catalogue or circulation bottlenecks
-- [ ] Add performance and load testing strategy covering peak patron activity
-- [ ] Prepare deployment scripts and release checklist for library operations teams
+## Milestone 6 – Operations & Quality (Planned)
 
-Roadmap items are aspirational and should be refined as discovery continues. Update this document alongside code changes so all contributors—including AI assistants—share the same direction.
+- [ ] Add CI pipeline (restore/build/test, including Mongo Testcontainers).
+- [ ] Containerise the integrated host and publish images via Compose/Kubernetes manifests.
+- [ ] Introduce observability (logging, tracing, metrics) as decorators around ports/adapters.
+
+Revisit this roadmap whenever a milestone is achieved or priorities change so contributors (humans and AI) stay aligned.
