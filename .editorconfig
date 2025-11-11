@@ -1,9 +1,11 @@
-# Two or more consecutive blank lines: Remove down to one blank line.
-dotnet_diagnostic.SA1507.severity = error
+root = true
 
-# Blank line immediately before or after a { line: remove it.
-dotnet_diagnostic.SA1505.severity = error
-dotnet_diagnostic.SA1509.severity = error
+[*.cs]
+indent_style = space
+indent_size = 4
+csharp_new_line_before_open_brace = all
+csharp_prefer_braces = true:suggestion
+dotnet_sort_system_directives_first = true
+dotnet_style_qualification_for_field = false:suggestion
 
-# Blank line immediately before a } line: remove it.
-dotnet_diagnostic.SA1508.severity = error
+dotnet_diagnostic_IDE0005_severity = warning
