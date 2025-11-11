@@ -4,7 +4,7 @@ Thanks for helping build the Hexagonal Library Management System! This guide exp
 
 ## Prerequisites
 
-- .NET 9 SDK
+- .NET 10 SDK
 - Git
 - Recommended: IDE with C# support (JetBrains Rider, Visual Studio, or VS Code with C# Dev Kit)
 
