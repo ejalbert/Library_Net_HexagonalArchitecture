@@ -1,4 +1,3 @@
-using LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using LibraryManagement.Web.Client.ModuleConfigurations;

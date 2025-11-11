@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
@@ -10,12 +8,14 @@ using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
 using LibraryManagement.ModuleBootstrapper.Extensions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+
 using Moq;
 
 namespace LibraryManagement.Api.Rest.Tests.ModuleConfigurations;

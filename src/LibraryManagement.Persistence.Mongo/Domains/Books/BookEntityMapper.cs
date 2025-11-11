@@ -1,4 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
+
 using Riok.Mapperly.Abstractions;
 
 namespace LibraryManagement.Persistence.Mongo.Domains.Books;

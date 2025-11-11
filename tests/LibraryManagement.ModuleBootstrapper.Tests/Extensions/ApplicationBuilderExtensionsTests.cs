@@ -1,8 +1,10 @@
 using LibraryManagement.ModuleBootstrapper.Extensions;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Moq;
 
 namespace LibraryManagement.ModuleBootstrapper.Tests.Extensions;

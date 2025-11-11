@@ -1,6 +1,7 @@
-﻿using LibraryManagement.Api.Rest.Domains.Books;
+using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

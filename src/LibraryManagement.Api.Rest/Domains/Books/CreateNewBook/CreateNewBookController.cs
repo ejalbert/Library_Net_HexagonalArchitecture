@@ -1,8 +1,7 @@
-using System.Net.Mime;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Create;
+
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 

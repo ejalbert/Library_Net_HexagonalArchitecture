@@ -1,5 +1,5 @@
-using LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 using LibraryManagement.Web.Client.ModuleConfigurations;
+
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

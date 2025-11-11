@@ -1,5 +1,3 @@
-using System.Net.Http;
-
 namespace LibraryManagement.Api.Rest.Client.Tests.Http;
 
 internal sealed class TestHttpMessageHandler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handler) : HttpMessageHandler
