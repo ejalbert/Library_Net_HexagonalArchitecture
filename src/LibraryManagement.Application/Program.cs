@@ -23,3 +23,5 @@ app.UseHttpsRedirection();
 moduleConfigurator.UseRestApiModule().UseWebModule();
 
 app.Run();
+
+public partial class Program;

@@ -1,17 +1,17 @@
 # LibraryManagement.Application.Tests
 
-Placeholder xUnit project intended to cover the ASP.NET Core host (`LibraryManagement.Application`). No test files exist yet.
+Integration test suite that boots the real `LibraryManagement.Application` host via `WebApplicationFactory<ApplicationAssemblyMarker>`. `ApplicationWebApplicationFactory` swaps Mongo persistence ports with an in-memory test double so the composed API + UI can run without external services.
 
-## Next Steps
+## Covered Scenarios
 
-- Add tests that spin up `WebApplicationFactory` instances to verify module wiring (REST endpoints mapped, Blazor assets served, Mongo configuration bound).
-- Cover host-level concerns such as health probes, middleware order, and configuration overrides.
+- Book endpoints: create, fetch, and search requests traverse the REST, domain, and (stubbed) persistence layers.
+- Blazor shell + static assets are reachable (`/` and `/app.css`) proving the web module wiring.
+- `PersistenceMongoModuleOptions` bind to configuration overrides.
 
 ## Commands
 
 ```bash
-# Restore and run once tests exist
-dotnet test
+dotnet test tests/LibraryManagement.Application.Tests/LibraryManagement.Application.Tests.csproj
 ```
 
-Update this README when concrete host scenarios are added.
+Run from the repository root so solution-relative content roots resolve correctly.
