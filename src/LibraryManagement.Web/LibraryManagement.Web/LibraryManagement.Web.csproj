@@ -7,10 +7,10 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
-    <ItemGroup>        
+    <ItemGroup>
         <ProjectReference Include="..\..\LibraryManagement.ModuleBootstrapper.AspNetCore\LibraryManagement.ModuleBootstrapper.AspNetCore.csproj" />
         <ProjectReference Include="..\LibraryManagement.Web.Client\LibraryManagement.Web.Client.csproj"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0-rc.2.25502.107"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
