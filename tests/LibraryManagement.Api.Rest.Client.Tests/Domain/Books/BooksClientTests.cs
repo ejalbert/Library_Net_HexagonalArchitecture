@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -14,14 +15,21 @@ public class BooksClientTests
     [Fact]
     public async Task Create_SendsPostToBooksEndpointAndReturnsCreatedBook()
     {
-        var requestDto = new CreateNewBookRequestDto("The Hobbit", "author-1");
-        var expectedResponse = new BookDto { Id = "book-1", Title = requestDto.Title, AuthorId = requestDto.AuthorId };
+        var requestDto = new CreateNewBookRequestDto("The Hobbit", "author-1", "A journey", new[] { "fantasy", "adventure" });
+        var expectedResponse = new BookDto
+        {
+            Id = "book-1",
+            Title = requestDto.Title,
+            AuthorId = requestDto.AuthorId,
+            Description = requestDto.Description,
+            Keywords = requestDto.Keywords.ToArray()
+        };
         var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
         {
             Assert.Equal(HttpMethod.Post, request.Method);
             Assert.Equal("http://localhost/api/v1/books", request.RequestUri!.ToString());
             var payload = await request.Content!.ReadFromJsonAsync<CreateNewBookRequestDto>(cancellationToken);
-            Assert.Equal(requestDto, payload);
+            Assert.Equivalent(requestDto, payload);
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -35,12 +43,21 @@ public class BooksClientTests
         Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Title, book.Title);
         Assert.Equal(expectedResponse.AuthorId, book.AuthorId);
+        Assert.Equal(expectedResponse.Description, book.Description);
+        Assert.Equal(expectedResponse.Keywords, book.Keywords);
     }
 
     [Fact]
     public async Task Get_SendsGetRequestAndReturnsBook()
     {
-        var expectedResponse = new BookDto { Id = "book-1", Title = "The Hobbit", AuthorId = "author-1" };
+        var expectedResponse = new BookDto
+        {
+            Id = "book-1",
+            Title = "The Hobbit",
+            AuthorId = "author-1",
+            Description = "A journey",
+            Keywords = new[] { "fantasy", "adventure" }
+        };
         var handler = new TestHttpMessageHandler((request, _) =>
         {
             Assert.Equal(HttpMethod.Get, request.Method);
@@ -58,6 +75,8 @@ public class BooksClientTests
         Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Title, book.Title);
         Assert.Equal(expectedResponse.AuthorId, book.AuthorId);
+        Assert.Equal(expectedResponse.Description, book.Description);
+        Assert.Equal(expectedResponse.Keywords, book.Keywords);
     }
 
     [Fact]
@@ -66,7 +85,14 @@ public class BooksClientTests
         var requestDto = new SearchBooksRequestDto("hobbit");
         var expectedResponse = new SearchBooksResponseDto(new[]
         {
-            new BookDto { Id = "book-1", Title = "The Hobbit", AuthorId = "author-1" }
+            new BookDto
+            {
+                Id = "book-1",
+                Title = "The Hobbit",
+                AuthorId = "author-1",
+                Description = "A journey",
+                Keywords = new[] { "fantasy" }
+            }
         });
         var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
         {
@@ -88,6 +114,8 @@ public class BooksClientTests
         Assert.Equal("book-1", dto.Id);
         Assert.Equal("The Hobbit", dto.Title);
         Assert.Equal("author-1", dto.AuthorId);
+        Assert.Equal("A journey", dto.Description);
+        Assert.Equal(new[] { "fantasy" }, dto.Keywords);
     }
 
     [Fact]
@@ -118,14 +146,21 @@ public class BooksClientTests
     [Fact]
     public async Task Update_SendsPutRequestAndReturnsBook()
     {
-        var requestDto = new UpdateBookRequestDto("The Hobbit - Revised", "author-2");
-        var expectedResponse = new BookDto { Id = "book-1", Title = requestDto.Title, AuthorId = requestDto.AuthorId };
+        var requestDto = new UpdateBookRequestDto("The Hobbit - Revised", "author-2", "Updated journey", new[] { "fantasy", "revised" });
+        var expectedResponse = new BookDto
+        {
+            Id = "book-1",
+            Title = requestDto.Title,
+            AuthorId = requestDto.AuthorId,
+            Description = requestDto.Description,
+            Keywords = requestDto.Keywords.ToArray()
+        };
         var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
         {
             Assert.Equal(HttpMethod.Put, request.Method);
             Assert.Equal("http://localhost/api/v1/books/book-1", request.RequestUri!.ToString());
             var payload = await request.Content!.ReadFromJsonAsync<UpdateBookRequestDto>(cancellationToken);
-            Assert.Equal(requestDto, payload);
+            Assert.Equivalent(requestDto, payload);
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -139,6 +174,8 @@ public class BooksClientTests
         Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Title, book.Title);
         Assert.Equal(expectedResponse.AuthorId, book.AuthorId);
+        Assert.Equal(expectedResponse.Description, book.Description);
+        Assert.Equal(expectedResponse.Keywords, book.Keywords);
     }
 
     private static IBooksClient CreateBooksClient(HttpMessageHandler handler)

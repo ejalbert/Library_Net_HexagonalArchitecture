@@ -6,6 +6,6 @@ internal class CreateNewBookService(ICreateNewBookPort createNewBookPort, ILogge
 {
     public Task<Book> Create(CreateNewBookCommand command)
     {
-        return createNewBookPort.Create(command.Title, command.AuthorId);
+        return createNewBookPort.Create(command.Title, command.AuthorId, command.Description, command.Keywords);
     }
 }

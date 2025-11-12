@@ -11,7 +11,14 @@ public class GetSingleBookServiceTests
     public async Task Get_returns_book_retrieved_from_port()
     {
         Mock<IGetSingleBookPort> portMock = new();
-        Book expected = new() { Id = "book-42", Title = "Refactoring", AuthorId = "author-1" };
+        Book expected = new()
+        {
+            Id = "book-42",
+            Title = "Refactoring",
+            AuthorId = "author-1",
+            Description = "Improving design",
+            Keywords = new[] { "refactoring" }
+        };
 
         portMock.Setup(port => port.GetById("book-42"))
             .ReturnsAsync(expected);

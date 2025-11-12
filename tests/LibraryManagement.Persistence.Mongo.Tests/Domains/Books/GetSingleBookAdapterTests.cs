@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
@@ -18,7 +20,9 @@ public class GetSingleBookAdapterTests
         {
             Id = "book-1",
             Title = "Clean Code",
-            AuthorId = "author-1"
+            AuthorId = "author-1",
+            Description = "Code craftsmanship",
+            Keywords = new List<string> { "clean-code" }
         };
 
         GetSingleBookAdapter adapter = BuildAdapter(new List<BookEntity> { existing });
@@ -28,6 +32,8 @@ public class GetSingleBookAdapterTests
         Assert.Equal(existing.Id, result.Id);
         Assert.Equal(existing.Title, result.Title);
         Assert.Equal(existing.AuthorId, result.AuthorId);
+        Assert.Equal(existing.Description, result.Description);
+        Assert.Equal(existing.Keywords, result.Keywords);
     }
 
     [Fact]

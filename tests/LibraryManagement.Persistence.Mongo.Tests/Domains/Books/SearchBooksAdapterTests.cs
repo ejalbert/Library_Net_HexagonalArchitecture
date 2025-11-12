@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
@@ -16,9 +20,9 @@ public class SearchBooksAdapterTests
     {
         List<BookEntity> seededBooks = new()
         {
-            new BookEntity { Title = "Clean Code", AuthorId = "author-1" },
-            new BookEntity { Title = "Domain-Driven Design", AuthorId = "author-2" },
-            new BookEntity { Title = "Code Complete", AuthorId = "author-3" }
+            new BookEntity { Title = "Clean Code", AuthorId = "author-1", Description = "Code craftsmanship", Keywords = new List<string> { "clean-code" } },
+            new BookEntity { Title = "Domain-Driven Design", AuthorId = "author-2", Description = "DDD fundamentals", Keywords = new List<string> { "ddd" } },
+            new BookEntity { Title = "Code Complete", AuthorId = "author-3", Description = "Complete guide", Keywords = new List<string> { "code" } }
         };
 
         SearchBooksAdapter adapter = BuildAdapter(seededBooks, out _);
@@ -34,7 +38,13 @@ public class SearchBooksAdapterTests
     {
         List<BookEntity> seededBooks = Enumerable
             .Range(1, 12)
-            .Select(index => new BookEntity { Title = $"Book {index:00}", AuthorId = $"author-{index:00}" })
+            .Select(index => new BookEntity
+            {
+                Title = $"Book {index:00}",
+                AuthorId = $"author-{index:00}",
+                Description = $"Description {index:00}",
+                Keywords = new List<string> { $"kw-{index:00}" }
+            })
             .ToList();
 
         FindOptions<BookEntity, BookEntity>? usedOptions = null;

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace LibraryManagement.Domain.Domains.Books.Update;
 
-public record UpdateBookCommand(string Id, string Title, string AuthorId);
+public record UpdateBookCommand(string Id, string Title, string AuthorId, string Description, IReadOnlyCollection<string> Keywords);

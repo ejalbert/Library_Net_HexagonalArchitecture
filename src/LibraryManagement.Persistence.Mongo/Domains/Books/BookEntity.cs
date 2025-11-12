@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -10,4 +12,12 @@ public class BookEntity
     public string Title { get; set; } = string.Empty;
 
     public string AuthorId { get; set; } = string.Empty;
+
+    public string Description { get; set; } = string.Empty;
+
+    public List<string> Keywords
+    {
+        get;
+        set => field = value ?? [];
+    } = [];
 }

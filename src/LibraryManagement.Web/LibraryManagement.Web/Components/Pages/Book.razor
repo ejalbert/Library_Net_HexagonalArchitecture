@@ -5,6 +5,8 @@
 {
     <div @key="book.Id" class="book-item">
         <h4>@book.Title</h4>
+        <p class="book-description">@book.Description</p>
         <p class="book-author">Author: @book.AuthorId</p>
+        <p class="book-keywords">Keywords: @FormatKeywords(book.Keywords)</p>
     </div>
 }

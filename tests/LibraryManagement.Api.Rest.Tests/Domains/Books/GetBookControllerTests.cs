@@ -13,7 +13,14 @@ public class GetBookControllerTests
     [Fact]
     public async Task GetBookById_ReturnsOkWithBookFromUseCase()
     {
-        var book = new Book { Id = "book-id", Title = "The Hobbit", AuthorId = "author-1" };
+        var book = new Book
+        {
+            Id = "book-id",
+            Title = "The Hobbit",
+            AuthorId = "author-1",
+            Description = "A journey",
+            Keywords = new[] { "fantasy", "adventure" }
+        };
         var useCaseMock = new Mock<IGetSingleBookUseCase>();
         useCaseMock
             .Setup(x => x.Get(It.IsAny<GetSingleBookCommand>()))

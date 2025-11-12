@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -28,7 +29,14 @@ public class BooksEndpointsTests
     [Fact]
     public async Task GetBook_returns_seeded_book()
     {
-        Book seeded = new() { Id = "book-1", Title = "Hexagonal Architecture in Action", AuthorId = "author-1" };
+        Book seeded = new()
+        {
+            Id = "book-1",
+            Title = "Hexagonal Architecture in Action",
+            AuthorId = "author-1",
+            Description = "Practical guide",
+            Keywords = new[] { "architecture", "hexagonal" }
+        };
         _persistence.Seed(seeded);
 
         using HttpClient client = _factory.CreateClient();
@@ -41,6 +49,8 @@ public class BooksEndpointsTests
         Assert.Equal(seeded.Id, dto!.Id);
         Assert.Equal(seeded.Title, dto.Title);
         Assert.Equal(seeded.AuthorId, dto.AuthorId);
+        Assert.Equal(seeded.Description, dto.Description);
+        Assert.Equal(seeded.Keywords, dto.Keywords);
     }
 
     [Fact]
@@ -48,7 +58,7 @@ public class BooksEndpointsTests
     {
         using HttpClient client = _factory.CreateClient();
 
-        var request = new CreateNewBookRequestDto("Domain-Driven Design", "author-9");
+        var request = new CreateNewBookRequestDto("Domain-Driven Design", "author-9", "DDD classic", new[] { "ddd", "architecture" });
         using HttpResponseMessage createResponse = await client.PostAsJsonAsync("/api/v1/books", request);
 
         createResponse.EnsureSuccessStatusCode();
@@ -62,14 +72,16 @@ public class BooksEndpointsTests
         Assert.NotNull(fetched);
         Assert.Equal(request.Title, fetched!.Title);
         Assert.Equal(request.AuthorId, fetched.AuthorId);
+        Assert.Equal(request.Description, fetched.Description);
+        Assert.Equal(request.Keywords, fetched.Keywords);
     }
 
     [Fact]
     public async Task SearchBooks_filters_results()
     {
         _persistence.Seed(
-            new Book { Id = "book-1", Title = "Pragmatic Hexagonal Architecture", AuthorId = "author-1" },
-            new Book { Id = "book-2", Title = "CQRS Patterns", AuthorId = "author-2" }
+            new Book { Id = "book-1", Title = "Pragmatic Hexagonal Architecture", AuthorId = "author-1", Description = "Pragmatic guide", Keywords = new[] { "architecture" } },
+            new Book { Id = "book-2", Title = "CQRS Patterns", AuthorId = "author-2", Description = "CQRS deep dive", Keywords = new[] { "cqrs" } }
         );
 
         using HttpClient client = _factory.CreateClient();
@@ -84,12 +96,20 @@ public class BooksEndpointsTests
         BookDto book = Assert.Single(payload!.Books);
         Assert.Equal("book-1", book.Id);
         Assert.Equal("author-1", book.AuthorId);
+        Assert.Equal("author-1", book.AuthorId);
     }
 
     [Fact]
     public async Task DeleteBook_removes_persisted_entry()
     {
-        Book seeded = new() { Id = "book-9", Title = "Implementing Hexagonal Architecture", AuthorId = "author-3" };
+        Book seeded = new()
+        {
+            Id = "book-9",
+            Title = "Implementing Hexagonal Architecture",
+            AuthorId = "author-3",
+            Description = "Implementation details",
+            Keywords = new[] { "architecture", "implementation" }
+        };
         _persistence.Seed(seeded);
 
         using HttpClient client = _factory.CreateClient();

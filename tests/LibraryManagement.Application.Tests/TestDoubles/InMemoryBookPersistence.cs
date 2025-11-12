@@ -1,4 +1,6 @@
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
@@ -16,13 +18,15 @@ internal class InMemoryBookPersistence :
 {
     private readonly ConcurrentDictionary<string, Book> _books = new();
 
-    public Task<Book> Create(string title, string authorId)
+    public Task<Book> Create(string title, string authorId, string description, IReadOnlyCollection<string> keywords)
     {
         var book = new Book
         {
             Id = Guid.NewGuid().ToString("N"),
             Title = title,
-            AuthorId = authorId
+            AuthorId = authorId,
+            Description = description,
+            Keywords = keywords.ToArray()
         };
 
         _books[book.Id] = book;

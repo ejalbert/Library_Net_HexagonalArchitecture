@@ -1,3 +1,6 @@
+using System.Linq;
+using System.Runtime.InteropServices;
+
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Create;
 
@@ -10,7 +13,7 @@ public class CreateNewBookController(ICreateNewBookUseCase createNewBookUseCase,
     public async Task<IResult> CreateNewBook(CreateNewBookRequestDto requestDto)
     {
         var book = await createNewBookUseCase.Create(
-            new CreateNewBookCommand(requestDto.Title, requestDto.AuthorId)
+            new CreateNewBookCommand(requestDto.Title, requestDto.AuthorId, requestDto.Description ?? string.Empty, requestDto.Keywords?.ToList() ?? Enumerable.Empty<string>().ToList())
         );
 
         return Results.Ok(mapper.ToDto(book));

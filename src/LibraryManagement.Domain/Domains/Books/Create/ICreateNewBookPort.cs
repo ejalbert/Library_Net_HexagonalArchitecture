@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+
 namespace LibraryManagement.Domain.Domains.Books.Create;
 
 public interface ICreateNewBookPort
 {
-    Task<Book> Create(string title, string authorId);
+    Task<Book> Create(string title, string authorId, string description, IReadOnlyCollection<string> keywords);
 }

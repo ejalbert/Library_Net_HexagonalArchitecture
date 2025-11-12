@@ -29,13 +29,18 @@ public class CreateNewBookAdapterTests
 
         CreateNewBookAdapter adapter = new(bookCollectionMock.Object, new BookEntityMapper());
 
-        Book result = await adapter.Create("Refactoring", "author-1");
+        Book result = await adapter.Create("Refactoring", "author-1", "Improving design", new[] { "refactoring", "design" });
 
         Assert.NotNull(insertedEntity);
         Assert.Equal("Refactoring", insertedEntity!.Title);
         Assert.Equal("author-1", insertedEntity.AuthorId);
+        Assert.Equal("Improving design", insertedEntity.Description);
+        Assert.Equal(new[] { "refactoring", "design" }, insertedEntity.Keywords);
         Assert.Equal(insertedEntity.Id, result.Id);
         Assert.Equal(insertedEntity.Title, result.Title);
+        Assert.Equal(insertedEntity.AuthorId, result.AuthorId);
+        Assert.Equal(insertedEntity.Description, result.Description);
+        Assert.Equal(insertedEntity.Keywords, result.Keywords);
         Assert.Equal(insertedEntity.AuthorId, result.AuthorId);
 
         collectionMock.Verify(collection => collection.InsertOneAsync(
