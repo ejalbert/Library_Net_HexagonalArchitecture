@@ -3,11 +3,13 @@ using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Api.Rest.Domains.Books.DeleteBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Api.Rest.Domains.Books.Search;
+using LibraryManagement.Api.Rest.Domains.Books.UpdateBook;
 using LibraryManagement.Api.Rest.ModuleConfigurations;
 using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Search;
+using LibraryManagement.Domain.Domains.Books.Update;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
 using LibraryManagement.ModuleBootstrapper.Extensions;
 
@@ -75,6 +77,7 @@ public class ApiModuleTests
         Assert.NotNull(provider.GetRequiredService<IDeleteBookController>());
         Assert.NotNull(provider.GetRequiredService<IGetBookController>());
         Assert.NotNull(provider.GetRequiredService<ISearchBooksController>());
+        Assert.NotNull(provider.GetRequiredService<IUpdateBookController>());
     }
 
     [Fact]
@@ -99,6 +102,9 @@ public class ApiModuleTests
         Assert.Contains(endpoints, endpoint =>
             (endpoint.RoutePattern.RawText ?? string.Empty).Contains("/api/v1/books/{id}") &&
             endpoint.Metadata.OfType<HttpMethodMetadata>().Any(metadata => metadata.HttpMethods.Contains("DELETE")));
+        Assert.Contains(endpoints, endpoint =>
+            (endpoint.RoutePattern.RawText ?? string.Empty).Contains("/api/v1/books/{id}") &&
+            endpoint.Metadata.OfType<HttpMethodMetadata>().Any(metadata => metadata.HttpMethods.Contains("PUT")));
     }
 
     private static WebApplicationBuilder CreateBuilder()
@@ -114,6 +120,7 @@ public class ApiModuleTests
         services.AddSingleton(Mock.Of<IDeleteBookUseCase>());
         services.AddSingleton(Mock.Of<IGetSingleBookUseCase>());
         services.AddSingleton(Mock.Of<ISearchBooksUseCase>());
+        services.AddSingleton(Mock.Of<IUpdateBookUseCase>());
     }
 
     private static IEnumerable<RouteEndpoint> GetRouteEndpoints(WebApplication app)

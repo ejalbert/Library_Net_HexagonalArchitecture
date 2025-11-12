@@ -3,10 +3,12 @@ using System.ComponentModel.DataAnnotations;
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Api.Rest.Domains.Books.DeleteBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Api.Rest.Domains.Books.Search;
+using LibraryManagement.Api.Rest.Domains.Books.UpdateBook;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +25,8 @@ internal static class BookServices
         .AddScoped<ICreateNewBookController, CreateNewBookController>()
         .AddScoped<IDeleteBookController, DeleteBookController>()
         .AddScoped<ISearchBooksController, SearchBooksController>()
-        .AddScoped<IGetBookController, GetBookController>();
+        .AddScoped<IGetBookController, GetBookController>()
+        .AddScoped<IUpdateBookController, UpdateBookController>();
 
         return services;
     }
@@ -41,6 +44,11 @@ internal static class BookServices
         group.MapGet("{id}", ([Required]string id, IGetBookController controller) => controller.GetBookById(id))
             .WithName("Get Book By Id")
             .WithDescription("Get a single book by its unique identifier")
+            .Produces<BookDto>();
+
+        group.MapPut("{id}", ([Required] string id, [FromBody] UpdateBookRequestDto requestDto, IUpdateBookController controller) => controller.UpdateBook(id, requestDto))
+            .WithName("Update Book")
+            .WithDescription("Update a book in the library")
             .Produces<BookDto>();
 
         group.MapPost("/search", ([FromBody] SearchBooksRequestDto requestDto, ISearchBooksController controller) => controller.SearchBooks(requestDto))

@@ -4,7 +4,7 @@ Validates the typed REST client contracts using xUnit. Each test injects a custo
 
 ## Current Coverage
 
-- `BooksClientTests` cover `Create`, `Get`, and `Search` flows plus error handling (non-success responses throw `HttpRequestException`).
+- `BooksClientTests` cover `Create`, `Get`, `Update`, `Search`, and `Delete` flows plus error handling (non-success responses throw `HttpRequestException`).
 - `TestHttpMessageHandler` centralises request interception so scenarios remain deterministic.
 
 ## Commands

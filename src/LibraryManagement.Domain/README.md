@@ -1,11 +1,11 @@
 # LibraryManagement.Domain
 
-Contains the core domain model and use cases. The current focus is the `Books` aggregate, which exposes ports for creating, searching, and retrieving titles.
+Contains the core domain model and use cases. The current focus is the `Books` aggregate, which exposes ports for creating, searching, retrieving, updating, and deleting titles.
 
 ## Responsibilities
 
-- Defines the `Book` entity plus associated commands (`CreateNewBookCommand`, `SearchBooksCommand`, `GetSingleBookCommand`, `DeleteBookCommand`).
-- Implements use-case services that depend on outbound ports: `ICreateNewBookPort`, `ISearchBooksPort`, `IGetSingleBookPort`, and `IDeleteBookPort`.
+- Defines the `Book` entity plus associated commands (`CreateNewBookCommand`, `SearchBooksCommand`, `GetSingleBookCommand`, `UpdateBookCommand`, `DeleteBookCommand`).
+- Implements use-case services that depend on outbound ports: `ICreateNewBookPort`, `ISearchBooksPort`, `IGetSingleBookPort`, `IUpdateBookPort`, and `IDeleteBookPort`.
 - Provides the `DomainModule` extension so hosts can register domain services via the module bootstrapper and bind options (`DomainModuleOptions`).
 
 ## Dependencies
@@ -25,6 +25,7 @@ LibraryManagement.Domain/
     Delete/...
     Search/...
     GetSingle/...
+    Update/...
   ModuleConfigurations/
     DomainModule.cs
     DomainModuleOptions.cs
@@ -36,13 +37,13 @@ LibraryManagement.Domain/
 # Build the domain assembly
 dotnet build
 
-# Run the paired tests (currently a placeholder project)
+# Run the paired tests
 dotnet test ../../tests/LibraryManagement.Domain.Tests/LibraryManagement.Domain.Tests.csproj
 ```
 
 ## Tests
 
-`LibraryManagement.Domain.Tests` has not been populated yet. Add unit tests for each use case before expanding the aggregate (e.g., validation, policy enforcement, identifier generation).
+`LibraryManagement.Domain.Tests` validates each book use case (create/search/get/update/delete). Add richer behavioural tests (validation, policy enforcement, identifier generation) as the aggregate grows.
 
 ## Configuration
 
@@ -50,7 +51,7 @@ dotnet test ../../tests/LibraryManagement.Domain.Tests/LibraryManagement.Domain.
 
 ## Integration Points
 
-- Inbound ports implemented by delivery adapters: REST controllers call `ICreateNewBookUseCase`, `ISearchBooksUseCase`, etc.
+- Inbound ports implemented by delivery adapters: REST controllers call `ICreateNewBookUseCase`, `ISearchBooksUseCase`, `IUpdateBookUseCase`, etc.
 - Outbound ports implemented by `LibraryManagement.Persistence.Mongo` and future infrastructure adapters.
 
 Document any new aggregates or invariants in `docs/architecture.md` as the domain grows.

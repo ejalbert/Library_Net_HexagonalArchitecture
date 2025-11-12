@@ -6,7 +6,7 @@ MongoDB adapter that implements the outbound ports defined by the domain layer. 
 
 - Provides `PersistenceMongoModule` to register MongoDB dependencies (client, database, options) through the module bootstrapper.
 - Implements `IBookCollection`, `BookEntity`, and Mapperly-powered conversions between entities and domain models.
-- Supplies adapters for `ICreateNewBookPort`, `IDeleteBookPort`, `IGetSingleBookPort`, and `ISearchBooksPort`.
+- Supplies adapters for `ICreateNewBookPort`, `IUpdateBookPort`, `IDeleteBookPort`, `IGetSingleBookPort`, and `ISearchBooksPort`.
 
 ## Dependencies
 
@@ -49,7 +49,7 @@ dotnet test ../../tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagem
 `LibraryManagement.Persistence.Mongo.Tests` covers:
 
 - Mapper correctness (`BookEntityMapperTests`).
-- Unit tests for each adapter (create/search/get/delete).
+- Unit tests for each adapter (create/search/get/update/delete).
 - Integration tests that spin up MongoDB 7 with Testcontainers to verify persistence end-to-end.
 
 Ensure Docker is running before executing the integration suite.

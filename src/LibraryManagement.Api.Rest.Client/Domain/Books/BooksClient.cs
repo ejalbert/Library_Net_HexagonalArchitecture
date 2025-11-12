@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
 
 namespace LibraryManagement.Api.Rest.Client.Domain.Books;
 
@@ -20,6 +21,15 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
     public Task<BookDto> Get(string bookId, CancellationToken cancellationToken = default)
     {
         return client.HttpClient.GetFromJsonAsync<BookDto>($"{BasePath}/{bookId}", cancellationToken)!;
+    }
+
+    public async Task<BookDto> Update(string bookId, UpdateBookRequestDto requestDto, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"{BasePath}/{bookId}", requestDto, cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        return (await response.Content.ReadFromJsonAsync<BookDto>(cancellationToken))!;
     }
 
     public async Task<SearchBooksResponseDto> Search(SearchBooksRequestDto requestDto, CancellationToken cancellationToken = default)

@@ -59,6 +59,25 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
     }
 
     [Fact]
+    public async Task UpdateBookAdapter_updates_existing_book_title()
+    {
+        BookEntity seeded = await SeedBook("Clean Code");
+
+        UpdateBookAdapter adapter = new(GetBookCollection(), _mapper);
+
+        var result = await adapter.Update(seeded.Id, "Clean Code (2nd Edition)");
+
+        Assert.Equal(seeded.Id, result.Id);
+        Assert.Equal("Clean Code (2nd Edition)", result.Title);
+
+        BookEntity reloaded = await GetBookCollection().Collection
+            .Find(entity => entity.Id == seeded.Id)
+            .SingleAsync();
+
+        Assert.Equal("Clean Code (2nd Edition)", reloaded.Title);
+    }
+
+    [Fact]
     public async Task SearchBooksAdapter_filters_by_partial_title()
     {
         await SeedBook("Clean Code");
