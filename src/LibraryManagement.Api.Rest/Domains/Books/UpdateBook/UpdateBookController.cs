@@ -10,7 +10,7 @@ public class UpdateBookController(IUpdateBookUseCase updateBookUseCase, IBookDto
 {
     public async Task<IResult> UpdateBook(string id, UpdateBookRequestDto requestDto)
     {
-        var book = await updateBookUseCase.Update(new UpdateBookCommand(id, requestDto.Title));
+        var book = await updateBookUseCase.Update(new UpdateBookCommand(id, requestDto.Title, requestDto.AuthorId));
 
         return Results.Ok(mapper.ToDto(book));
     }

@@ -28,7 +28,7 @@ public class BooksEndpointsTests
     [Fact]
     public async Task GetBook_returns_seeded_book()
     {
-        Book seeded = new() { Id = "book-1", Title = "Hexagonal Architecture in Action" };
+        Book seeded = new() { Id = "book-1", Title = "Hexagonal Architecture in Action", AuthorId = "author-1" };
         _persistence.Seed(seeded);
 
         using HttpClient client = _factory.CreateClient();
@@ -40,6 +40,7 @@ public class BooksEndpointsTests
         Assert.NotNull(dto);
         Assert.Equal(seeded.Id, dto!.Id);
         Assert.Equal(seeded.Title, dto.Title);
+        Assert.Equal(seeded.AuthorId, dto.AuthorId);
     }
 
     [Fact]
@@ -47,7 +48,7 @@ public class BooksEndpointsTests
     {
         using HttpClient client = _factory.CreateClient();
 
-        var request = new CreateNewBookRequestDto("Domain-Driven Design");
+        var request = new CreateNewBookRequestDto("Domain-Driven Design", "author-9");
         using HttpResponseMessage createResponse = await client.PostAsJsonAsync("/api/v1/books", request);
 
         createResponse.EnsureSuccessStatusCode();
@@ -60,14 +61,15 @@ public class BooksEndpointsTests
 
         Assert.NotNull(fetched);
         Assert.Equal(request.Title, fetched!.Title);
+        Assert.Equal(request.AuthorId, fetched.AuthorId);
     }
 
     [Fact]
     public async Task SearchBooks_filters_results()
     {
         _persistence.Seed(
-            new Book { Id = "book-1", Title = "Pragmatic Hexagonal Architecture" },
-            new Book { Id = "book-2", Title = "CQRS Patterns" }
+            new Book { Id = "book-1", Title = "Pragmatic Hexagonal Architecture", AuthorId = "author-1" },
+            new Book { Id = "book-2", Title = "CQRS Patterns", AuthorId = "author-2" }
         );
 
         using HttpClient client = _factory.CreateClient();
@@ -81,12 +83,13 @@ public class BooksEndpointsTests
         Assert.NotNull(payload);
         BookDto book = Assert.Single(payload!.Books);
         Assert.Equal("book-1", book.Id);
+        Assert.Equal("author-1", book.AuthorId);
     }
 
     [Fact]
     public async Task DeleteBook_removes_persisted_entry()
     {
-        Book seeded = new() { Id = "book-9", Title = "Implementing Hexagonal Architecture" };
+        Book seeded = new() { Id = "book-9", Title = "Implementing Hexagonal Architecture", AuthorId = "author-3" };
         _persistence.Seed(seeded);
 
         using HttpClient client = _factory.CreateClient();

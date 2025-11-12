@@ -10,7 +10,7 @@ public class CreateNewBookController(ICreateNewBookUseCase createNewBookUseCase,
     public async Task<IResult> CreateNewBook(CreateNewBookRequestDto requestDto)
     {
         var book = await createNewBookUseCase.Create(
-            new CreateNewBookCommand(requestDto.Title)
+            new CreateNewBookCommand(requestDto.Title, requestDto.AuthorId)
         );
 
         return Results.Ok(mapper.ToDto(book));

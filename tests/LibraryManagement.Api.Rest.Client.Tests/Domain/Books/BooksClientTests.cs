@@ -14,8 +14,8 @@ public class BooksClientTests
     [Fact]
     public async Task Create_SendsPostToBooksEndpointAndReturnsCreatedBook()
     {
-        var requestDto = new CreateNewBookRequestDto("The Hobbit");
-        var expectedResponse = new BookDto { Id = "book-1", Title = requestDto.Title };
+        var requestDto = new CreateNewBookRequestDto("The Hobbit", "author-1");
+        var expectedResponse = new BookDto { Id = "book-1", Title = requestDto.Title, AuthorId = requestDto.AuthorId };
         var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
         {
             Assert.Equal(HttpMethod.Post, request.Method);
@@ -34,12 +34,13 @@ public class BooksClientTests
 
         Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Title, book.Title);
+        Assert.Equal(expectedResponse.AuthorId, book.AuthorId);
     }
 
     [Fact]
     public async Task Get_SendsGetRequestAndReturnsBook()
     {
-        var expectedResponse = new BookDto { Id = "book-1", Title = "The Hobbit" };
+        var expectedResponse = new BookDto { Id = "book-1", Title = "The Hobbit", AuthorId = "author-1" };
         var handler = new TestHttpMessageHandler((request, _) =>
         {
             Assert.Equal(HttpMethod.Get, request.Method);
@@ -56,6 +57,7 @@ public class BooksClientTests
 
         Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Title, book.Title);
+        Assert.Equal(expectedResponse.AuthorId, book.AuthorId);
     }
 
     [Fact]
@@ -64,7 +66,7 @@ public class BooksClientTests
         var requestDto = new SearchBooksRequestDto("hobbit");
         var expectedResponse = new SearchBooksResponseDto(new[]
         {
-            new BookDto { Id = "book-1", Title = "The Hobbit" }
+            new BookDto { Id = "book-1", Title = "The Hobbit", AuthorId = "author-1" }
         });
         var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
         {
@@ -85,6 +87,7 @@ public class BooksClientTests
         var dto = Assert.Single(response.Books);
         Assert.Equal("book-1", dto.Id);
         Assert.Equal("The Hobbit", dto.Title);
+        Assert.Equal("author-1", dto.AuthorId);
     }
 
     [Fact]
@@ -115,8 +118,8 @@ public class BooksClientTests
     [Fact]
     public async Task Update_SendsPutRequestAndReturnsBook()
     {
-        var requestDto = new UpdateBookRequestDto("The Hobbit - Revised");
-        var expectedResponse = new BookDto { Id = "book-1", Title = requestDto.Title };
+        var requestDto = new UpdateBookRequestDto("The Hobbit - Revised", "author-2");
+        var expectedResponse = new BookDto { Id = "book-1", Title = requestDto.Title, AuthorId = requestDto.AuthorId };
         var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
         {
             Assert.Equal(HttpMethod.Put, request.Method);
@@ -135,6 +138,7 @@ public class BooksClientTests
 
         Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Title, book.Title);
+        Assert.Equal(expectedResponse.AuthorId, book.AuthorId);
     }
 
     private static IBooksClient CreateBooksClient(HttpMessageHandler handler)

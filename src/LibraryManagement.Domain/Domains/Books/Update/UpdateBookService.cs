@@ -8,6 +8,6 @@ internal class UpdateBookService(IUpdateBookPort updateBookPort, ILogger<UpdateB
 {
     public Task<Book> Update(UpdateBookCommand command)
     {
-        return updateBookPort.Update(command.Id, command.Title);
+        return updateBookPort.Update(command.Id, command.Title, command.AuthorId);
     }
 }

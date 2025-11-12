@@ -16,8 +16,8 @@
     {
         var expectedBooks = new[]
         {
-            new BookDto { Id = "1", Title = "Clean Code" },
-            new BookDto { Id = "2", Title = "Domain-Driven Design" }
+            new BookDto { Id = "1", Title = "Clean Code", AuthorId = "author-1" },
+            new BookDto { Id = "2", Title = "Domain-Driven Design", AuthorId = "author-2" }
         };
         RegisterRestClient(new SearchBooksResponseDto(expectedBooks));
 
@@ -26,6 +26,9 @@
 
         var renderedTitles = cut.FindAll("h4").Select(h => h.TextContent.Trim()).ToArray();
         Assert.Equal(expectedBooks.Select(book => book.Title), renderedTitles);
+
+        var renderedAuthors = cut.FindAll(".book-author").Select(p => p.TextContent.Trim()).ToArray();
+        Assert.Equal(expectedBooks.Select(book => $"Author: {book.AuthorId}"), renderedAuthors);
     }
 
     private void RegisterRestClient(SearchBooksResponseDto response)

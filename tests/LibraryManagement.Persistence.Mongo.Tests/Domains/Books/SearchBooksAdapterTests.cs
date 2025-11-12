@@ -16,9 +16,9 @@ public class SearchBooksAdapterTests
     {
         List<BookEntity> seededBooks = new()
         {
-            new BookEntity { Title = "Clean Code" },
-            new BookEntity { Title = "Domain-Driven Design" },
-            new BookEntity { Title = "Code Complete" }
+            new BookEntity { Title = "Clean Code", AuthorId = "author-1" },
+            new BookEntity { Title = "Domain-Driven Design", AuthorId = "author-2" },
+            new BookEntity { Title = "Code Complete", AuthorId = "author-3" }
         };
 
         SearchBooksAdapter adapter = BuildAdapter(seededBooks, out _);
@@ -34,7 +34,7 @@ public class SearchBooksAdapterTests
     {
         List<BookEntity> seededBooks = Enumerable
             .Range(1, 12)
-            .Select(index => new BookEntity { Title = $"Book {index:00}" })
+            .Select(index => new BookEntity { Title = $"Book {index:00}", AuthorId = $"author-{index:00}" })
             .ToList();
 
         FindOptions<BookEntity, BookEntity>? usedOptions = null;

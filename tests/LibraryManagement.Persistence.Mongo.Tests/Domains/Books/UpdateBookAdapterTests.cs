@@ -13,7 +13,7 @@ public class UpdateBookAdapterTests
     [Fact]
     public async Task Update_returns_mapped_entity_when_document_exists()
     {
-        BookEntity updatedEntity = new() { Id = "book-42", Title = "Refactoring (Updated)" };
+        BookEntity updatedEntity = new() { Id = "book-42", Title = "Refactoring (Updated)", AuthorId = "author-9" };
         Mock<IMongoCollection<BookEntity>> collectionMock = new();
         collectionMock
             .Setup(collection => collection.FindOneAndUpdateAsync(
@@ -26,13 +26,13 @@ public class UpdateBookAdapterTests
         Mock<IBookCollection> bookCollectionMock = new();
         bookCollectionMock.SetupGet(collection => collection.Collection).Returns(collectionMock.Object);
 
-        Book mapped = new() { Id = updatedEntity.Id, Title = updatedEntity.Title };
+        Book mapped = new() { Id = updatedEntity.Id, Title = updatedEntity.Title, AuthorId = updatedEntity.AuthorId };
         Mock<IBookEntityMapper> mapperMock = new();
         mapperMock.Setup(mapper => mapper.ToDomain(updatedEntity)).Returns(mapped);
 
         UpdateBookAdapter adapter = new(bookCollectionMock.Object, mapperMock.Object);
 
-        Book result = await adapter.Update("book-42", "Refactoring (Updated)");
+        Book result = await adapter.Update("book-42", "Refactoring (Updated)", "author-9");
 
         Assert.Same(mapped, result);
 
@@ -61,6 +61,6 @@ public class UpdateBookAdapterTests
 
         UpdateBookAdapter adapter = new(bookCollectionMock.Object, Mock.Of<IBookEntityMapper>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => adapter.Update("missing", "anything"));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => adapter.Update("missing", "anything", "author-1"));
     }
 }

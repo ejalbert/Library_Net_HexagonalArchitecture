@@ -13,8 +13,8 @@ public class SearchBooksServiceTests
         Mock<ISearchBooksPort> portMock = new();
         IEnumerable<Book> expected = new[]
         {
-            new Book { Id = "book-1", Title = "Clean Code" },
-            new Book { Id = "book-2", Title = "Domain-Driven Design" }
+            new Book { Id = "book-1", Title = "Clean Code", AuthorId = "author-1" },
+            new Book { Id = "book-2", Title = "Domain-Driven Design", AuthorId = "author-2" }
         };
 
         portMock.Setup(port => port.Search("code"))

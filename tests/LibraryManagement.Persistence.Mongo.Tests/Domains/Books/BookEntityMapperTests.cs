@@ -13,13 +13,15 @@ public class BookEntityMapperTests
         Book domain = new()
         {
             Id = "book-1",
-            Title = "Clean Architecture"
+            Title = "Clean Architecture",
+            AuthorId = "author-1"
         };
 
         BookEntity entity = _mapper.ToEntity(domain);
 
         Assert.Equal(domain.Id, entity.Id);
         Assert.Equal(domain.Title, entity.Title);
+        Assert.Equal(domain.AuthorId, entity.AuthorId);
     }
 
     [Fact]
@@ -28,12 +30,14 @@ public class BookEntityMapperTests
         BookEntity entity = new()
         {
             Id = "book-2",
-            Title = "The Pragmatic Programmer"
+            Title = "The Pragmatic Programmer",
+            AuthorId = "author-2"
         };
 
         Book domain = _mapper.ToDomain(entity);
 
         Assert.Equal(entity.Id, domain.Id);
         Assert.Equal(entity.Title, domain.Title);
+        Assert.Equal(entity.AuthorId, domain.AuthorId);
     }
 }

@@ -35,20 +35,22 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
     {
         CreateNewBookAdapter adapter = new(GetBookCollection(), _mapper);
 
-        var result = await adapter.Create("Patterns of Enterprise Application Architecture");
+        var result = await adapter.Create("Patterns of Enterprise Application Architecture", "author-1");
 
         BookEntity persisted = await GetBookCollection().Collection
             .Find(entity => entity.Id == result.Id)
             .SingleAsync();
 
         Assert.Equal("Patterns of Enterprise Application Architecture", persisted.Title);
+        Assert.Equal("author-1", persisted.AuthorId);
         Assert.Equal(persisted.Id, result.Id);
+        Assert.Equal(persisted.AuthorId, result.AuthorId);
     }
 
     [Fact]
     public async Task GetSingleBookAdapter_returns_stored_book()
     {
-        BookEntity seeded = await SeedBook("Domain-Driven Design");
+        BookEntity seeded = await SeedBook("Domain-Driven Design", "author-2");
 
         GetSingleBookAdapter adapter = new(GetBookCollection(), _mapper);
 
@@ -61,28 +63,30 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
     [Fact]
     public async Task UpdateBookAdapter_updates_existing_book_title()
     {
-        BookEntity seeded = await SeedBook("Clean Code");
+        BookEntity seeded = await SeedBook("Clean Code", "author-3");
 
         UpdateBookAdapter adapter = new(GetBookCollection(), _mapper);
 
-        var result = await adapter.Update(seeded.Id, "Clean Code (2nd Edition)");
+        var result = await adapter.Update(seeded.Id, "Clean Code (2nd Edition)", "author-4");
 
         Assert.Equal(seeded.Id, result.Id);
         Assert.Equal("Clean Code (2nd Edition)", result.Title);
+        Assert.Equal("author-4", result.AuthorId);
 
         BookEntity reloaded = await GetBookCollection().Collection
             .Find(entity => entity.Id == seeded.Id)
             .SingleAsync();
 
         Assert.Equal("Clean Code (2nd Edition)", reloaded.Title);
+        Assert.Equal("author-4", reloaded.AuthorId);
     }
 
     [Fact]
     public async Task SearchBooksAdapter_filters_by_partial_title()
     {
-        await SeedBook("Clean Code");
-        await SeedBook("Refactoring");
-        await SeedBook("The Pragmatic Programmer");
+        await SeedBook("Clean Code", "author-5");
+        await SeedBook("Refactoring", "author-6");
+        await SeedBook("The Pragmatic Programmer", "author-7");
 
         SearchBooksAdapter adapter = new(GetBookCollection(), _mapper);
 
@@ -98,7 +102,7 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
     [Fact]
     public async Task DeleteBookAdapter_removes_existing_book()
     {
-        BookEntity seeded = await SeedBook("Working Effectively with Legacy Code");
+        BookEntity seeded = await SeedBook("Working Effectively with Legacy Code", "author-8");
 
         DeleteBookAdapter adapter = new(GetBookCollection());
 
@@ -115,11 +119,12 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
         return _bookCollection ?? throw new InvalidOperationException("Book collection has not been initialized yet.");
     }
 
-    private async Task<BookEntity> SeedBook(string title)
+    private async Task<BookEntity> SeedBook(string title, string authorId)
     {
         BookEntity entity = new()
         {
-            Title = title
+            Title = title,
+            AuthorId = authorId
         };
 
         await GetBookCollection().Collection.InsertOneAsync(entity);

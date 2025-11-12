@@ -7,5 +7,7 @@ public class BookEntity
 {
     [BsonId] public string Id { get; init; } = ObjectId.GenerateNewId().ToString();
 
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
+
+    public string AuthorId { get; set; } = string.Empty;
 }

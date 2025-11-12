@@ -16,12 +16,13 @@ internal class InMemoryBookPersistence :
 {
     private readonly ConcurrentDictionary<string, Book> _books = new();
 
-    public Task<Book> Create(string title)
+    public Task<Book> Create(string title, string authorId)
     {
         var book = new Book
         {
             Id = Guid.NewGuid().ToString("N"),
-            Title = title
+            Title = title,
+            AuthorId = authorId
         };
 
         _books[book.Id] = book;

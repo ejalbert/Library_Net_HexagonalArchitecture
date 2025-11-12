@@ -17,7 +17,8 @@ public class GetSingleBookAdapterTests
         BookEntity existing = new()
         {
             Id = "book-1",
-            Title = "Clean Code"
+            Title = "Clean Code",
+            AuthorId = "author-1"
         };
 
         GetSingleBookAdapter adapter = BuildAdapter(new List<BookEntity> { existing });
@@ -26,6 +27,7 @@ public class GetSingleBookAdapterTests
 
         Assert.Equal(existing.Id, result.Id);
         Assert.Equal(existing.Title, result.Title);
+        Assert.Equal(existing.AuthorId, result.AuthorId);
     }
 
     [Fact]

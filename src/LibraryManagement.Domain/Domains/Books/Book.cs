@@ -4,4 +4,5 @@ public class Book
 {
     public required string Id { get; init; }
     public required string Title { get; init; }
+    public required string AuthorId { get; init; }
 }
