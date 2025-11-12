@@ -1,17 +1,16 @@
 # LibraryManagement.Domain.Tests
 
-xUnit test project reserved for domain-level unit tests. No fixtures exist yet because the domain currently exposes straightforward pass-through use cases.
+xUnit project covering the domain use cases for the `Books` aggregate.
 
-## Planned Coverage
+## Current Coverage
 
-- Validation of `CreateNewBookService`, `SearchBooksService`, and `GetSingleBookService` once invariants are introduced.
-- Behaviour around identifiers, policies, and errors as additional aggregates are implemented.
+- Verifies `CreateNewBookService`, `SearchBooksService`, `GetSingleBookService`, and `DeleteBookService` call their outbound ports with the expected inputs.
+- Serves as the foundation for richer behavioural tests (validation, invariants) as the domain grows.
 
 ## Commands
 
 ```bash
-# Execute domain tests once scenarios exist
 dotnet test
 ```
 
-Add meaningful tests alongside domain changes and update this README accordingly.
+Add new tests alongside domain changes and keep this README synchronized with actual coverage.

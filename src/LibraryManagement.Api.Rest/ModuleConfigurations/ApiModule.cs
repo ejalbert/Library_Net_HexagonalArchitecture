@@ -48,9 +48,10 @@ public static class ApiModule
 
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
+            app.MapOpenApi("/api/{documentName}.json");
         }
 
+        app.UseRouting();
 
         app.UseBookServices();
 

@@ -1,5 +1,6 @@
 using LibraryManagement.Application.Tests.TestDoubles;
 using LibraryManagement.Domain.Domains.Books.Create;
+using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Search;
 
@@ -22,11 +23,13 @@ public class ApplicationWebApplicationFactory : WebApplicationFactory<Applicatio
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<ICreateNewBookPort>();
+            services.RemoveAll<IDeleteBookPort>();
             services.RemoveAll<IGetSingleBookPort>();
             services.RemoveAll<ISearchBooksPort>();
 
             services.AddSingleton<InMemoryBookPersistence>();
             services.AddScoped<ICreateNewBookPort>(ResolvePersistence);
+            services.AddScoped<IDeleteBookPort>(ResolvePersistence);
             services.AddScoped<IGetSingleBookPort>(ResolvePersistence);
             services.AddScoped<ISearchBooksPort>(ResolvePersistence);
         });

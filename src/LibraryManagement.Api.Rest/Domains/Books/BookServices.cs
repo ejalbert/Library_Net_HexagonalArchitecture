@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
+using LibraryManagement.Api.Rest.Domains.Books.DeleteBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Api.Rest.Domains.Books.Search;
 
@@ -18,6 +21,7 @@ internal static class BookServices
     {
         services.AddScoped<IBookDtoMapper, BookDtoMapper>()
         .AddScoped<ICreateNewBookController, CreateNewBookController>()
+        .AddScoped<IDeleteBookController, DeleteBookController>()
         .AddScoped<ISearchBooksController, SearchBooksController>()
         .AddScoped<IGetBookController, GetBookController>();
 
@@ -34,7 +38,7 @@ internal static class BookServices
         .WithDescription("Create a new book in the library")
         .Produces<BookDto>();
 
-        group.MapGet("{id}", (string id, IGetBookController controller) => controller.GetBookById(id))
+        group.MapGet("{id}", ([Required]string id, IGetBookController controller) => controller.GetBookById(id))
             .WithName("Get Book By Id")
             .WithDescription("Get a single book by its unique identifier")
             .Produces<BookDto>();
@@ -43,6 +47,11 @@ internal static class BookServices
             .WithName("Search Books")
             .WithDescription("Search for books in the library")
             .Produces<SearchBooksResponseDto>();
+
+        group.MapDelete("{id}", ([Required] string id, IDeleteBookController controller) => controller.DeleteBook(id))
+            .WithName("Delete Book")
+            .WithDescription("Delete a book from the library")
+            .Produces(StatusCodes.Status204NoContent);
 
         return app;
     }

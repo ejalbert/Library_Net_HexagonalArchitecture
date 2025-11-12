@@ -4,7 +4,7 @@ Integration test suite that boots the real `LibraryManagement.Application` host 
 
 ## Covered Scenarios
 
-- Book endpoints: create, fetch, and search requests traverse the REST, domain, and (stubbed) persistence layers.
+- Book endpoints: create, fetch, search, and delete requests traverse the REST, domain, and (stubbed) persistence layers.
 - Blazor shell + static assets are reachable (`/` and `/app.css`) proving the web module wiring.
 - `PersistenceMongoModuleOptions` bind to configuration overrides.
 

@@ -96,6 +96,21 @@ public class BooksClientTests
         await Assert.ThrowsAsync<HttpRequestException>(() => booksClient.Search(new SearchBooksRequestDto("hobbit")));
     }
 
+    [Fact]
+    public async Task Delete_SendsDeleteRequestAndEnsuresSuccess()
+    {
+        var handler = new TestHttpMessageHandler((request, _) =>
+        {
+            Assert.Equal(HttpMethod.Delete, request.Method);
+            Assert.Equal("http://localhost/api/v1/books/book-2", request.RequestUri!.ToString());
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NoContent));
+        });
+        var booksClient = CreateBooksClient(handler);
+
+        await booksClient.Delete("book-2");
+    }
+
     private static IBooksClient CreateBooksClient(HttpMessageHandler handler)
     {
         var httpClient = new HttpClient(handler)

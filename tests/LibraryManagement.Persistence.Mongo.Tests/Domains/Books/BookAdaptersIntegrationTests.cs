@@ -76,6 +76,21 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
         Assert.DoesNotContain("The Pragmatic Programmer", titles);
     }
 
+    [Fact]
+    public async Task DeleteBookAdapter_removes_existing_book()
+    {
+        BookEntity seeded = await SeedBook("Working Effectively with Legacy Code");
+
+        DeleteBookAdapter adapter = new(GetBookCollection());
+
+        await adapter.Delete(seeded.Id);
+
+        long remaining = await GetBookCollection().Collection
+            .CountDocumentsAsync(entity => entity.Id == seeded.Id);
+
+        Assert.Equal(0, remaining);
+    }
+
     private IBookCollection GetBookCollection()
     {
         return _bookCollection ?? throw new InvalidOperationException("Book collection has not been initialized yet.");
