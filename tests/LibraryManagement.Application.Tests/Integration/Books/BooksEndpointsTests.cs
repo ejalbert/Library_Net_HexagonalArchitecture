@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 
 using LibraryManagement.Api.Rest.Client.Domain.Books;
@@ -80,5 +81,19 @@ public class BooksEndpointsTests
         Assert.NotNull(payload);
         BookDto book = Assert.Single(payload!.Books);
         Assert.Equal("book-1", book.Id);
+    }
+
+    [Fact]
+    public async Task DeleteBook_removes_persisted_entry()
+    {
+        Book seeded = new() { Id = "book-9", Title = "Implementing Hexagonal Architecture" };
+        _persistence.Seed(seeded);
+
+        using HttpClient client = _factory.CreateClient();
+
+        using HttpResponseMessage response = await client.DeleteAsync($"/api/v1/books/{seeded.Id}");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => _persistence.GetById(seeded.Id));
     }
 }

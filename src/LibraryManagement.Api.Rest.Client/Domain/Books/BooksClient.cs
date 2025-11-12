@@ -30,4 +30,11 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
 
         return (await response.Content.ReadFromJsonAsync<SearchBooksResponseDto>(cancellationToken))!;
     }
+
+    public async Task Delete(string bookId, CancellationToken cancellationToken = default)
+    {
+        HttpResponseMessage response = await _httpClient.DeleteAsync($"{BasePath}/{bookId}", cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+    }
 }

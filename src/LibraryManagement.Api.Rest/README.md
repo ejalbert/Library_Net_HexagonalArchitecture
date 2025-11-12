@@ -7,7 +7,7 @@ Delivery module that exposes domain capabilities via minimal APIs. The current i
 - Registers REST services through `AddRestApiModule()` and wires endpoints via `UseRestApiModule()`.
 - Binds `RestApiModuleOptions` from configuration, defaulting to `/api` when not provided.
 - Adds OpenAPI/Swagger in Development to document endpoints.
-- Maps book endpoints for create, get-by-id, and search scenarios using DTOs from the REST client package and Mapperly-based mappers.
+- Maps book endpoints for create, get-by-id, search, and delete scenarios using DTOs from the REST client package and Mapperly-based mappers.
 
 ## Directory Layout
 
@@ -17,6 +17,7 @@ LibraryManagement.Api.Rest/
     BookServices.cs
     BookDtoMapper.cs
     CreateNewBook/*.cs
+    DeleteBook/*.cs
     GetSingleBook/*.cs
     Search/*.cs
   ModuleConfigurations/

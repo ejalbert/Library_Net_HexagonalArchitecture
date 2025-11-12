@@ -1,9 +1,11 @@
 using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
+using LibraryManagement.Api.Rest.Domains.Books.DeleteBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Api.Rest.Domains.Books.Search;
 using LibraryManagement.Api.Rest.ModuleConfigurations;
 using LibraryManagement.Domain.Domains.Books.Create;
+using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
@@ -70,6 +72,7 @@ public class ApiModuleTests
 
         Assert.IsType<BookDtoMapper>(provider.GetRequiredService<IBookDtoMapper>());
         Assert.NotNull(provider.GetRequiredService<ICreateNewBookController>());
+        Assert.NotNull(provider.GetRequiredService<IDeleteBookController>());
         Assert.NotNull(provider.GetRequiredService<IGetBookController>());
         Assert.NotNull(provider.GetRequiredService<ISearchBooksController>());
     }
@@ -87,11 +90,15 @@ public class ApiModuleTests
         using var app = builder.Build();
         app.UseApplicationModules().UseRestApiModule();
 
-        var routes = GetRoutePatterns(app).ToList();
+        var endpoints = GetRouteEndpoints(app).ToList();
+        var routes = endpoints.Select(endpoint => endpoint.RoutePattern.RawText ?? string.Empty).ToList();
 
         Assert.Contains(routes, pattern => pattern.Contains("/api/v1/books"));
         Assert.Contains(routes, pattern => pattern.Contains("/api/v1/books/{id}"));
         Assert.Contains(routes, pattern => pattern.Contains("/api/v1/books/search"));
+        Assert.Contains(endpoints, endpoint =>
+            (endpoint.RoutePattern.RawText ?? string.Empty).Contains("/api/v1/books/{id}") &&
+            endpoint.Metadata.OfType<HttpMethodMetadata>().Any(metadata => metadata.HttpMethods.Contains("DELETE")));
     }
 
     private static WebApplicationBuilder CreateBuilder()
@@ -104,15 +111,15 @@ public class ApiModuleTests
     private static void RegisterBookUseCases(IServiceCollection services)
     {
         services.AddSingleton(Mock.Of<ICreateNewBookUseCase>());
+        services.AddSingleton(Mock.Of<IDeleteBookUseCase>());
         services.AddSingleton(Mock.Of<IGetSingleBookUseCase>());
         services.AddSingleton(Mock.Of<ISearchBooksUseCase>());
     }
 
-    private static IEnumerable<string> GetRoutePatterns(WebApplication app)
+    private static IEnumerable<RouteEndpoint> GetRouteEndpoints(WebApplication app)
     {
         var routeBuilder = (IEndpointRouteBuilder)app;
         return routeBuilder.DataSources
-            .SelectMany(source => source.Endpoints.OfType<RouteEndpoint>())
-            .Select(endpoint => endpoint.RoutePattern.RawText ?? string.Empty);
+            .SelectMany(source => source.Endpoints.OfType<RouteEndpoint>());
     }
 }

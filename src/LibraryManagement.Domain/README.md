@@ -4,8 +4,8 @@ Contains the core domain model and use cases. The current focus is the `Books` a
 
 ## Responsibilities
 
-- Defines the `Book` entity plus associated commands (`CreateNewBookCommand`, `SearchBooksCommand`, `GetSingleBookCommand`).
-- Implements use-case services that depend on outbound ports: `ICreateNewBookPort`, `ISearchBooksPort`, and `IGetSingleBookPort`.
+- Defines the `Book` entity plus associated commands (`CreateNewBookCommand`, `SearchBooksCommand`, `GetSingleBookCommand`, `DeleteBookCommand`).
+- Implements use-case services that depend on outbound ports: `ICreateNewBookPort`, `ISearchBooksPort`, `IGetSingleBookPort`, and `IDeleteBookPort`.
 - Provides the `DomainModule` extension so hosts can register domain services via the module bootstrapper and bind options (`DomainModuleOptions`).
 
 ## Dependencies
@@ -22,6 +22,7 @@ LibraryManagement.Domain/
     Book.cs
     BookServiceRegistration.cs
     Create/...
+    Delete/...
     Search/...
     GetSingle/...
   ModuleConfigurations/

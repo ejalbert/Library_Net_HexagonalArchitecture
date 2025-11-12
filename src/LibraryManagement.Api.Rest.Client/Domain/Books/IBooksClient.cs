@@ -10,4 +10,6 @@ public interface IBooksClient
     Task<BookDto> Get(string bookId, CancellationToken cancellationToken = default);
 
     Task<SearchBooksResponseDto> Search(SearchBooksRequestDto requestDto, CancellationToken cancellationToken = default);
+
+    Task Delete(string bookId, CancellationToken cancellationToken = default);
 }

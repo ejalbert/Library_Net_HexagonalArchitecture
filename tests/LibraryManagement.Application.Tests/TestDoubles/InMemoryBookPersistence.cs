@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
+using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Search;
 
@@ -9,6 +10,7 @@ namespace LibraryManagement.Application.Tests.TestDoubles;
 
 internal class InMemoryBookPersistence :
     ICreateNewBookPort,
+    IDeleteBookPort,
     IGetSingleBookPort,
     ISearchBooksPort
 {
@@ -47,6 +49,16 @@ internal class InMemoryBookPersistence :
         }
 
         return Task.FromResult(books);
+    }
+
+    public Task Delete(string id)
+    {
+        if (_books.TryRemove(id, out _))
+        {
+            return Task.CompletedTask;
+        }
+
+        throw new KeyNotFoundException($"Book '{id}' was not found.");
     }
 
     public void Seed(params Book[] books)
