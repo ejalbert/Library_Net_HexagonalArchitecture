@@ -4,6 +4,7 @@ using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Search;
+using LibraryManagement.Domain.Domains.Books.Patch;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -28,6 +29,7 @@ public class ApplicationWebApplicationFactory : WebApplicationFactory<Applicatio
             services.RemoveAll<IDeleteBookPort>();
             services.RemoveAll<IGetSingleBookPort>();
             services.RemoveAll<ISearchBooksPort>();
+            services.RemoveAll<IPatchBookPort>();
 
             services.AddSingleton<InMemoryAuthorPersistence>();
             services.AddSingleton<InMemoryBookPersistence>();
@@ -36,6 +38,7 @@ public class ApplicationWebApplicationFactory : WebApplicationFactory<Applicatio
             services.AddScoped<IDeleteBookPort>(ResolvePersistence);
             services.AddScoped<IGetSingleBookPort>(ResolvePersistence);
             services.AddScoped<ISearchBooksPort>(ResolvePersistence);
+            services.AddScoped<IPatchBookPort>(ResolvePersistence);
         });
     }
 

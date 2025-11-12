@@ -11,6 +11,7 @@ using LibraryManagement.Domain.Domains.Authors.Create;
 using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
+using LibraryManagement.Domain.Domains.Books.Patch;
 using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.Domain.Domains.Books.Update;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
@@ -128,6 +129,7 @@ public class ApiModuleTests
         services.AddSingleton(Mock.Of<IGetSingleBookUseCase>());
         services.AddSingleton(Mock.Of<ISearchBooksUseCase>());
         services.AddSingleton(Mock.Of<IUpdateBookUseCase>());
+        services.AddSingleton(Mock.Of<IPatchBookUseCase>());
     }
 
     private static IEnumerable<RouteEndpoint> GetRouteEndpoints(WebApplication app)

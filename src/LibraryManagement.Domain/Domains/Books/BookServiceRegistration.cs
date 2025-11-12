@@ -3,6 +3,7 @@ using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.Domain.Domains.Books.Update;
+using LibraryManagement.Domain.Domains.Books.Patch;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,7 @@ internal static class BookServiceRegistration
             .AddScoped<IDeleteBookUseCase, DeleteBookService>()
             .AddScoped<IGetSingleBookUseCase, GetSingleBookService>()
             .AddScoped<ISearchBooksUseCase, SearchBooksService>()
-            .AddScoped<IUpdateBookUseCase, UpdateBookService>();
+            .AddScoped<IUpdateBookUseCase, UpdateBookService>()
+            .AddScoped<IPatchBookUseCase, PatchBookService>();
     }
 }

@@ -6,6 +6,7 @@ using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
 using LibraryManagement.Api.Rest.Client.Tests.Http;
 
 namespace LibraryManagement.Api.Rest.Client.Tests.Domain.Books;
@@ -174,6 +175,40 @@ public class BooksClientTests
         Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Title, book.Title);
         Assert.Equal(expectedResponse.AuthorId, book.AuthorId);
+        Assert.Equal(expectedResponse.Description, book.Description);
+        Assert.Equal(expectedResponse.Keywords, book.Keywords);
+    }
+
+    [Fact]
+    public async Task Patch_SendsPatchRequestAndReturnsBook()
+    {
+        var requestDto = new PatchBookRequestDto(Description: "New blurb", Keywords: new[] { "fantasy" });
+        var expectedResponse = new BookDto
+        {
+            Id = "book-1",
+            Title = "The Hobbit",
+            AuthorId = "author-1",
+            Description = "New blurb",
+            Keywords = new[] { "fantasy" }
+        };
+
+        var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
+        {
+            Assert.Equal(HttpMethod.Patch, request.Method);
+            Assert.Equal("http://localhost/api/v1/books/book-1", request.RequestUri!.ToString());
+            var payload = await request.Content!.ReadFromJsonAsync<PatchBookRequestDto>(cancellationToken);
+            Assert.Equivalent(requestDto, payload);
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = JsonContent.Create(expectedResponse)
+            };
+        });
+        var booksClient = CreateBooksClient(handler);
+
+        var book = await booksClient.Patch("book-1", requestDto);
+
+        Assert.Equal(expectedResponse.Id, book.Id);
         Assert.Equal(expectedResponse.Description, book.Description);
         Assert.Equal(expectedResponse.Keywords, book.Keywords);
     }

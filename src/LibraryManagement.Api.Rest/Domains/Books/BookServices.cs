@@ -4,11 +4,13 @@ using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Api.Rest.Domains.Books.DeleteBook;
 using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Api.Rest.Domains.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books.UpdateBook;
+using LibraryManagement.Api.Rest.Domains.Books.PatchBook;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +28,8 @@ internal static class BookServices
         .AddScoped<IDeleteBookController, DeleteBookController>()
         .AddScoped<ISearchBooksController, SearchBooksController>()
         .AddScoped<IGetBookController, GetBookController>()
-        .AddScoped<IUpdateBookController, UpdateBookController>();
+        .AddScoped<IUpdateBookController, UpdateBookController>()
+        .AddScoped<IPatchBookController, PatchBookController>();
 
         return services;
     }
@@ -49,6 +52,11 @@ internal static class BookServices
         group.MapPut("{id}", ([Required] string id, [FromBody] UpdateBookRequestDto requestDto, IUpdateBookController controller) => controller.UpdateBook(id, requestDto))
             .WithName("Update Book")
             .WithDescription("Update a book in the library")
+            .Produces<BookDto>();
+
+        group.MapPatch("{id}", ([Required] string id, [FromBody] PatchBookRequestDto requestDto, IPatchBookController controller) => controller.PatchBook(id, requestDto))
+            .WithName("Patch Book")
+            .WithDescription("Partially update a book in the library")
             .Produces<BookDto>();
 
         group.MapPost("/search", ([FromBody] SearchBooksRequestDto requestDto, ISearchBooksController controller) => controller.SearchBooks(requestDto))

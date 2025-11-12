@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
 using LibraryManagement.Application.Tests.Infrastructure;
 using LibraryManagement.Application.Tests.TestDoubles;
 using LibraryManagement.Domain.Domains.Books;
@@ -118,5 +119,34 @@ public class BooksEndpointsTests
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         await Assert.ThrowsAsync<KeyNotFoundException>(() => _persistence.GetById(seeded.Id));
+    }
+
+    [Fact]
+    public async Task PatchBook_updates_selected_fields()
+    {
+        Book seeded = new()
+        {
+            Id = "book-22",
+            Title = "Event-Driven Architectures",
+            AuthorId = "author-22",
+            Description = "Original",
+            Keywords = new[] { "eda" }
+        };
+        _persistence.Seed(seeded);
+
+        using HttpClient client = _factory.CreateClient();
+
+        PatchBookRequestDto request = new(Description: "Updated description", Keywords: new[] { "eda", "messaging" });
+        using HttpResponseMessage response = await client.PatchAsJsonAsync($"/api/v1/books/{seeded.Id}", request);
+
+        response.EnsureSuccessStatusCode();
+        BookDto? patched = await response.Content.ReadFromJsonAsync<BookDto>();
+
+        Assert.NotNull(patched);
+        Assert.Equal(seeded.Id, patched!.Id);
+        Assert.Equal(seeded.Title, patched.Title);
+        Assert.Equal(seeded.AuthorId, patched.AuthorId);
+        Assert.Equal("Updated description", patched.Description);
+        Assert.Equal(new[] { "eda", "messaging" }, patched.Keywords);
     }
 }

@@ -1,8 +1,10 @@
+using System.Net.Http;
 using System.Net.Http.Json;
 
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
 
 namespace LibraryManagement.Api.Rest.Client.Domain.Books;
 
@@ -26,6 +28,20 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
     public async Task<BookDto> Update(string bookId, UpdateBookRequestDto requestDto, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.PutAsJsonAsync($"{BasePath}/{bookId}", requestDto, cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        return (await response.Content.ReadFromJsonAsync<BookDto>(cancellationToken))!;
+    }
+
+    public async Task<BookDto> Patch(string bookId, PatchBookRequestDto requestDto, CancellationToken cancellationToken = default)
+    {
+        using HttpRequestMessage request = new(HttpMethod.Patch, $"{BasePath}/{bookId}")
+        {
+            Content = JsonContent.Create(requestDto)
+        };
+
+        using HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken);
 
         response.EnsureSuccessStatusCode();
 
