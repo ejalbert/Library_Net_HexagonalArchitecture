@@ -6,7 +6,7 @@ xUnit suite that protects the REST delivery module (`LibraryManagement.Api.Rest`
 
 - `ApiModuleTests` asserts configuration precedence (environment vs. delegate overrides).
 - Verifies DI registrations for controllers/mappers are available once `AddRestApiModule()` runs.
-- Ensures `UseRestApiModule()` maps `/api/v1/books`, `/api/v1/books/{id}`, and `/api/v1/books/search` routes.
+- Ensures `UseRestApiModule()` maps `/api/v1/books`, `/api/v1/books/{id}` (GET/PUT/DELETE), and `/api/v1/books/search` routes.
 
 ## Commands
 

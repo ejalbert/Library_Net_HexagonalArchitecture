@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
 using LibraryManagement.Api.Rest.Client.Tests.Http;
 
 namespace LibraryManagement.Api.Rest.Client.Tests.Domain.Books;
@@ -109,6 +110,31 @@ public class BooksClientTests
         var booksClient = CreateBooksClient(handler);
 
         await booksClient.Delete("book-2");
+    }
+
+    [Fact]
+    public async Task Update_SendsPutRequestAndReturnsBook()
+    {
+        var requestDto = new UpdateBookRequestDto("The Hobbit - Revised");
+        var expectedResponse = new BookDto { Id = "book-1", Title = requestDto.Title };
+        var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
+        {
+            Assert.Equal(HttpMethod.Put, request.Method);
+            Assert.Equal("http://localhost/api/v1/books/book-1", request.RequestUri!.ToString());
+            var payload = await request.Content!.ReadFromJsonAsync<UpdateBookRequestDto>(cancellationToken);
+            Assert.Equal(requestDto, payload);
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = JsonContent.Create(expectedResponse)
+            };
+        });
+        var booksClient = CreateBooksClient(handler);
+
+        var book = await booksClient.Update("book-1", requestDto);
+
+        Assert.Equal(expectedResponse.Id, book.Id);
+        Assert.Equal(expectedResponse.Title, book.Title);
     }
 
     private static IBooksClient CreateBooksClient(HttpMessageHandler handler)

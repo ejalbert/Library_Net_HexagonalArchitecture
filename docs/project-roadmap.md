@@ -10,7 +10,7 @@ This roadmap tracks milestones for the book-focused vertical slice and highlight
 
 ## Milestone 1 – Book Domain (In Progress)
 
-- [x] Model the `Book` aggregate with create/search/get/delete use cases.
+- [x] Model the `Book` aggregate with create/search/get/update/delete use cases.
 - [x] Expose outbound ports for persistence adapters.
 - [ ] Add validation/invariants (e.g., duplicate detection, title rules).
 - [ ] Add domain unit tests that cover behaviours beyond pass-through commands.

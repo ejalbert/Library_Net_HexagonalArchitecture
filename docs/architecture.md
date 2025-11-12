@@ -6,7 +6,7 @@ The Library Management System follows Hexagonal (Ports & Adapters) architecture.
 
 | Layer | Projects | Responsibilities |
 | --- | --- | --- |
-| Domain | `LibraryManagement.Domain` | Aggregates, commands, use cases, and port interfaces. Currently focuses on the `Books` aggregate (create/search/get/delete). |
+| Domain | `LibraryManagement.Domain` | Aggregates, commands, use cases, and port interfaces. Currently focuses on the `Books` aggregate (create/search/get/update/delete). |
 | Application Host | `LibraryManagement.Application` | ASP.NET Core host that bootstraps every module and exposes HTTP/Blazor endpoints. |
 | Infrastructure (Driven adapters) | `LibraryManagement.Persistence.Mongo` | MongoDB implementation of the outbound ports. Uses Mapperly to convert between domain models and Mongo entities. |
 | Delivery (Driving adapters) | `LibraryManagement.Api.Rest`, `LibraryManagement.Web`/`.Client` | REST minimal APIs and Blazor UI that drive use cases via the REST client. |
@@ -23,10 +23,10 @@ This pattern keeps service registration and endpoint configuration consistent wh
 
 ## Current Modules
 
-- **Domain** – `Book` entity plus create/search/get/delete use cases. Relies on outbound ports for persistence.
-- **Mongo Persistence** – Registers `MongoClient`, `IMongoDatabase`, `BookCollection`, mapper, and adapters for create/search/get/delete. Defaults to `mongodb://localhost:20027` / `library_management`. Tested via Testcontainers.
-- **REST Delivery** – Adds OpenAPI and maps `/api/v1/books` create/get/search/delete endpoints using DTOs from the REST client package.
-- **REST Client** – Provides `IBooksClient` (create/get/search/delete), DTOs, and DI helpers so other modules (e.g., Blazor) can call the REST API without duplicating contracts.
+- **Domain** – `Book` entity plus create/search/get/update/delete use cases. Relies on outbound ports for persistence.
+- **Mongo Persistence** – Registers `MongoClient`, `IMongoDatabase`, `BookCollection`, mapper, and adapters for create/search/get/update/delete. Defaults to `mongodb://localhost:20027` / `library_management`. Tested via Testcontainers.
+- **REST Delivery** – Adds OpenAPI and maps `/api/v1/books` create/get/search/update/delete endpoints using DTOs from the REST client package.
+- **REST Client** – Provides `IBooksClient` (create/get/search/update/delete), DTOs, and DI helpers so other modules (e.g., Blazor) can call the REST API without duplicating contracts.
 - **Web Module** – Configures Razor/Blazor services, registers the REST client, and maps UI routes. The `Book` page fetches data through `restAPiClient.Books`.
 
 ## Configuration Map
@@ -42,7 +42,7 @@ Always document new configuration keys in the relevant README + this table.
 
 ## Testing Strategy
 
-- **Domain** – Unit tests cover the pass-through use cases (create/search/get/delete) and will expand as invariants are introduced.
+- **Domain** – Unit tests cover the pass-through use cases (create/search/get/update/delete) and will expand as invariants are introduced.
 - **Mongo Persistence** – xUnit + Testcontainers integration tests assert adapters persist and query correctly.
 - **REST Delivery** – xUnit tests validate module registration and endpoint routing using `WebApplicationBuilder`.
 - **REST Client** – xUnit tests intercept HTTP calls via custom handlers.

@@ -5,9 +5,9 @@ A .NET 10 reference implementation of a modular Library Management System centre
 ## Current Status
 
 - ✅ Module bootstrapper libraries (`LibraryManagement.ModuleBootstrapper*`) let any host compose modules in a consistent way.
-- ✅ Domain `Books` aggregate exposes create, search, get, and delete use cases plus outbound ports for persistence.
-- ✅ MongoDB adapter persists books (create/search/get/delete), including Mapperly-powered mappings and tested Testcontainers coverage.
-- ✅ REST API module maps minimal API endpoints under `/api/v1/books`, uses the domain use cases (create/get/search/delete), and publishes OpenAPI metadata.
+- ✅ Domain `Books` aggregate exposes create, search, get, update, and delete use cases plus outbound ports for persistence.
+- ✅ MongoDB adapter persists books (create/search/get/update/delete), including Mapperly-powered mappings and tested Testcontainers coverage.
+- ✅ REST API module maps minimal API endpoints under `/api/v1/books`, uses the domain use cases (create/get/search/update/delete), and publishes OpenAPI metadata.
 - ✅ REST client package ships a typed `IBooksClient` plus DI-friendly configuration helpers.
 - ✅ Blazor host (`LibraryManagement.Web` + `.Client`) renders the book listing by calling the REST client and is tested with bUnit.
 - 🚧 Additional domains (patrons, circulation, policies) still need to be modelled.
