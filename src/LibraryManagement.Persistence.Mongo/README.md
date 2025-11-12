@@ -1,12 +1,12 @@
 # LibraryManagement.Persistence.Mongo
 
-MongoDB adapter that implements the outbound ports defined by the domain layer. The current slice stores and queries books.
+MongoDB adapter that implements the outbound ports defined by the domain layer. The current slice stores and queries books and now persists authors (create use case).
 
 ## Responsibilities
 
 - Provides `PersistenceMongoModule` to register MongoDB dependencies (client, database, options) through the module bootstrapper.
-- Implements `IBookCollection`, `BookEntity`, and Mapperly-powered conversions between entities and domain models.
-- Supplies adapters for `ICreateNewBookPort`, `IUpdateBookPort`, `IDeleteBookPort`, `IGetSingleBookPort`, and `ISearchBooksPort`.
+- Implements `IBookCollection`, `IAuthorCollection`, their entities, and Mapperly-powered conversions between entities and domain models.
+- Supplies adapters for `ICreateAuthorPort`, `ICreateNewBookPort`, `IUpdateBookPort`, `IDeleteBookPort`, `IGetSingleBookPort`, and `ISearchBooksPort`.
 
 ## Dependencies
 
@@ -21,6 +21,11 @@ LibraryManagement.Persistence.Mongo/
   Abstractions/
     AbstractCollection.cs
     IAbstractCollection.cs
+  Domains/Authors/
+    AuthorEntity.cs
+    AuthorEntityMapper.cs
+    AuthorCollection.cs
+    Adapters/*.cs
   Domains/Books/
     BookEntity.cs
     BookEntityMapper.cs
@@ -49,7 +54,7 @@ dotnet test ../../tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagem
 `LibraryManagement.Persistence.Mongo.Tests` covers:
 
 - Mapper correctness (`BookEntityMapperTests`).
-- Unit tests for each adapter (create/search/get/update/delete).
+- Unit and integration tests for each adapter (authors + books).
 - Integration tests that spin up MongoDB 7 with Testcontainers to verify persistence end-to-end.
 
 Ensure Docker is running before executing the integration suite.
@@ -59,6 +64,6 @@ Ensure Docker is running before executing the integration suite.
 The module registers:
 
 - `MongoClient` (singleton) and scoped `IMongoDatabase`.
-- Book-specific services (collection, mapper, adapters).
+- Author + book services (collections, mappers, adapters).
 
 Add additional collections/adapters here as new aggregates move into MongoDB.

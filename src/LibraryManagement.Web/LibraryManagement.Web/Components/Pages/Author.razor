@@ -1,0 +1,30 @@
+@page "/Author"
+
+<h3>Create Author</h3>
+
+<div class="author-form">
+    <input id="author-name" @bind="AuthorName" placeholder="Author name" class="form-control" />
+    <button class="btn btn-primary mt-2 create-author-btn" @onclick="CreateAuthor" disabled="@IsCreateDisabled">
+        @if (IsSubmitting)
+        {
+            <span>Creating...</span>
+        }
+        else
+        {
+            <span>Create Author</span>
+        }
+    </button>
+</div>
+
+@if (LastCreatedAuthor is not null)
+{
+    <div class="alert alert-success mt-3 created-author">
+        <h4>@LastCreatedAuthor.Name</h4>
+        <span class="text-muted">Id: @LastCreatedAuthor.Id</span>
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p class="text-danger mt-2">@ErrorMessage</p>
+}

@@ -1,4 +1,5 @@
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
+using LibraryManagement.Persistence.Mongo.Domains.Authors;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 
 using Microsoft.Extensions.Configuration;
@@ -43,7 +44,9 @@ public static class PersistenceMongoModule
         });
 
 
-        moduleRegistrator.Services.AddBookServices();
+        moduleRegistrator.Services
+            .AddAuthorServices()
+            .AddBookServices();
 
         return moduleRegistrator;
     }

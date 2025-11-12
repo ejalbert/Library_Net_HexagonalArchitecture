@@ -4,8 +4,9 @@ Shared DTOs and typed HTTP clients that mirror the REST delivery module. Consume
 
 ## Key Capabilities
 
-- Defines `BookDto`, `CreateNewBookRequestDto`, `UpdateBookRequestDto`, and `SearchBooksRequest/ResponseDto` types.
+- Defines `BookDto`, `CreateNewBookRequestDto`, `UpdateBookRequestDto`, `SearchBooksRequest/ResponseDto`, plus the `AuthorDto`/`CreateAuthorRequestDto` pair.
 - Implements `IBooksClient` with `Create`, `Get`, `Update`, `Search`, and `Delete` operations that call `/api/v1/books` endpoints.
+- Implements `IAuthorsClient` with `Create` that calls `/api/v1/authors`.
 - Provides `IRestAPiClient` plus `AddRestApiHttpClient()` so hosts can register a configured `HttpClient` based on the `RestApi` configuration section.
 - Includes a helper extension (`restAPiClient.Books`) to obtain the typed client from an injected `IRestAPiClient`.
 
@@ -18,6 +19,11 @@ Shared DTOs and typed HTTP clients that mirror the REST delivery module. Consume
 
 ```
 LibraryManagement.Api.Rest.Client/
+  Domain/Authors/
+    AuthorDto.cs
+    AuthorsClient.cs
+    IAuthorsClient.cs
+    Create/*.cs
   Domain/Books/
     BookDto.cs
     BooksClient.cs

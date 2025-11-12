@@ -1,6 +1,6 @@
 # LibraryManagement.Api.Rest
 
-Delivery module that exposes domain capabilities via minimal APIs. The current implementation publishes `/api/v1/books` endpoints that forward to the book use cases.
+Delivery module that exposes domain capabilities via minimal APIs. The current implementation publishes `/api/v1/books` endpoints that forward to the book use cases and `/api/v1/authors` for the author create flow.
 
 ## Key Capabilities
 
@@ -8,11 +8,16 @@ Delivery module that exposes domain capabilities via minimal APIs. The current i
 - Binds `RestApiModuleOptions` from configuration, defaulting to `/api` when not provided.
 - Adds OpenAPI/Swagger in Development to document endpoints.
 - Maps book endpoints for create, get-by-id, search, update, and delete scenarios using DTOs from the REST client package and Mapperly-based mappers.
+- Maps author creation endpoint that forwards to `ICreateAuthorUseCase`.
 
 ## Directory Layout
 
 ```
 LibraryManagement.Api.Rest/
+  Domains/Authors/
+    AuthorServices.cs
+    AuthorDtoMapper.cs
+    CreateAuthor/*.cs
   Domains/Books/
     BookServices.cs
     BookDtoMapper.cs
@@ -52,14 +57,14 @@ Set `RestApi:BasePath` in host configuration to control the route prefix. When o
 `LibraryManagement.Api.Rest.Tests` verifies:
 
 - Option binding precedence (configuration vs. delegate overrides).
-- Service registration (controllers, mappers, DTO mapping).
+- Service registration (controllers, mappers, DTO mapping) across books and authors.
 - Endpoint templates via a minimal WebApplication builder.
 
 Extend coverage with request/response validation as more endpoints are added.
 
 ## Integration Points
 
-- Inbound adapters: minimal APIs defined in `BookServices.cs`.
+- Inbound adapters: minimal APIs defined in `BookServices.cs` and `AuthorServices.cs`.
 - Outbound: depends on domain use cases (`ICreateNewBookUseCase`, etc.); there is no direct persistence coupling.
 
 Document additional endpoint groups here whenever new domains are exposed.

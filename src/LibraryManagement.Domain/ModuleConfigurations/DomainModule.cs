@@ -1,3 +1,4 @@
+using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
@@ -25,7 +26,9 @@ public static class DomainModule
             moduleRegistrator.Services.Configure(configureOptions);
         }
 
-        moduleRegistrator.Services.AddBookServices();
+        moduleRegistrator.Services
+            .AddAuthorServices()
+            .AddBookServices();
 
         return moduleRegistrator;
     }
