@@ -1,11 +1,12 @@
 # LibraryManagement.Domain
 
-Contains the core domain model and use cases. The current focus is the `Books` aggregate, which exposes ports for creating, searching, retrieving, updating, and deleting titles.
+Contains the core domain model and use cases. The current focus is the `Books` aggregate plus the initial `Authors` aggregate (create use case only). Books expose ports for creating, searching, retrieving, updating, and deleting titles, while Authors currently expose the port required to create new authors.
 
 ## Responsibilities
 
 - Defines the `Book` entity plus associated commands (`CreateNewBookCommand`, `SearchBooksCommand`, `GetSingleBookCommand`, `UpdateBookCommand`, `DeleteBookCommand`).
-- Implements use-case services that depend on outbound ports: `ICreateNewBookPort`, `ISearchBooksPort`, `IGetSingleBookPort`, `IUpdateBookPort`, and `IDeleteBookPort`.
+- Defines the `Author` entity and the create-author command/port/use-case trio (`CreateAuthorCommand`, `ICreateAuthorPort`, `ICreateAuthorUseCase`).
+- Implements use-case services that depend on outbound ports: `ICreateNewBookPort`, `ISearchBooksPort`, `IGetSingleBookPort`, `IUpdateBookPort`, `IDeleteBookPort`, and `ICreateAuthorPort`.
 - Provides the `DomainModule` extension so hosts can register domain services via the module bootstrapper and bind options (`DomainModuleOptions`).
 
 ## Dependencies
@@ -18,6 +19,10 @@ Contains the core domain model and use cases. The current focus is the `Books` a
 
 ```
 LibraryManagement.Domain/
+  Domains/Authors/
+    Author.cs
+    AuthorServiceRegistration.cs
+    Create/...
   Domains/Books/
     Book.cs
     BookServiceRegistration.cs
@@ -43,7 +48,7 @@ dotnet test ../../tests/LibraryManagement.Domain.Tests/LibraryManagement.Domain.
 
 ## Tests
 
-`LibraryManagement.Domain.Tests` validates each book use case (create/search/get/update/delete). Add richer behavioural tests (validation, policy enforcement, identifier generation) as the aggregate grows.
+`LibraryManagement.Domain.Tests` validates each book use case (create/search/get/update/delete) plus create-author behaviour. Add richer behavioural tests (validation, policy enforcement, identifier generation) as the aggregate grows.
 
 ## Configuration
 

@@ -1,3 +1,4 @@
+using LibraryManagement.Api.Rest.Domains.Authors;
 using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
@@ -35,6 +36,7 @@ public static class ApiModule
             .AddOpenApi()
             .AddValidation()
             .AddProblemDetails()
+            .AddAuthorServices()
             .AddBookServices();
 
 
@@ -53,10 +55,10 @@ public static class ApiModule
 
         app.UseRouting();
 
+        app.UseAuthorServices();
         app.UseBookServices();
 
         return configurator;
     }
 }
-
 

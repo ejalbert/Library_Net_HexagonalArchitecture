@@ -1,3 +1,5 @@
+using LibraryManagement.Api.Rest.Domains.Authors;
+using LibraryManagement.Api.Rest.Domains.Authors.CreateAuthor;
 using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Api.Rest.Domains.Books.DeleteBook;
@@ -5,6 +7,7 @@ using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Api.Rest.Domains.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books.UpdateBook;
 using LibraryManagement.Api.Rest.ModuleConfigurations;
+using LibraryManagement.Domain.Domains.Authors.Create;
 using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
@@ -61,10 +64,10 @@ public class ApiModuleTests
     }
 
     [Fact]
-    public void AddRestApiModule_RegistersBookServices()
+    public void AddRestApiModule_RegistersServices()
     {
         var builder = CreateBuilder();
-        RegisterBookUseCases(builder.Services);
+        RegisterUseCases(builder.Services);
 
         builder
             .InitializeApplicationModuleConfiguration()
@@ -73,6 +76,8 @@ public class ApiModuleTests
         using var provider = builder.Services.BuildServiceProvider();
 
         Assert.IsType<BookDtoMapper>(provider.GetRequiredService<IBookDtoMapper>());
+        Assert.IsType<AuthorDtoMapper>(provider.GetRequiredService<IAuthorDtoMapper>());
+        Assert.NotNull(provider.GetRequiredService<ICreateAuthorController>());
         Assert.NotNull(provider.GetRequiredService<ICreateNewBookController>());
         Assert.NotNull(provider.GetRequiredService<IDeleteBookController>());
         Assert.NotNull(provider.GetRequiredService<IGetBookController>());
@@ -84,7 +89,7 @@ public class ApiModuleTests
     public void UseRestApiModule_MapsBookEndpoints()
     {
         var builder = CreateBuilder();
-        RegisterBookUseCases(builder.Services);
+        RegisterUseCases(builder.Services);
 
         builder
             .InitializeApplicationModuleConfiguration()
@@ -97,6 +102,7 @@ public class ApiModuleTests
         var routes = endpoints.Select(endpoint => endpoint.RoutePattern.RawText ?? string.Empty).ToList();
 
         Assert.Contains(routes, pattern => pattern.Contains("/api/v1/books"));
+        Assert.Contains(routes, pattern => pattern.Contains("/api/v1/authors"));
         Assert.Contains(routes, pattern => pattern.Contains("/api/v1/books/{id}"));
         Assert.Contains(routes, pattern => pattern.Contains("/api/v1/books/search"));
         Assert.Contains(endpoints, endpoint =>
@@ -114,8 +120,9 @@ public class ApiModuleTests
         return builder;
     }
 
-    private static void RegisterBookUseCases(IServiceCollection services)
+    private static void RegisterUseCases(IServiceCollection services)
     {
+        services.AddSingleton(Mock.Of<ICreateAuthorUseCase>());
         services.AddSingleton(Mock.Of<ICreateNewBookUseCase>());
         services.AddSingleton(Mock.Of<IDeleteBookUseCase>());
         services.AddSingleton(Mock.Of<IGetSingleBookUseCase>());
