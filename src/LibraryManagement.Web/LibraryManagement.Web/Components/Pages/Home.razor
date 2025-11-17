@@ -2,6 +2,14 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Library Management</h1>
 
-Welcome to your new app.
+<div style="display: flex; flex-direction: column; gap: 10px;">
+    @foreach(var book in BookDetails)
+    {
+        <NavLink @key="book.Id" class="book-link" href="@($"/book/{book.Id}")">
+            <span>@book.Title</span>
+        </NavLink>
+
+    }
+</div>

@@ -2,6 +2,7 @@ using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using LibraryManagement.Web.Client.ModuleConfigurations;
 using LibraryManagement.Web.Components;
+using LibraryManagement.Web.Domain.Authors;
 
 namespace LibraryManagement.Web.ModuleConfigurations;
 
@@ -14,6 +15,8 @@ public static class WebModule
             .AddRazorComponents()
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();
+
+        builder.Services.AddAuthorServices();
 
         return builder;
     }

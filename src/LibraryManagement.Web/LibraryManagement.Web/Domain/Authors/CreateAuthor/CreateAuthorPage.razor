@@ -1,0 +1,20 @@
+@page "/Author"
+
+
+
+<h3>Create Author</h3>
+
+<CreateAuthorForm Model="FormModel" OnSubmit="CreateAuthor" SubmitButtonText="@(IsSubmitting ? "Creating..." : "Create Author")" />
+
+@if (LastCreatedAuthor is not null)
+{
+    <div class="alert alert-success mt-3 created-author">
+        <h4>@LastCreatedAuthor.Name</h4>
+        <span class="text-muted">Id: @LastCreatedAuthor.Id</span>
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p class="text-danger mt-2">@ErrorMessage</p>
+}

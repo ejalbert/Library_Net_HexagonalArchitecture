@@ -21,7 +21,7 @@
         };
         RegisterRestClient(new SearchBooksResponseDto(expectedBooks));
 
-        var cut = Render(@<Book />);
+        var cut = Render(@<ListBooks />);
         cut.WaitForState(() => cut.FindAll(".book-item").Count == expectedBooks.Length);
 
         var renderedTitles = cut.FindAll("h4").Select(h => h.TextContent.Trim()).ToArray();

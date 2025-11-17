@@ -6,7 +6,7 @@ namespace LibraryManagement.Api.Rest.Client.Domain.Authors;
 
 internal class AuthorsClient(IRestAPiClient client) : IAuthorsClient
 {
-    private const string BasePath = "api/v1/authors";
+    private const string BasePath = "v1/authors";
     private readonly HttpClient _httpClient = client.HttpClient;
 
     public async Task<AuthorDto> Create(CreateAuthorRequestDto requestDto, CancellationToken cancellationToken = default)

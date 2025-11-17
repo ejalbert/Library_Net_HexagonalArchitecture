@@ -23,7 +23,7 @@ public class PatchBookControllerTests
             Title = "The Hobbit",
             AuthorId = "author-1",
             Description = "Updated",
-            Keywords = new[] { "fantasy" }
+            Keywords = ["fantasy"]
         };
 
         Mock<IPatchBookUseCase> useCaseMock = new();

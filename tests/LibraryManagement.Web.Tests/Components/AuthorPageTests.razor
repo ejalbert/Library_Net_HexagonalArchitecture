@@ -6,6 +6,7 @@
 @using LibraryManagement.Api.Rest.Client.Domain.Authors
 @using LibraryManagement.Api.Rest.Client.Domain.Authors.Create
 @using LibraryManagement.Web.Components.Pages
+@using LibraryManagement.Web.Domain.Authors.CreateAuthor
 
 @inherits TestContext
 
@@ -16,7 +17,7 @@
         AuthorDto response = new() { Id = "author-42", Name = "Ada Lovelace" };
         RegisterRestClient(response);
 
-        var cut = Render(@<Author />);
+        var cut = Render(@<CreateAuthorPage />);
         cut.Find("#author-name").Change("Ada Lovelace");
         cut.Find(".create-author-btn").Click();
 

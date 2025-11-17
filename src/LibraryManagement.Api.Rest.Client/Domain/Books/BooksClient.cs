@@ -10,7 +10,7 @@ namespace LibraryManagement.Api.Rest.Client.Domain.Books;
 
 internal class BooksClient(IRestAPiClient client) : IBooksClient
 {
-    private const string BasePath = "api/v1/books";
+    private const string BasePath = "v1/books";
     private readonly HttpClient _httpClient = client.HttpClient;
 
     public async Task<BookDto> Create(CreateNewBookRequestDto requestDto, CancellationToken cancellationToken = default)

@@ -13,7 +13,7 @@ public static class RestApiClientModule
 
         services.AddOptions<RestApiClientModuleOptions>().Configure(options =>
         {
-            options.BasePath = optionsFromEnv.BasePath ?? "http://localhost:5007/api";
+            options.BasePath = $"{optionsFromEnv.BasePath ?? "http://localhost:5007"}/api/";
         });
 
         if (configureOptions != null)

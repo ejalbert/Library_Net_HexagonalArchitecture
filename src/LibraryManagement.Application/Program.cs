@@ -24,4 +24,7 @@ moduleConfigurator.UseRestApiModule().UseWebModule();
 
 app.Run();
 
-public partial class Program;
+namespace LibraryManagement.Application
+{
+    public partial class Program;
+}
