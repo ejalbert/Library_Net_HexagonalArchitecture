@@ -1,13 +1,14 @@
-## LibraryManagement.Persistence.Postgres
+# LibraryManagement.Persistence.Postgres
 
-Entity Framework Core Postgres persistence module for the Library Management services.
+Entity Framework Core Postgres persistence module for the Library Management services. The current surface covers the
+book create/delete ports; extend it alongside new domain use cases.
 
-### Prerequisites
+## Prerequisites
 
 - Docker with `docker compose`
 - Access to the dev Postgres service defined in `compose-dev.yaml`
 
-### Default connection
+## Default connection
 
 - Host: localhost
 - Port: 5432
@@ -18,13 +19,13 @@ Entity Framework Core Postgres persistence module for the Library Management ser
 
 When running inside the compose network, use host `postgres` instead of `localhost`.
 
-### Running Postgres locally
+## Running Postgres locally
 
 1. `docker compose -f compose-dev.yaml up -d postgres`
 2. Optional: start pgAdmin too with `docker compose -f compose-dev.yaml up -d pgadmin` and connect using host
    `postgres`, port `5432`, user `postgres`, password `postgres`.
 
-### Configuration
+## Configuration
 
 The module binds to `PersistencePostgres` configuration:
 
@@ -39,7 +40,7 @@ The module binds to `PersistencePostgres` configuration:
 
 Values can be supplied via appsettings or environment variables (e.g., `PersistencePostgres__ConnectionString`).
 
-### Usage
+## Usage
 
 Register the module in your host builder:
 
@@ -48,22 +49,23 @@ builder.AddPersistencePostgresModule();
 ```
 
 `LibraryManagementDbContext` exposes the EF Core sets (e.g., `Books`) and uses `UseNpgsql` with the configured
-connection string.
+connection string and migrations assembly.
 
-### Database migrations
+## Database migrations
 
-- Install EF tools if needed: `dotnet tool install --global dotnet-ef`
-- From this project directory (`src/LibraryManagement.Persistence.Postgres`), add a migration targeting the bootstrapper
-  startup:
+Migrations live in `src/LibraryManagement.Persistence.Postgres.Migrations`.
 
 ```bash
-dotnet ef migrations add InitialCreate
-```
+# Add a migration targeting the migrations assembly
+dotnet ef migrations add <Name> \
+  --project src/LibraryManagement.Persistence.Postgres.Migrations/LibraryManagement.Persistence.Postgres.Migrations.csproj \
+  --startup-project src/LibraryManagement.Persistence.Postgres.Migrations/LibraryManagement.Persistence.Postgres.Migrations.csproj \
+  --output-dir Migrations
 
-- Apply migrations to the dev database:
-
-```bash
-dotnet ef database update --startup-project ../LibraryManagement.ModuleBootstrapper
+# Apply migrations to the configured database
+dotnet ef database update \
+  --project src/LibraryManagement.Persistence.Postgres.Migrations/LibraryManagement.Persistence.Postgres.Migrations.csproj \
+  --startup-project src/LibraryManagement.Persistence.Postgres.Migrations/LibraryManagement.Persistence.Postgres.Migrations.csproj
 ```
 
 Ensure the connection string (appsettings or `PersistencePostgres__ConnectionString`) points to a running Postgres

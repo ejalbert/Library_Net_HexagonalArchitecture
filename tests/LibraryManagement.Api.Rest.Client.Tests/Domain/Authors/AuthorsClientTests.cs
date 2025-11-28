@@ -40,7 +40,7 @@ public class AuthorsClientTests
     {
         HttpClient httpClient = new(handler)
         {
-            BaseAddress = new Uri("http://localhost/")
+            BaseAddress = new Uri("http://localhost/api")
         };
 
         return new AuthorsClient(new RestApiClient(httpClient));

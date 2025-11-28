@@ -3,9 +3,9 @@
     <div class="form-layout">
         <label>
             Author Name:
-            <InputText @bind-Value="Model.Name" name="@(nameof(Model.Name))"/>
+            <InputText id="author-name" @bind-Value="Model.Name" name="@(nameof(Model.Name))"/>
         </label>
-        <button class="btn btn-primary mt-2 create-author-btn" @onclick="HandleSubmit">
+        <button type="button" class="btn btn-primary mt-2 create-author-btn" @onclick="HandleSubmit">
             @SubmitButtonText
         </button>
     </div>

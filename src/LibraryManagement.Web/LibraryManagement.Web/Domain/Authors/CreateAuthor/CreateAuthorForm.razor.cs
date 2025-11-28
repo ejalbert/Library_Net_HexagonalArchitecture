@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace LibraryManagement.Web.Domain.Authors.CreateAuthor;
 
-public partial class CreateAuthorForm(IAuthorModelMapper mapper) : ComponentBase
+public partial class CreateAuthorForm : ComponentBase
 {
     private const string ComponentName = "author-form";
 

@@ -3,6 +3,7 @@
 @using LibraryManagement.Api.Rest.Client
 @using LibraryManagement.Api.Rest.Client.Domain.Authors
 @using LibraryManagement.Web.Domain.Authors.CreateAuthor
+@using LibraryManagement.Web.Domain.Authors
 @inherits TestContext
 
 @code {
@@ -24,6 +25,7 @@
 
     private void RegisterRestClient(AuthorDto response)
     {
+        Services.AddScoped<IAuthorModelMapper, AuthorModelMapper>();
         Services.AddScoped<IRestAPiClient>(_ =>
         {
             var handler = new StubHttpMessageHandler(response);
@@ -45,7 +47,7 @@
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request.Method == HttpMethod.Post && request.RequestUri?.AbsolutePath == "/api/v1/authors")
+            if (request.Method == HttpMethod.Post && request.RequestUri is { AbsolutePath: "/v1/authors" or "/api/v1/authors" })
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {

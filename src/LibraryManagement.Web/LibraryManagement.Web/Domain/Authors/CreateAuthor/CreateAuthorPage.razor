@@ -1,11 +1,23 @@
 @page "/Author"
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
 
 
 
 <h3>Create Author</h3>
 
-<CreateAuthorForm Model="FormModel" OnSubmit="CreateAuthor"
-                  SubmitButtonText="@(IsSubmitting ? "Creating..." : "Create Author")"/>
+<div class="author-form">
+    <div class="form-layout">
+        <label>
+            Author Name:
+            <InputText id="author-name" @bind-Value="FormModel!.Name" name="@(nameof(FormModel.Name))"/>
+        </label>
+        <button type="button" class="btn btn-primary mt-2 create-author-btn" disabled="@IsCreateDisabled"
+                @onclick="() => CreateAuthor(FormModel!)">
+            @(IsSubmitting ? "Creating..." : "Create Author")
+        </button>
+    </div>
+</div>
 
 @if (LastCreatedAuthor is not null)
 {

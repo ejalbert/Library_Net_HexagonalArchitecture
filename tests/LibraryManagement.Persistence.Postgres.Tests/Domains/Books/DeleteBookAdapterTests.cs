@@ -1,0 +1,54 @@
+using LibraryManagement.Persistence.Postgres.Domains.Books;
+using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
+using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
+
+using Microsoft.EntityFrameworkCore;
+
+namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
+
+public class DeleteBookAdapterTests(PostgresDatabaseFixture fixture) : IClassFixture<PostgresDatabaseFixture>
+{
+    [Fact]
+    public async Task Delete_existing_book_removes_entity_and_keywords()
+    {
+        await fixture.ResetDatabaseAsync();
+
+        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+
+        Guid bookId = Guid.NewGuid();
+        BookEntity entity = new()
+        {
+            Id = bookId,
+            Title = "Clean Code",
+            AuthorId = "author-1",
+            Description = "Craftsmanship",
+            Keywords =
+            [
+                new BookKeywordEntity { BookId = bookId, Keyword = "clean" },
+                new BookKeywordEntity { BookId = bookId, Keyword = "code" }
+            ]
+        };
+
+        context.Books.Add(entity);
+        await context.SaveChangesAsync();
+
+        DeleteBookAdapter adapter = new(context);
+
+        await adapter.Delete(bookId.ToString());
+
+        Assert.Empty(await context.Books.ToListAsync());
+        Assert.Empty(await context.Set<BookKeywordEntity>().ToListAsync());
+    }
+
+    [Fact]
+    public async Task Delete_unknown_book_throws()
+    {
+        await fixture.ResetDatabaseAsync();
+
+        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+
+        DeleteBookAdapter adapter = new(context);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => adapter.Delete(Guid.NewGuid().ToString()));
+    }
+}

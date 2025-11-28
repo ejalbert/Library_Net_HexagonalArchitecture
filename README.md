@@ -1,12 +1,13 @@
 # Hexagonal Library Management System
 
-A .NET 10 reference implementation of a modular Library Management System centred on Hexagonal (Ports & Adapters) architecture. The solution currently delivers a vertical slice for managing books end-to-end: domain use cases, MongoDB persistence adapters, a REST delivery module, a typed REST client, and a Blazor UI that consumes the API.
+A .NET 10 reference implementation of a modular Library Management System centred on Hexagonal (Ports & Adapters) architecture. The solution currently delivers a vertical slice for managing books end-to-end: domain use cases, MongoDB and Postgres persistence adapters, a REST delivery module, a typed REST client, and a Blazor UI that consumes the API.
 
 ## Current Status
 
 - ✅ Module bootstrapper libraries (`LibraryManagement.ModuleBootstrapper*`) let any host compose modules in a consistent way.
 - ✅ Domain `Books` aggregate exposes create, search, get, update, and delete use cases plus outbound ports for persistence.
 - ✅ MongoDB adapter persists books (create/search/get/update/delete), including Mapperly-powered mappings and tested Testcontainers coverage.
+- ✅ Postgres adapter (EF Core) persists books (create/delete) with a dedicated migrations assembly.
 - ✅ REST API module maps minimal API endpoints under `/api/v1/books`, uses the domain use cases (create/get/search/update/delete), and publishes OpenAPI metadata.
 - ✅ REST client package ships a typed `IBooksClient` plus DI-friendly configuration helpers.
 - ✅ Blazor host (`LibraryManagement.Web` + `.Client`) renders the book listing by calling the REST client and is tested with bUnit.
@@ -21,6 +22,8 @@ src/
   LibraryManagement.Application           # ASP.NET Core host that composes every module
   LibraryManagement.Domain                # Domain model + use cases (currently books)
   LibraryManagement.Persistence.Mongo     # MongoDB outbound adapters
+  LibraryManagement.Persistence.Postgres  # EF Core Postgres outbound adapters (books)
+  LibraryManagement.Persistence.Postgres.Migrations # EF Core migrations assembly for Postgres
   LibraryManagement.Api.Rest              # REST delivery module (minimal APIs)
   LibraryManagement.Api.Rest.Client       # Shared DTOs + typed HttpClient wrappers
   LibraryManagement.Web                   # Blazor Server entry point
@@ -29,11 +32,13 @@ src/
 
 tests/
   LibraryManagement.Persistence.Mongo.Tests        # Integration + mapping tests
+  LibraryManagement.Persistence.Postgres.Tests     # Integration harness for EF Core adapters
   LibraryManagement.Api.Rest.Tests                 # Module registration and routing tests
   LibraryManagement.Api.Rest.Client.Tests          # Typed client contract tests
-  LibraryManagement.Web.Tests                      # bUnit component tests (Book page)
+  LibraryManagement.Web.Tests                      # bUnit component tests (Book/Author pages)
   LibraryManagement.ModuleBootstrapper*.Tests      # Bootstrapper regression tests
   LibraryManagement.Application.Tests              # Placeholder for future host tests
+  LibraryManagement.Tests.Abstractions             # Shared fixtures/helpers for test projects
 ```
 
 ## Running the Application
@@ -42,14 +47,15 @@ tests/
 # Restore every project
 dotnet restore
 
-# Run the integrated host (REST API + Mongo + Blazor)
+# Run the integrated host (REST API + Mongo/Postgres + Blazor)
 dotnet run --project src/LibraryManagement.Application/LibraryManagement.Application.csproj
 ```
 
-The host wires modules in `Program.cs` via `InitializeApplicationModuleConfiguration()` and the fluent `Add*Module()` extensions. Configuration is read from the usual ASP.NET Core providers:
+The host wires modules in `Program.cs` via `InitializeApplicationModuleConfiguration()` and the fluent `Add*Module()` extensions. Make sure the backing databases are running (e.g., `docker compose -f compose-dev.yaml up -d mongo postgres`). Configuration is read from the usual ASP.NET Core providers:
 
 - `RestApi` section -> REST base path (defaults to `/api`).
 - `PersistenceMongo` section -> Mongo connection string + database (defaults to `mongodb://localhost:20027`, `library_management`).
+- `PersistencePostgres` section -> Postgres connection string + database (defaults to `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres`).
 - `RestApi:BasePath` is also used by the REST client module to set the typed `HttpClient` base address.
 
 Use `compose.yaml` to build the Blazor server and WebAssembly client containers once you are ready to deploy UI artifacts independently.
@@ -59,6 +65,9 @@ Use `compose.yaml` to build the Blazor server and WebAssembly client containers 
 ```bash
 # MongoDB adapters (uses Testcontainers -> requires Docker running)
 dotnet test tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagement.Persistence.Mongo.Tests.csproj
+
+# Postgres adapters (uses Testcontainers -> requires Docker running)
+dotnet test tests/LibraryManagement.Persistence.Postgres.Tests/LibraryManagement.Persistence.Postgres.Tests.csproj
 
 # REST API module behaviour
 dotnet test tests/LibraryManagement.Api.Rest.Tests/LibraryManagement.Api.Rest.Tests.csproj
