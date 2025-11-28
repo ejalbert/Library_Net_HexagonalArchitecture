@@ -1,3 +1,5 @@
+using System.Collections;
+
 using MongoDB.Driver;
 
 namespace LibraryManagement.Persistence.Mongo.Tests.Infrastructure;
@@ -16,10 +18,7 @@ internal sealed class AsyncCursorStub<TDocument> : IAsyncCursor<TDocument>, IEnu
 
     public void Dispose()
     {
-        if (_isDisposed)
-        {
-            return;
-        }
+        if (_isDisposed) return;
 
         _isDisposed = true;
         _enumerator.Dispose();
@@ -39,28 +38,27 @@ internal sealed class AsyncCursorStub<TDocument> : IAsyncCursor<TDocument>, IEnu
         return true;
     }
 
-    public Task<bool> MoveNextAsync(CancellationToken cancellationToken) => Task.FromResult(MoveNext(cancellationToken));
+    public Task<bool> MoveNextAsync(CancellationToken cancellationToken)
+    {
+        return Task.FromResult(MoveNext(cancellationToken));
+    }
 
     public IEnumerator<TDocument> GetEnumerator()
     {
         EnsureNotDisposed();
 
         while (MoveNext())
-        {
             foreach (TDocument document in Current)
-            {
                 yield return document;
-            }
-        }
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
     private void EnsureNotDisposed()
     {
-        if (_isDisposed)
-        {
-            throw new ObjectDisposedException(nameof(AsyncCursorStub<TDocument>));
-        }
+        if (_isDisposed) throw new ObjectDisposedException(nameof(AsyncCursorStub<TDocument>));
     }
 }

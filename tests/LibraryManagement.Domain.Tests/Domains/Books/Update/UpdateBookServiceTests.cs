@@ -1,5 +1,3 @@
-using System.Linq;
-
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Update;
 
@@ -25,14 +23,19 @@ public class UpdateBookServiceTests
             Keywords = new[] { "architecture", "clean-code" }
         };
 
-        portMock.Setup(port => port.Update("book-123", "Clean Architecture (2nd Ed.)", "author-1", "Updated insights", It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))))
+        portMock.Setup(port => port.Update("book-123", "Clean Architecture (2nd Ed.)", "author-1", "Updated insights",
+                It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))))
             .ReturnsAsync(updated);
 
         UpdateBookService service = new(portMock.Object, loggerMock.Object);
 
-        Book result = await service.Update(new UpdateBookCommand("book-123", "Clean Architecture (2nd Ed.)", "author-1", "Updated insights", new[] { "architecture", "clean-code" }));
+        Book result = await service.Update(new UpdateBookCommand("book-123", "Clean Architecture (2nd Ed.)", "author-1",
+            "Updated insights", new[] { "architecture", "clean-code" }));
 
         Assert.Same(updated, result);
-        portMock.Verify(port => port.Update("book-123", "Clean Architecture (2nd Ed.)", "author-1", "Updated insights", It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))), Times.Once);
+        portMock.Verify(
+            port => port.Update("book-123", "Clean Architecture (2nd Ed.)", "author-1", "Updated insights",
+                It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))),
+            Times.Once);
     }
 }

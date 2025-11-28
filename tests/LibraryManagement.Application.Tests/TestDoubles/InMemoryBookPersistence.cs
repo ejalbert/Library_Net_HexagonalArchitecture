@@ -1,13 +1,11 @@
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
-using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.Domain.Domains.Books.Patch;
+using LibraryManagement.Domain.Domains.Books.Search;
 
 namespace LibraryManagement.Application.Tests.TestDoubles;
 
@@ -35,35 +33,24 @@ internal class InMemoryBookPersistence :
         return Task.FromResult(book);
     }
 
-    public Task<Book> GetById(string id)
+    public Task Delete(string id)
     {
-        if (_books.TryGetValue(id, out var book))
-        {
-            return Task.FromResult(book);
-        }
+        if (_books.TryRemove(id, out _)) return Task.CompletedTask;
 
         throw new KeyNotFoundException($"Book '{id}' was not found.");
     }
 
-    public Task<IEnumerable<Book>> Search(string? searchTerm)
+    public Task<Book> GetById(string id)
     {
-        IEnumerable<Book> books = _books.Values;
+        if (_books.TryGetValue(id, out Book? book)) return Task.FromResult(book);
 
-        if (!string.IsNullOrWhiteSpace(searchTerm))
-        {
-            books = books.Where(book =>
-                book.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-        }
-
-        return Task.FromResult(books);
+        throw new KeyNotFoundException($"Book '{id}' was not found.");
     }
 
-    public Task<Book> Patch(string id, string? title, string? authorId, string? description, IReadOnlyCollection<string>? keywords)
+    public Task<Book> Patch(string id, string? title, string? authorId, string? description,
+        IReadOnlyCollection<string>? keywords)
     {
-        if (!_books.TryGetValue(id, out var existing))
-        {
-            throw new KeyNotFoundException($"Book '{id}' was not found.");
-        }
+        if (!_books.TryGetValue(id, out Book? existing)) throw new KeyNotFoundException($"Book '{id}' was not found.");
 
         Book updated = new()
         {
@@ -79,23 +66,24 @@ internal class InMemoryBookPersistence :
         return Task.FromResult(updated);
     }
 
-    public Task Delete(string id)
+    public Task<IEnumerable<Book>> Search(string? searchTerm)
     {
-        if (_books.TryRemove(id, out _))
-        {
-            return Task.CompletedTask;
-        }
+        IEnumerable<Book> books = _books.Values;
 
-        throw new KeyNotFoundException($"Book '{id}' was not found.");
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+            books = books.Where(book =>
+                book.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+
+        return Task.FromResult(books);
     }
 
     public void Seed(params Book[] books)
     {
-        foreach (var book in books)
-        {
-            _books[book.Id] = book;
-        }
+        foreach (Book book in books) _books[book.Id] = book;
     }
 
-    public void Reset() => _books.Clear();
+    public void Reset()
+    {
+        _books.Clear();
+    }
 }

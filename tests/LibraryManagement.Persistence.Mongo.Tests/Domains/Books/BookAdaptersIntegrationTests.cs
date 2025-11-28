@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-
-using System.Collections.Generic;
-using System.Linq;
+using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Mongo.Tests.Fixtures;
@@ -14,9 +10,9 @@ namespace LibraryManagement.Persistence.Mongo.Tests.Domains.Books;
 [Collection(nameof(MongoDbCollection))]
 public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture) : IAsyncLifetime
 {
-    private IMongoDatabase? _database;
-    private IBookCollection? _bookCollection;
     private readonly BookEntityMapper _mapper = new();
+    private IBookCollection? _bookCollection;
+    private IMongoDatabase? _database;
 
     public Task InitializeAsync()
     {
@@ -27,10 +23,7 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
 
     public async Task DisposeAsync()
     {
-        if (_database is null)
-        {
-            return;
-        }
+        if (_database is null) return;
 
         await fixture.DropDatabaseAsync(_database);
     }
@@ -40,7 +33,7 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
     {
         CreateNewBookAdapter adapter = new(GetBookCollection(), _mapper);
 
-        var result = await adapter.Create(
+        Book result = await adapter.Create(
             "Patterns of Enterprise Application Architecture",
             "author-1",
             "Enterprise patterns",
@@ -67,7 +60,7 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
 
         GetSingleBookAdapter adapter = new(GetBookCollection(), _mapper);
 
-        var result = await adapter.GetById(seeded.Id);
+        Book result = await adapter.GetById(seeded.Id);
 
         Assert.Equal(seeded.Id, result.Id);
         Assert.Equal("Domain-Driven Design", result.Title);
@@ -82,7 +75,8 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
 
         UpdateBookAdapter adapter = new(GetBookCollection(), _mapper);
 
-        var result = await adapter.Update(seeded.Id, "Clean Code (2nd Edition)", "author-4", "Updated craftsmanship", new[] { "clean-code", "updated" });
+        Book result = await adapter.Update(seeded.Id, "Clean Code (2nd Edition)", "author-4", "Updated craftsmanship",
+            new[] { "clean-code", "updated" });
 
         Assert.Equal(seeded.Id, result.Id);
         Assert.Equal("Clean Code (2nd Edition)", result.Title);
@@ -109,7 +103,7 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
 
         SearchBooksAdapter adapter = new(GetBookCollection(), _mapper);
 
-        var results = await adapter.Search("ing");
+        IEnumerable<Book> results = await adapter.Search("ing");
 
         var titles = results.Select(book => book.Title).ToList();
 
@@ -121,13 +115,14 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
     [Fact]
     public async Task DeleteBookAdapter_removes_existing_book()
     {
-        BookEntity seeded = await SeedBook("Working Effectively with Legacy Code", "author-8", "Legacy techniques", new[] { "legacy" });
+        BookEntity seeded = await SeedBook("Working Effectively with Legacy Code", "author-8", "Legacy techniques",
+            new[] { "legacy" });
 
         DeleteBookAdapter adapter = new(GetBookCollection());
 
         await adapter.Delete(seeded.Id);
 
-        long remaining = await GetBookCollection().Collection
+        var remaining = await GetBookCollection().Collection
             .CountDocumentsAsync(entity => entity.Id == seeded.Id);
 
         Assert.Equal(0, remaining);
@@ -138,7 +133,8 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
         return _bookCollection ?? throw new InvalidOperationException("Book collection has not been initialized yet.");
     }
 
-    private async Task<BookEntity> SeedBook(string title, string authorId, string description, IEnumerable<string> keywords)
+    private async Task<BookEntity> SeedBook(string title, string authorId, string description,
+        IEnumerable<string> keywords)
     {
         BookEntity entity = new()
         {

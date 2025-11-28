@@ -11,7 +11,8 @@ public interface IModuleRegistrator
     public IHostEnvironment Environment { get; }
 }
 
-public interface IModuleRegistrator<out TApplicationBuilder> : IModuleRegistrator where TApplicationBuilder : IHostApplicationBuilder
+public interface IModuleRegistrator<out TApplicationBuilder> : IModuleRegistrator
+    where TApplicationBuilder : IHostApplicationBuilder
 {
     TApplicationBuilder Builder { get; }
 }

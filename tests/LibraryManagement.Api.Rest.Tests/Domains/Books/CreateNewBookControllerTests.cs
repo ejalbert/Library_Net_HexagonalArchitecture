@@ -1,5 +1,3 @@
-using System.Linq;
-
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Domains.Books;
@@ -7,6 +5,7 @@ using LibraryManagement.Api.Rest.Domains.Books.CreateNewBook;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using Moq;
@@ -26,7 +25,7 @@ public class CreateNewBookControllerTests
             Description = "A journey",
             Keywords = ["fantasy", "adventure"]
         };
-        var expected = new BookDto()
+        var expected = new BookDto
         {
             Id = book.Id,
             Title = book.Title,
@@ -37,7 +36,7 @@ public class CreateNewBookControllerTests
         var useCaseMock = new Mock<ICreateNewBookUseCase>();
         useCaseMock
             .Setup(x => x.Create(It.IsAny<CreateNewBookCommand>()))
-            .ReturnsAsync(()=>book);
+            .ReturnsAsync(() => book);
 
         var mapperMock = new Mock<IBookDtoMapper>();
         mapperMock.Setup(x => x.ToDto(It.IsAny<Book>())).Returns(new BookDto
@@ -52,9 +51,9 @@ public class CreateNewBookControllerTests
         var controller = new CreateNewBookController(useCaseMock.Object, mapperMock.Object);
         var request = new CreateNewBookRequestDto("The Hobbit", "author-1", "A journey", ["fantasy", "adventure"]);
 
-        var result = await controller.CreateNewBook(request);
+        IResult result = await controller.CreateNewBook(request);
 
-        var okResult = Assert.IsType<Ok<BookDto>>(result);
+        Ok<BookDto> okResult = Assert.IsType<Ok<BookDto>>(result);
         Assert.Equivalent(expected, okResult.Value);
         useCaseMock.Verify(
             x => x.Create(It.IsAny<CreateNewBookCommand>()),

@@ -4,11 +4,14 @@ using LibraryManagement.Web.Client.ModuleConfigurations;
 using LibraryManagement.Web.Components;
 using LibraryManagement.Web.Domain.Authors;
 
+using _Imports = LibraryManagement.Web.Client._Imports;
+
 namespace LibraryManagement.Web.ModuleConfigurations;
 
 public static class WebModule
 {
-    public static IModuleRegistrator<TApplicationBuilder> AddWebModule<TApplicationBuilder>(this IModuleRegistrator<TApplicationBuilder> builder) where TApplicationBuilder : IHostApplicationBuilder
+    public static IModuleRegistrator<TApplicationBuilder> AddWebModule<TApplicationBuilder>(
+        this IModuleRegistrator<TApplicationBuilder> builder) where TApplicationBuilder : IHostApplicationBuilder
     {
         builder.Services
             .AddWebClientModule(builder.ConfigurationManager)
@@ -23,7 +26,7 @@ public static class WebModule
 
     public static IModuleConfigurator UseWebModule(this IModuleConfigurator configurator)
     {
-        var app = configurator.App;
+        WebApplication app = configurator.App;
 
         if (app.Environment.IsDevelopment())
         {
@@ -31,7 +34,7 @@ public static class WebModule
         }
         else
         {
-            app.UseExceptionHandler("/Error", createScopeForErrors: true);
+            app.UseExceptionHandler("/Error", true);
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
@@ -43,7 +46,7 @@ public static class WebModule
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()
-            .AddAdditionalAssemblies(typeof(LibraryManagement.Web.Client._Imports).Assembly);
+            .AddAdditionalAssemblies(typeof(_Imports).Assembly);
 
         return configurator;
     }

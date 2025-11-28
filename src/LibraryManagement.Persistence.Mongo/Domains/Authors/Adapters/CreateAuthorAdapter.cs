@@ -3,7 +3,8 @@ using LibraryManagement.Domain.Domains.Authors.Create;
 
 namespace LibraryManagement.Persistence.Mongo.Domains.Authors.Adapters;
 
-public class CreateAuthorAdapter(IAuthorCollection authorCollection, IAuthorEntityMapper authorEntityMapper) : ICreateAuthorPort
+public class CreateAuthorAdapter(IAuthorCollection authorCollection, IAuthorEntityMapper authorEntityMapper)
+    : ICreateAuthorPort
 {
     public async Task<Author> Create(string name)
     {

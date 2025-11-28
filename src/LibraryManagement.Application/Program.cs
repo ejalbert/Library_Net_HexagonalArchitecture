@@ -1,22 +1,25 @@
 using LibraryManagement.Api.Rest.ModuleConfigurations;
 using LibraryManagement.Domain.ModuleConfigurations;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
+using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.Extensions;
 using LibraryManagement.Persistence.Mongo.ModuleConfigurations;
+using LibraryManagement.Persistence.Postgres.ModuleConfiguration;
 using LibraryManagement.Web.ModuleConfigurations;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder
     .InitializeApplicationModuleConfiguration()
     .AddDomainModule()
     .AddPersistenceMongoModule()
+    .AddPersistencePostgresModule()
     .AddRestApiModule()
     .AddWebModule();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-var moduleConfigurator = app.UseApplicationModules();
+IModuleConfigurator moduleConfigurator = app.UseApplicationModules();
 
 app.UseHttpsRedirection();
 
@@ -26,5 +29,5 @@ app.Run();
 
 namespace LibraryManagement.Application
 {
-    public partial class Program;
+    public class Program;
 }

@@ -4,7 +4,8 @@ namespace LibraryManagement.Web.Client.ModuleConfigurations;
 
 public static class WebClientModule
 {
-    public static IServiceCollection AddWebClientModule<TConfigurationManager>(this IServiceCollection services, TConfigurationManager configurationManager) where TConfigurationManager : IConfiguration, IConfigurationBuilder
+    public static IServiceCollection AddWebClientModule<TConfigurationManager>(this IServiceCollection services,
+        TConfigurationManager configurationManager) where TConfigurationManager : IConfiguration, IConfigurationBuilder
     {
         services.AddRestApiHttpClient(configurationManager);
 

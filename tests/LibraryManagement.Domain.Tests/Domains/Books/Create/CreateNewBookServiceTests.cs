@@ -1,5 +1,3 @@
-using System.Linq;
-
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
 
@@ -25,14 +23,19 @@ public class CreateNewBookServiceTests
             Keywords = new[] { "architecture", "clean-code" }
         };
 
-        portMock.Setup(port => port.Create("Clean Architecture", "author-1", "Architectural patterns", It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))))
+        portMock.Setup(port => port.Create("Clean Architecture", "author-1", "Architectural patterns",
+                It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))))
             .ReturnsAsync(persisted);
 
         CreateNewBookService service = new(portMock.Object, loggerMock.Object);
 
-        Book result = await service.Create(new CreateNewBookCommand("Clean Architecture", "author-1", "Architectural patterns", new[] { "architecture", "clean-code" }));
+        Book result = await service.Create(new CreateNewBookCommand("Clean Architecture", "author-1",
+            "Architectural patterns", new[] { "architecture", "clean-code" }));
 
         Assert.Same(persisted, result);
-        portMock.Verify(port => port.Create("Clean Architecture", "author-1", "Architectural patterns", It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))), Times.Once);
+        portMock.Verify(
+            port => port.Create("Clean Architecture", "author-1", "Architectural patterns",
+                It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "architecture", "clean-code" }))),
+            Times.Once);
     }
 }

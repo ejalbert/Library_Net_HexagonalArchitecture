@@ -29,7 +29,8 @@ public class CreateNewBookAdapterTests
 
         CreateNewBookAdapter adapter = new(bookCollectionMock.Object, new BookEntityMapper());
 
-        Book result = await adapter.Create("Refactoring", "author-1", "Improving design", new[] { "refactoring", "design" });
+        Book result = await adapter.Create("Refactoring", "author-1", "Improving design",
+            new[] { "refactoring", "design" });
 
         Assert.NotNull(insertedEntity);
         Assert.Equal("Refactoring", insertedEntity!.Title);

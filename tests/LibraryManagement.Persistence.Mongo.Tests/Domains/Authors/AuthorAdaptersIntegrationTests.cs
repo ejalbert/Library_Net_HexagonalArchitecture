@@ -1,3 +1,4 @@
+using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Persistence.Mongo.Domains.Authors;
 using LibraryManagement.Persistence.Mongo.Domains.Authors.Adapters;
 using LibraryManagement.Persistence.Mongo.Tests.Fixtures;
@@ -9,9 +10,9 @@ namespace LibraryManagement.Persistence.Mongo.Tests.Domains.Authors;
 [Collection(nameof(MongoDbCollection))]
 public class AuthorAdaptersIntegrationTests(MongoDbContainerFixture fixture) : IAsyncLifetime
 {
-    private IMongoDatabase? _database;
-    private IAuthorCollection? _authorCollection;
     private readonly AuthorEntityMapper _mapper = new();
+    private IAuthorCollection? _authorCollection;
+    private IMongoDatabase? _database;
 
     public Task InitializeAsync()
     {
@@ -22,10 +23,7 @@ public class AuthorAdaptersIntegrationTests(MongoDbContainerFixture fixture) : I
 
     public async Task DisposeAsync()
     {
-        if (_database is null)
-        {
-            return;
-        }
+        if (_database is null) return;
 
         await fixture.DropDatabaseAsync(_database);
     }
@@ -35,7 +33,7 @@ public class AuthorAdaptersIntegrationTests(MongoDbContainerFixture fixture) : I
     {
         CreateAuthorAdapter adapter = new(GetAuthorCollection(), _mapper);
 
-        var created = await adapter.Create("Uncle Bob");
+        Author created = await adapter.Create("Uncle Bob");
 
         AuthorEntity persisted = await GetAuthorCollection().Collection
             .Find(entity => entity.Id == created.Id)

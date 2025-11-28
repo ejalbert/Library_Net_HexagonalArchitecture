@@ -6,7 +6,9 @@ namespace LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 
 public static class RestApiClientModule
 {
-    public static IServiceCollection AddRestApiHttpClient<TConfigurationManager>(this IServiceCollection services, TConfigurationManager configurationManager, Action<RestApiClientModuleOptions>? configureOptions = null) where TConfigurationManager : IConfiguration, IConfigurationBuilder
+    public static IServiceCollection AddRestApiHttpClient<TConfigurationManager>(this IServiceCollection services,
+        TConfigurationManager configurationManager, Action<RestApiClientModuleOptions>? configureOptions = null)
+        where TConfigurationManager : IConfiguration, IConfigurationBuilder
     {
         RestApiClientEnvConfiguration optionsFromEnv = new();
         configurationManager.GetSection("RestApi").Bind(optionsFromEnv);
@@ -16,14 +18,12 @@ public static class RestApiClientModule
             options.BasePath = $"{optionsFromEnv.BasePath ?? "http://localhost:5007"}/api/";
         });
 
-        if (configureOptions != null)
-        {
-            services.Configure(configureOptions);
-        }
+        if (configureOptions != null) services.Configure(configureOptions);
 
         services.AddHttpClient<IRestAPiClient, RestApiClient>((serviceProvider, client) =>
         {
-            var options = serviceProvider.GetRequiredService<IOptions<RestApiClientModuleOptions>>().Value;
+            RestApiClientModuleOptions options =
+                serviceProvider.GetRequiredService<IOptions<RestApiClientModuleOptions>>().Value;
 
             client.BaseAddress = new Uri(options.BasePath);
         });

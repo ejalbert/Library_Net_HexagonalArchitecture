@@ -9,7 +9,7 @@ public class GetSingleBookAdapter(IBookCollection bookCollection, IBookEntityMap
 {
     public async Task<Book> GetById(string id)
     {
-        var cursor = await bookCollection.Collection.FindAsync(it => it.Id == id);
+        IAsyncCursor<BookEntity>? cursor = await bookCollection.Collection.FindAsync(it => it.Id == id);
 
         return mapper.ToDomain(cursor.Single());
     }

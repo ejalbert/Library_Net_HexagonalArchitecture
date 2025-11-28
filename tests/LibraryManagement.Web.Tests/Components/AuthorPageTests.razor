@@ -1,23 +1,19 @@
-@using System
 @using System.Net
-@using System.Net.Http
 @using System.Net.Http.Json
 @using LibraryManagement.Api.Rest.Client
 @using LibraryManagement.Api.Rest.Client.Domain.Authors
-@using LibraryManagement.Api.Rest.Client.Domain.Authors.Create
-@using LibraryManagement.Web.Components.Pages
 @using LibraryManagement.Web.Domain.Authors.CreateAuthor
-
 @inherits TestContext
 
 @code {
+
     [Fact]
     public void Author_page_submits_create_request_and_displays_created_author()
     {
         AuthorDto response = new() { Id = "author-42", Name = "Ada Lovelace" };
         RegisterRestClient(response);
 
-        var cut = Render(@<CreateAuthorPage />);
+        var cut = Render(@<CreateAuthorPage/>);
         cut.Find("#author-name").Change("Ada Lovelace");
         cut.Find(".create-author-btn").Click();
 
@@ -60,4 +56,5 @@
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
         }
     }
+
 }

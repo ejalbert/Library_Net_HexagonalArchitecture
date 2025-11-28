@@ -35,7 +35,7 @@ public class CreateAuthorControllerTests
         Assert.Equal(dto, okResult.Value);
 
         useCaseMock.Verify(useCase => useCase.Create(
-            It.Is<CreateAuthorCommand>(command => command == new CreateAuthorCommand(author.Name))),
+                It.Is<CreateAuthorCommand>(command => command == new CreateAuthorCommand(author.Name))),
             Times.Once);
     }
 }

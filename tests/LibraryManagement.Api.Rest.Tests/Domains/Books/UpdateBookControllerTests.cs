@@ -1,5 +1,3 @@
-using System.Linq;
-
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
 using LibraryManagement.Api.Rest.Domains.Books;
@@ -44,11 +42,12 @@ public class UpdateBookControllerTests
         mapperMock.Setup(mapper => mapper.ToDto(updated)).Returns(mapped);
 
         UpdateBookController controller = new(useCaseMock.Object, mapperMock.Object);
-        UpdateBookRequestDto request = new("The Hobbit - Revised", "author-1", "Updated journey", new[] { "fantasy", "revised" });
+        UpdateBookRequestDto request = new("The Hobbit - Revised", "author-1", "Updated journey",
+            new[] { "fantasy", "revised" });
 
         IResult result = await controller.UpdateBook("book-id", request);
 
-        var okResult = Assert.IsType<Ok<BookDto>>(result);
+        Ok<BookDto> okResult = Assert.IsType<Ok<BookDto>>(result);
         Assert.Equal(mapped, okResult.Value);
         useCaseMock.Verify(useCase =>
                 useCase.Update(It.IsAny<UpdateBookCommand>()),

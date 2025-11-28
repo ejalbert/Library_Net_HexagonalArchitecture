@@ -1,14 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
 
 namespace LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 
-public class CreateNewBookAdapter(IBookCollection bookCollection, IBookEntityMapper bookEntityMapper) : ICreateNewBookPort
+public class CreateNewBookAdapter(IBookCollection bookCollection, IBookEntityMapper bookEntityMapper)
+    : ICreateNewBookPort
 {
-    public async Task<Book> Create(string title, string authorId, string description, IReadOnlyCollection<string> keywords)
+    public async Task<Book> Create(string title, string authorId, string description,
+        IReadOnlyCollection<string> keywords)
     {
         BookEntity bookEntity = new()
         {

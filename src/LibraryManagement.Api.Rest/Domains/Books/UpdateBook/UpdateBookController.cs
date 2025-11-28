@@ -1,7 +1,5 @@
-using System.Linq;
-
-using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Update;
+using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Update;
 
 using Microsoft.AspNetCore.Http;
@@ -12,7 +10,7 @@ public class UpdateBookController(IUpdateBookUseCase updateBookUseCase, IBookDto
 {
     public async Task<IResult> UpdateBook(string id, UpdateBookRequestDto requestDto)
     {
-        var book = await updateBookUseCase.Update(new UpdateBookCommand(
+        Book book = await updateBookUseCase.Update(new UpdateBookCommand(
             id,
             requestDto.Title,
             requestDto.AuthorId,

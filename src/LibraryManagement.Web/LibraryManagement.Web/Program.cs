@@ -1,14 +1,15 @@
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
+using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.Extensions;
 using LibraryManagement.Web.ModuleConfigurations;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.InitializeApplicationModuleConfiguration().AddWebModule();
 
-var app = builder.Build();
-var moduleConfigurator = app.UseApplicationModules();
+WebApplication app = builder.Build();
+IModuleConfigurator moduleConfigurator = app.UseApplicationModules();
 
 app.UseHttpsRedirection();
 

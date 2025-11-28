@@ -10,7 +10,6 @@ public interface IBookEntityMapper
     BookEntity ToEntity(Book book);
 }
 
-
 [Mapper]
 public partial class BookEntityMapper : IBookEntityMapper
 {

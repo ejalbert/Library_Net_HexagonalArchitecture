@@ -1,5 +1,3 @@
-using System.Linq;
-
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books;
@@ -7,6 +5,7 @@ using LibraryManagement.Api.Rest.Domains.Books.Search;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Search;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using Moq;
@@ -18,11 +17,27 @@ public class SearchBooksControllerTests
     [Fact]
     public async Task SearchBooks_ReturnsMappedDtosInOkResult()
     {
-        var bookOne = new Book { Id = "book-1", Title = "The Hobbit", AuthorId = "author-1", Description = "A hobbit tale", Keywords = new[] { "fantasy" } };
-        var bookTwo = new Book { Id = "book-2", Title = "The Silmarillion", AuthorId = "author-2", Description = "Lore of Middle-earth", Keywords = new[] { "fantasy", "lore" } };
-        var books = new[] { bookOne, bookTwo };
-        var responseDtoOne = new BookDto { Id = "book-1", Title = "The Hobbit", AuthorId = "author-1", Description = "A hobbit tale", Keywords = new[] { "fantasy" } };
-        var responseDtoTwo = new BookDto { Id = "book-2", Title = "The Silmarillion", AuthorId = "author-2", Description = "Lore of Middle-earth", Keywords = new[] { "fantasy", "lore" } };
+        var bookOne = new Book
+        {
+            Id = "book-1", Title = "The Hobbit", AuthorId = "author-1", Description = "A hobbit tale",
+            Keywords = new[] { "fantasy" }
+        };
+        var bookTwo = new Book
+        {
+            Id = "book-2", Title = "The Silmarillion", AuthorId = "author-2", Description = "Lore of Middle-earth",
+            Keywords = new[] { "fantasy", "lore" }
+        };
+        Book[] books = new[] { bookOne, bookTwo };
+        var responseDtoOne = new BookDto
+        {
+            Id = "book-1", Title = "The Hobbit", AuthorId = "author-1", Description = "A hobbit tale",
+            Keywords = new[] { "fantasy" }
+        };
+        var responseDtoTwo = new BookDto
+        {
+            Id = "book-2", Title = "The Silmarillion", AuthorId = "author-2", Description = "Lore of Middle-earth",
+            Keywords = new[] { "fantasy", "lore" }
+        };
         var request = new SearchBooksRequestDto("hobbit");
         var useCaseMock = new Mock<ISearchBooksUseCase>();
         useCaseMock
@@ -33,10 +48,10 @@ public class SearchBooksControllerTests
         mapperMock.Setup(x => x.ToDto(bookTwo)).Returns(responseDtoTwo);
         var controller = new SearchBooksController(useCaseMock.Object, mapperMock.Object);
 
-        var result = await controller.SearchBooks(request);
+        IResult result = await controller.SearchBooks(request);
 
-        var okResult = Assert.IsType<Ok<SearchBooksResponseDto>>(result);
-        var payload = Assert.IsType<SearchBooksResponseDto>(okResult.Value);
+        Ok<SearchBooksResponseDto> okResult = Assert.IsType<Ok<SearchBooksResponseDto>>(result);
+        SearchBooksResponseDto payload = Assert.IsType<SearchBooksResponseDto>(okResult.Value);
         Assert.Collection(
             payload.Books,
             dto => Assert.Same(responseDtoOne, dto),

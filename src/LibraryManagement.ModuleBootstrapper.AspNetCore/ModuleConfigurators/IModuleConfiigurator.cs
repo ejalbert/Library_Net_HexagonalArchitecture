@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Builder;
 
 namespace LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 
-
-
 public interface IModuleConfigurator
 {
     WebApplication App { get; }

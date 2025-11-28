@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
 
 public record PatchBookRequestDto(

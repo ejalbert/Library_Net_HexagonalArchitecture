@@ -11,21 +11,21 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0"/>
-        <PackageReference Include="Riok.Mapperly" Version="4.3.0" />
+        <PackageReference Include="Riok.Mapperly" Version="4.3.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj" />
+        <ProjectReference Include="..\..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\" />
+        <Folder Include="Pages\"/>
     </ItemGroup>
 
 </Project>

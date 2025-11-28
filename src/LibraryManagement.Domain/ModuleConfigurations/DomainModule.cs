@@ -10,9 +10,10 @@ namespace LibraryManagement.Domain.ModuleConfigurations;
 
 public static class DomainModule
 {
-    public static IModuleRegistrator<TApplicationBuilder> AddDomainModule<TApplicationBuilder>(this IModuleRegistrator<TApplicationBuilder> moduleRegistrator, Action<DomainModuleOptions>? configureOptions = null) where TApplicationBuilder : IHostApplicationBuilder
+    public static IModuleRegistrator<TApplicationBuilder> AddDomainModule<TApplicationBuilder>(
+        this IModuleRegistrator<TApplicationBuilder> moduleRegistrator,
+        Action<DomainModuleOptions>? configureOptions = null) where TApplicationBuilder : IHostApplicationBuilder
     {
-
         DomainModuleOptions optionsFromEnv = new();
         moduleRegistrator.ConfigurationManager.GetSection("Domain").Bind(optionsFromEnv);
 
@@ -21,10 +22,7 @@ public static class DomainModule
             options.Test = optionsFromEnv.Test;
         });
 
-        if (configureOptions != null)
-        {
-            moduleRegistrator.Services.Configure(configureOptions);
-        }
+        if (configureOptions != null) moduleRegistrator.Services.Configure(configureOptions);
 
         moduleRegistrator.Services
             .AddAuthorServices()

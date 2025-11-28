@@ -5,11 +5,10 @@
 <h1>Library Management</h1>
 
 <div style="display: flex; flex-direction: column; gap: 10px;">
-    @foreach(var book in BookDetails)
+    @foreach (var book in BookDetails)
     {
         <NavLink @key="book.Id" class="book-link" href="@($"/book/{book.Id}")">
             <span>@book.Title</span>
         </NavLink>
-
     }
 </div>

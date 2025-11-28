@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Dockerfile" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Dockerfile"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LibraryManagement.Api.Rest\LibraryManagement.Api.Rest.csproj" />
-    <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
-    <ProjectReference Include="..\LibraryManagement.Persistence.Mongo\LibraryManagement.Persistence.Mongo.csproj" />
-    <ProjectReference Include="..\LibraryManagement.Web\LibraryManagement.Web\LibraryManagement.Web.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\LibraryManagement.Api.Rest\LibraryManagement.Api.Rest.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Persistence.Mongo\LibraryManagement.Persistence.Mongo.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Persistence.Postgres\LibraryManagement.Persistence.Postgres.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Web\LibraryManagement.Web\LibraryManagement.Web.csproj"/>
+    </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 using LibraryManagement.Api.Rest.Domains.Books.DeleteBook;
 using LibraryManagement.Domain.Domains.Books.Delete;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using Moq;
@@ -18,7 +19,7 @@ public class DeleteBookControllerTests
             .Returns(Task.CompletedTask);
         DeleteBookController controller = new(useCaseMock.Object);
 
-        var result = await controller.DeleteBook("book-1");
+        IResult result = await controller.DeleteBook("book-1");
 
         Assert.IsType<NoContent>(result);
         useCaseMock.Verify(useCase => useCase.Delete(

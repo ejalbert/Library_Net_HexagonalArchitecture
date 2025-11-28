@@ -4,7 +4,6 @@ using MongoDB.Driver;
 
 namespace LibraryManagement.Persistence.Mongo.Domains.Books;
 
-
 public interface IBookCollection : IAbstractCollection<BookEntity>;
 
 public class BookCollection : AbstractCollection<BookEntity>, IBookCollection
@@ -18,7 +17,8 @@ public class BookCollection : AbstractCollection<BookEntity>, IBookCollection
     private void EnsureIndexes()
     {
         IndexKeysDefinition<BookEntity> titleIndex = Builders<BookEntity>.IndexKeys.Ascending(book => book.Title);
-        IndexKeysDefinition<BookEntity> keywordsIndex = Builders<BookEntity>.IndexKeys.Ascending(nameof(BookEntity.Keywords));
+        IndexKeysDefinition<BookEntity> keywordsIndex =
+            Builders<BookEntity>.IndexKeys.Ascending(nameof(BookEntity.Keywords));
 
         Collection.Indexes.CreateOne(
             new CreateIndexModel<BookEntity>(titleIndex, new CreateIndexOptions { Name = "idx_books_title" }));

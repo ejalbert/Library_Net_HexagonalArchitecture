@@ -33,7 +33,7 @@ public class ApiModuleTests
     [Fact]
     public void AddRestApiModule_UsesConfigurationAndDelegateOverrides()
     {
-        var builder = CreateBuilder();
+        WebApplicationBuilder builder = CreateBuilder();
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
         {
             ["RestApi:BasePath"] = "/configured"
@@ -43,8 +43,8 @@ public class ApiModuleTests
             .InitializeApplicationModuleConfiguration()
             .AddRestApiModule(options => options.BasePath = "/delegate");
 
-        using var provider = builder.Services.BuildServiceProvider();
-        var options = provider.GetRequiredService<IOptions<RestApiModuleOptions>>();
+        using ServiceProvider provider = builder.Services.BuildServiceProvider();
+        IOptions<RestApiModuleOptions> options = provider.GetRequiredService<IOptions<RestApiModuleOptions>>();
 
         Assert.Equal("/delegate", options.Value.BasePath);
     }
@@ -52,14 +52,14 @@ public class ApiModuleTests
     [Fact]
     public void AddRestApiModule_DefaultsBasePathWhenConfigurationMissing()
     {
-        var builder = CreateBuilder();
+        WebApplicationBuilder builder = CreateBuilder();
 
         builder
             .InitializeApplicationModuleConfiguration()
             .AddRestApiModule();
 
-        using var provider = builder.Services.BuildServiceProvider();
-        var options = provider.GetRequiredService<IOptions<RestApiModuleOptions>>();
+        using ServiceProvider provider = builder.Services.BuildServiceProvider();
+        IOptions<RestApiModuleOptions> options = provider.GetRequiredService<IOptions<RestApiModuleOptions>>();
 
         Assert.Equal("/api", options.Value.BasePath);
     }
@@ -67,14 +67,14 @@ public class ApiModuleTests
     [Fact]
     public void AddRestApiModule_RegistersServices()
     {
-        var builder = CreateBuilder();
+        WebApplicationBuilder builder = CreateBuilder();
         RegisterUseCases(builder.Services);
 
         builder
             .InitializeApplicationModuleConfiguration()
             .AddRestApiModule();
 
-        using var provider = builder.Services.BuildServiceProvider();
+        using ServiceProvider provider = builder.Services.BuildServiceProvider();
 
         Assert.IsType<BookDtoMapper>(provider.GetRequiredService<IBookDtoMapper>());
         Assert.IsType<AuthorDtoMapper>(provider.GetRequiredService<IAuthorDtoMapper>());
@@ -89,14 +89,14 @@ public class ApiModuleTests
     [Fact]
     public void UseRestApiModule_MapsBookEndpoints()
     {
-        var builder = CreateBuilder();
+        WebApplicationBuilder builder = CreateBuilder();
         RegisterUseCases(builder.Services);
 
         builder
             .InitializeApplicationModuleConfiguration()
             .AddRestApiModule();
 
-        using var app = builder.Build();
+        using WebApplication app = builder.Build();
         app.UseApplicationModules().UseRestApiModule();
 
         var endpoints = GetRouteEndpoints(app).ToList();
@@ -116,7 +116,7 @@ public class ApiModuleTests
 
     private static WebApplicationBuilder CreateBuilder()
     {
-        var builder = WebApplication.CreateBuilder();
+        WebApplicationBuilder builder = WebApplication.CreateBuilder();
         builder.Environment.EnvironmentName = Environments.Development;
         return builder;
     }

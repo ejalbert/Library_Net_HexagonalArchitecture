@@ -1,13 +1,15 @@
 # LibraryManagement.Api.Rest
 
-Delivery module that exposes domain capabilities via minimal APIs. The current implementation publishes `/api/v1/books` endpoints that forward to the book use cases and `/api/v1/authors` for the author create flow.
+Delivery module that exposes domain capabilities via minimal APIs. The current implementation publishes `/api/v1/books`
+endpoints that forward to the book use cases and `/api/v1/authors` for the author create flow.
 
 ## Key Capabilities
 
 - Registers REST services through `AddRestApiModule()` and wires endpoints via `UseRestApiModule()`.
 - Binds `RestApiModuleOptions` from configuration, defaulting to `/api` when not provided.
 - Adds OpenAPI/Swagger in Development to document endpoints.
-- Maps book endpoints for create, get-by-id, search, update, and delete scenarios using DTOs from the REST client package and Mapperly-based mappers.
+- Maps book endpoints for create, get-by-id, search, update, and delete scenarios using DTOs from the REST client
+  package and Mapperly-based mappers.
 - Maps author creation endpoint that forwards to `ICreateAuthorUseCase`.
 
 ## Directory Layout
@@ -50,7 +52,8 @@ dotnet test ../../tests/LibraryManagement.Api.Rest.Tests/LibraryManagement.Api.R
 
 ## Configuration
 
-Set `RestApi:BasePath` in host configuration to control the route prefix. When omitted, the module uses `/api` and then appends its group (`/v1/books`).
+Set `RestApi:BasePath` in host configuration to control the route prefix. When omitted, the module uses `/api` and then
+appends its group (`/v1/books`).
 
 ## Tests
 

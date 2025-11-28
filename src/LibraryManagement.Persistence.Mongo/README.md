@@ -1,12 +1,16 @@
 # LibraryManagement.Persistence.Mongo
 
-MongoDB adapter that implements the outbound ports defined by the domain layer. The current slice stores and queries books and now persists authors (create use case).
+MongoDB adapter that implements the outbound ports defined by the domain layer. The current slice stores and queries
+books and now persists authors (create use case).
 
 ## Responsibilities
 
-- Provides `PersistenceMongoModule` to register MongoDB dependencies (client, database, options) through the module bootstrapper.
-- Implements `IBookCollection`, `IAuthorCollection`, their entities, and Mapperly-powered conversions between entities and domain models.
-- Supplies adapters for `ICreateAuthorPort`, `ICreateNewBookPort`, `IUpdateBookPort`, `IDeleteBookPort`, `IGetSingleBookPort`, and `ISearchBooksPort`.
+- Provides `PersistenceMongoModule` to register MongoDB dependencies (client, database, options) through the module
+  bootstrapper.
+- Implements `IBookCollection`, `IAuthorCollection`, their entities, and Mapperly-powered conversions between entities
+  and domain models.
+- Supplies adapters for `ICreateAuthorPort`, `ICreateNewBookPort`, `IUpdateBookPort`, `IDeleteBookPort`,
+  `IGetSingleBookPort`, and `ISearchBooksPort`.
 
 ## Dependencies
 
@@ -47,7 +51,9 @@ dotnet test ../../tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagem
 
 ## Configuration
 
-`PersistenceMongoModule` binds `PersistenceMongo:ConnectionString` and `DatabaseName`, defaulting to `mongodb://localhost:20027` and `library_management`. Module consumers can override these via configuration or delegate options.
+`PersistenceMongoModule` binds `PersistenceMongo:ConnectionString` and `DatabaseName`, defaulting to
+`mongodb://localhost:20027` and `library_management`. Module consumers can override these via configuration or delegate
+options.
 
 ## Tests
 

@@ -1,3 +1,4 @@
+using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.Domain.Domains.Books;
 
@@ -18,7 +19,7 @@ public class BookDtoMapperTests
             Keywords = new[] { "fantasy", "adventure" }
         };
 
-        var dto = mapper.ToDto(book);
+        BookDto dto = mapper.ToDto(book);
 
         Assert.Equal(book.Id, dto.Id);
         Assert.Equal(book.Title, dto.Title);

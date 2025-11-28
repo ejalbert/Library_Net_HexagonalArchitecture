@@ -4,7 +4,8 @@
 
 <h3>Create Author</h3>
 
-<CreateAuthorForm Model="FormModel" OnSubmit="CreateAuthor" SubmitButtonText="@(IsSubmitting ? "Creating..." : "Create Author")" />
+<CreateAuthorForm Model="FormModel" OnSubmit="CreateAuthor"
+                  SubmitButtonText="@(IsSubmitting ? "Creating..." : "Create Author")"/>
 
 @if (LastCreatedAuthor is not null)
 {

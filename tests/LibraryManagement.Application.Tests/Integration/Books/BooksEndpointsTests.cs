@@ -1,11 +1,10 @@
-using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
-using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
+using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 using LibraryManagement.Application.Tests.Infrastructure;
 using LibraryManagement.Application.Tests.TestDoubles;
 using LibraryManagement.Domain.Domains.Books;
@@ -59,7 +58,8 @@ public class BooksEndpointsTests
     {
         using HttpClient client = _factory.CreateClient();
 
-        var request = new CreateNewBookRequestDto("Domain-Driven Design", "author-9", "DDD classic", new[] { "ddd", "architecture" });
+        var request = new CreateNewBookRequestDto("Domain-Driven Design", "author-9", "DDD classic",
+            new[] { "ddd", "architecture" });
         using HttpResponseMessage createResponse = await client.PostAsJsonAsync("/api/v1/books", request);
 
         createResponse.EnsureSuccessStatusCode();
@@ -81,8 +81,16 @@ public class BooksEndpointsTests
     public async Task SearchBooks_filters_results()
     {
         _persistence.Seed(
-            new Book { Id = "book-1", Title = "Pragmatic Hexagonal Architecture", AuthorId = "author-1", Description = "Pragmatic guide", Keywords = new[] { "architecture" } },
-            new Book { Id = "book-2", Title = "CQRS Patterns", AuthorId = "author-2", Description = "CQRS deep dive", Keywords = new[] { "cqrs" } }
+            new Book
+            {
+                Id = "book-1", Title = "Pragmatic Hexagonal Architecture", AuthorId = "author-1",
+                Description = "Pragmatic guide", Keywords = new[] { "architecture" }
+            },
+            new Book
+            {
+                Id = "book-2", Title = "CQRS Patterns", AuthorId = "author-2", Description = "CQRS deep dive",
+                Keywords = new[] { "cqrs" }
+            }
         );
 
         using HttpClient client = _factory.CreateClient();

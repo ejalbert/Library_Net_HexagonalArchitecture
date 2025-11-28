@@ -4,7 +4,8 @@ xUnit suite focused on the ASP.NET Core-specific configurator.
 
 ## Current Coverage
 
-- `WebApplicationExtensionsTests` confirms that `UseApplicationModules()` returns an `IModuleConfigurator` bound to the same `WebApplication` instance, ensuring downstream modules can append middleware/endpoints.
+- `WebApplicationExtensionsTests` confirms that `UseApplicationModules()` returns an `IModuleConfigurator` bound to the
+  same `WebApplication` instance, ensuring downstream modules can append middleware/endpoints.
 
 ## Commands
 

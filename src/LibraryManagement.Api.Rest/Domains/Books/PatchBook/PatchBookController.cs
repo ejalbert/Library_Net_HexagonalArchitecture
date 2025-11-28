@@ -1,7 +1,5 @@
-using System.Linq;
-
-using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
+using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Patch;
 
 using Microsoft.AspNetCore.Http;
@@ -12,7 +10,7 @@ public class PatchBookController(IPatchBookUseCase patchBookUseCase, IBookDtoMap
 {
     public async Task<IResult> PatchBook(string id, PatchBookRequestDto requestDto)
     {
-        var book = await patchBookUseCase.Patch(new PatchBookCommand(
+        Book book = await patchBookUseCase.Patch(new PatchBookCommand(
             id,
             requestDto.Title,
             requestDto.AuthorId,

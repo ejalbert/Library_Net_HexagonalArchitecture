@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
@@ -49,7 +46,8 @@ public class UpdateBookAdapterTests
 
         UpdateBookAdapter adapter = new(bookCollectionMock.Object, mapperMock.Object);
 
-        Book result = await adapter.Update("book-42", "Refactoring (Updated)", "author-9", "Updated edition", new[] { "refactoring", "updated" });
+        Book result = await adapter.Update("book-42", "Refactoring (Updated)", "author-9", "Updated edition",
+            new[] { "refactoring", "updated" });
 
         Assert.Same(mapped, result);
 
@@ -78,6 +76,7 @@ public class UpdateBookAdapterTests
 
         UpdateBookAdapter adapter = new(bookCollectionMock.Object, Mock.Of<IBookEntityMapper>());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => adapter.Update("missing", "anything", "author-1", "desc", Array.Empty<string>()));
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            adapter.Update("missing", "anything", "author-1", "desc", Array.Empty<string>()));
     }
 }

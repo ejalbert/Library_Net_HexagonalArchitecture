@@ -19,7 +19,7 @@ public class WebAssetsTests
         using HttpResponseMessage response = await client.GetAsync("/");
 
         response.EnsureSuccessStatusCode();
-        string html = await response.Content.ReadAsStringAsync();
+        var html = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("<html", html, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("blazor.web.js", html, StringComparison.OrdinalIgnoreCase);
@@ -34,7 +34,7 @@ public class WebAssetsTests
         response.EnsureSuccessStatusCode();
         Assert.Equal("text/css", response.Content.Headers.ContentType?.MediaType);
 
-        string css = await response.Content.ReadAsStringAsync();
+        var css = await response.Content.ReadAsStringAsync();
         Assert.Contains(".content", css, StringComparison.OrdinalIgnoreCase);
     }
 }

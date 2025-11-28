@@ -2,13 +2,11 @@ using LibraryManagement.Api.Rest.Client;
 using LibraryManagement.Api.Rest.Client.Domain.Authors;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace LibraryManagement.Web.Domain.Authors.CreateAuthor;
 
 public partial class CreateAuthorPage(IRestAPiClient restApiClient, IAuthorModelMapper mapper) : ComponentBase
 {
-
     private AuthorModel? FormModel { get; set; }
 
     private AuthorModel? LastCreatedAuthor { get; set; }
@@ -19,15 +17,12 @@ public partial class CreateAuthorPage(IRestAPiClient restApiClient, IAuthorModel
 
     protected override void OnInitialized()
     {
-        FormModel ??= new();
+        FormModel ??= new AuthorModel();
     }
 
     protected async Task CreateAuthor(AuthorModel newAuthor)
     {
-        if (IsCreateDisabled)
-        {
-            return;
-        }
+        if (IsCreateDisabled) return;
 
         ErrorMessage = null;
         IsSubmitting = true;
@@ -36,7 +31,7 @@ public partial class CreateAuthorPage(IRestAPiClient restApiClient, IAuthorModel
         {
             var createAuthorRequestDto = mapper.ToCreateAuthorRequestDto(FormModel!);
             LastCreatedAuthor = mapper.ToModel(await restApiClient.Authors.Create(createAuthorRequestDto));
-            FormModel = new();
+            FormModel = new AuthorModel();
         }
         catch (Exception)
         {
@@ -47,6 +42,4 @@ public partial class CreateAuthorPage(IRestAPiClient restApiClient, IAuthorModel
             IsSubmitting = false;
         }
     }
-
-
 }

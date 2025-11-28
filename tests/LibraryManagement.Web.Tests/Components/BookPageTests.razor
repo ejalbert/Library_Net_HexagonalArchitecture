@@ -1,16 +1,12 @@
-@using System
-@using System.Linq
 @using System.Net
-@using System.Net.Http
 @using System.Net.Http.Json
 @using LibraryManagement.Api.Rest.Client
 @using LibraryManagement.Api.Rest.Client.Domain.Books
 @using LibraryManagement.Api.Rest.Client.Domain.Books.Search
-@using LibraryManagement.Web.Components.Pages
-
 @inherits TestContext
 
 @code {
+
     [Fact]
     public void Book_page_displays_books_returned_by_search_endpoint_impl()
     {
@@ -21,7 +17,7 @@
         };
         RegisterRestClient(new SearchBooksResponseDto(expectedBooks));
 
-        var cut = Render(@<ListBooks />);
+        var cut = Render(@<ListBooks/>);
         cut.WaitForState(() => cut.FindAll(".book-item").Count == expectedBooks.Length);
 
         var renderedTitles = cut.FindAll("h4").Select(h => h.TextContent.Trim()).ToArray();
@@ -71,4 +67,5 @@
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
         }
     }
+
 }

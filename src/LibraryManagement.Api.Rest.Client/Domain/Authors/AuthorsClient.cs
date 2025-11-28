@@ -9,7 +9,8 @@ internal class AuthorsClient(IRestAPiClient client) : IAuthorsClient
     private const string BasePath = "v1/authors";
     private readonly HttpClient _httpClient = client.HttpClient;
 
-    public async Task<AuthorDto> Create(CreateAuthorRequestDto requestDto, CancellationToken cancellationToken = default)
+    public async Task<AuthorDto> Create(CreateAuthorRequestDto requestDto,
+        CancellationToken cancellationToken = default)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync(BasePath, requestDto, cancellationToken);
 

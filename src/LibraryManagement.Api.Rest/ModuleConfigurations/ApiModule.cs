@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace LibraryManagement.Api.Rest.ModuleConfigurations;
 
@@ -17,7 +18,7 @@ public static class ApiModule
         Action<RestApiModuleOptions>? configureOptions = null)
         where TApplicationBuilder : IHostApplicationBuilder
     {
-        var services = moduleRegistrator.Services;
+        IServiceCollection services = moduleRegistrator.Services;
 
         RestApiModuleEnvConfiguration optionsFromEnv = new();
         moduleRegistrator.ConfigurationManager.GetSection("RestApi").Bind(optionsFromEnv);
@@ -27,10 +28,7 @@ public static class ApiModule
             options.BasePath = optionsFromEnv.BasePath ?? "/api";
         });
 
-        if (configureOptions != null)
-        {
-            services.Configure(configureOptions);
-        }
+        if (configureOptions != null) services.Configure(configureOptions);
 
         services
             .AddOpenApi()
@@ -45,13 +43,10 @@ public static class ApiModule
 
     public static IModuleConfigurator UseRestApiModule(this IModuleConfigurator configurator)
     {
-        var app = configurator.App;
-        var options = app.Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<RestApiModuleOptions>>().Value;
+        WebApplication app = configurator.App;
+        RestApiModuleOptions options = app.Services.GetRequiredService<IOptions<RestApiModuleOptions>>().Value;
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi("/api/{documentName}.json");
-        }
+        if (app.Environment.IsDevelopment()) app.MapOpenApi("/api/{documentName}.json");
 
         app.UseRouting();
 
@@ -61,4 +56,3 @@ public static class ApiModule
         return configurator;
     }
 }
-

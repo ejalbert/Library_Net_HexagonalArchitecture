@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Update;
 
@@ -10,9 +7,10 @@ namespace LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 
 public class UpdateBookAdapter(IBookCollection bookCollection, IBookEntityMapper mapper) : IUpdateBookPort
 {
-    public async Task<Book> Update(string id, string title, string authorId, string description, IReadOnlyCollection<string> keywords)
+    public async Task<Book> Update(string id, string title, string authorId, string description,
+        IReadOnlyCollection<string> keywords)
     {
-        var updatedEntity = await bookCollection.Collection.FindOneAndUpdateAsync(
+        BookEntity? updatedEntity = await bookCollection.Collection.FindOneAndUpdateAsync(
             entity => entity.Id == id,
             Builders<BookEntity>.Update
                 .Set(entity => entity.Title, title)
@@ -24,10 +22,7 @@ public class UpdateBookAdapter(IBookCollection bookCollection, IBookEntityMapper
                 ReturnDocument = ReturnDocument.After
             });
 
-        if (updatedEntity is null)
-        {
-            throw new InvalidOperationException($"Book '{id}' was not found.");
-        }
+        if (updatedEntity is null) throw new InvalidOperationException($"Book '{id}' was not found.");
 
         return mapper.ToDomain(updatedEntity);
     }

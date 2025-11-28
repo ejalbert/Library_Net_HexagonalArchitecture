@@ -1,4 +1,3 @@
-using System.Linq;
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
 using LibraryManagement.Api.Rest.Domains.Books;
@@ -8,6 +7,7 @@ using LibraryManagement.Domain.Domains.Books.Patch;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+
 using Moq;
 
 namespace LibraryManagement.Api.Rest.Tests.Domains.Books.Patch;
@@ -46,7 +46,7 @@ public class PatchBookControllerTests
 
         IResult result = await controller.PatchBook("book-id", request);
 
-        var okResult = Assert.IsType<Ok<BookDto>>(result);
+        Ok<BookDto> okResult = Assert.IsType<Ok<BookDto>>(result);
         Assert.Equal(patched.Description, okResult.Value!.Description);
         useCaseMock.Verify(x => x.Patch(It.Is<PatchBookCommand>(command =>
             command == new PatchBookCommand("book-id", null, null, request.Description))), Times.Once);

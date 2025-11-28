@@ -5,7 +5,7 @@ namespace LibraryManagement.Web.Domain.Authors;
 
 public interface IAuthorModelMapper
 {
-     public AuthorModel ToModel(AuthorDto dto);
+    public AuthorModel ToModel(AuthorDto dto);
 
-     public CreateAuthorRequestDto ToCreateAuthorRequestDto(AuthorModel model);
+    public CreateAuthorRequestDto ToCreateAuthorRequestDto(AuthorModel model);
 }

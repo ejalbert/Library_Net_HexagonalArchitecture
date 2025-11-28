@@ -9,10 +9,10 @@ public class SearchBooksAdapter(IBookCollection bookCollection, IBookEntityMappe
 {
     public async Task<IEnumerable<Book>> Search(string? searchTerm)
     {
-        var searchRequest = await bookCollection.Collection.FindAsync(book =>
+        IAsyncCursor<BookEntity>? searchRequest = await bookCollection.Collection.FindAsync(book =>
                 searchTerm == null ||
                 book.Title.Contains(searchTerm)
-            , new FindOptions<BookEntity>() { Skip = 0, Limit = 10 });
+            , new FindOptions<BookEntity> { Skip = 0, Limit = 10 });
 
         return searchRequest.ToEnumerable().Select(mapper.ToDomain);
     }

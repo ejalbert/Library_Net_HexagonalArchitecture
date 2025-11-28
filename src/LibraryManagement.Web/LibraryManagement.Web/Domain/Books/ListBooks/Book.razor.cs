@@ -7,8 +7,7 @@ namespace LibraryManagement.Web.Domain.Books.ListBooks;
 
 public partial class Book(IRestAPiClient restClient) : ComponentBase
 {
-    [Parameter]
-    public string BookId { get; set; } = string.Empty;
+    [Parameter] public string BookId { get; set; } = string.Empty;
 
     private BookDto BookDetails { get; set; } = null!;
 
@@ -17,4 +16,3 @@ public partial class Book(IRestAPiClient restClient) : ComponentBase
         BookDetails = await restClient.Books.Get(BookId);
     }
 }
-

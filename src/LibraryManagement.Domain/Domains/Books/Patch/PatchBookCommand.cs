@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace LibraryManagement.Domain.Domains.Books.Patch;
 
 public record PatchBookCommand(

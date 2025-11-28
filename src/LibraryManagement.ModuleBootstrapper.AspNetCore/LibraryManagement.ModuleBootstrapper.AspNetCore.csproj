@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper\LibraryManagement.ModuleBootstrapper.csproj" />
+        <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper\LibraryManagement.ModuleBootstrapper.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
 </Project>

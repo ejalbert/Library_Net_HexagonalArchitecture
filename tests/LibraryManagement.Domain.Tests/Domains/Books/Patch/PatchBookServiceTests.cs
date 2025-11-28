@@ -1,7 +1,6 @@
-using System;
-using System.Linq;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Patch;
+
 using Moq;
 
 namespace LibraryManagement.Domain.Tests.Domains.Books.Patch;
@@ -21,15 +20,19 @@ public class PatchBookServiceTests
             Keywords = new[] { "kw" }
         };
 
-        portMock.Setup(port => port.Patch("book-1", null, null, "Updated", It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "kw" }))))
+        portMock.Setup(port => port.Patch("book-1", null, null, "Updated",
+                It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "kw" }))))
             .ReturnsAsync(patched);
 
         PatchBookService service = new(portMock.Object);
 
-        Book result = await service.Patch(new PatchBookCommand("book-1", Description: "Updated", Keywords: new[] { "kw" }));
+        Book result =
+            await service.Patch(new PatchBookCommand("book-1", Description: "Updated", Keywords: new[] { "kw" }));
 
         Assert.Same(patched, result);
-        portMock.Verify(port => port.Patch("book-1", null, null, "Updated", It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "kw" }))), Times.Once);
+        portMock.Verify(
+            port => port.Patch("book-1", null, null, "Updated",
+                It.Is<IReadOnlyCollection<string>>(k => k.SequenceEqual(new[] { "kw" }))), Times.Once);
     }
 
     [Fact]

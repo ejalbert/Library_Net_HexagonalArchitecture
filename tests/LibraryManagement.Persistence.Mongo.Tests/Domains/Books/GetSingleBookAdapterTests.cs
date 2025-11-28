@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
@@ -53,7 +51,8 @@ public class GetSingleBookAdapterTests
                 It.IsAny<FilterDefinition<BookEntity>>(),
                 It.IsAny<FindOptions<BookEntity, BookEntity>?>(),
                 It.IsAny<CancellationToken>()))
-            .Returns((FilterDefinition<BookEntity> filter, FindOptions<BookEntity, BookEntity>? _, CancellationToken _) =>
+            .Returns((FilterDefinition<BookEntity> filter, FindOptions<BookEntity, BookEntity>? _,
+                CancellationToken _) =>
             {
                 Func<BookEntity, bool> predicate = ResolvePredicate(filter);
                 IEnumerable<BookEntity> filtered = seededBooks.Where(predicate);
@@ -69,9 +68,7 @@ public class GetSingleBookAdapterTests
     private static Func<BookEntity, bool> ResolvePredicate(FilterDefinition<BookEntity> filter)
     {
         if (filter is ExpressionFilterDefinition<BookEntity> expressionFilter)
-        {
             return expressionFilter.Expression.Compile();
-        }
 
         return _ => true;
     }

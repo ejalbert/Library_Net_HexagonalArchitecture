@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 

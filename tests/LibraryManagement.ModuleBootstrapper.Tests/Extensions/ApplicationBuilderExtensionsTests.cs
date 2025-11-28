@@ -16,7 +16,8 @@ public class ApplicationBuilderExtensionsTests
     {
         Mock<IHostApplicationBuilder> builderMock = CreateBuilderMock();
 
-        IModuleRegistrator<IHostApplicationBuilder> registrator = builderMock.Object.InitializeApplicationModuleConfiguration();
+        IModuleRegistrator<IHostApplicationBuilder> registrator =
+            builderMock.Object.InitializeApplicationModuleConfiguration();
 
         Assert.Same(builderMock.Object, registrator.Builder);
         Assert.Same(builderMock.Object.Services, registrator.Services);

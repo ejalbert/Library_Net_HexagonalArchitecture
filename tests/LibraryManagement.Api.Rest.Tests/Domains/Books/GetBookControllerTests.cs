@@ -2,6 +2,7 @@ using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using Moq;
@@ -27,9 +28,9 @@ public class GetBookControllerTests
             .ReturnsAsync(book);
         var controller = new GetBookController(useCaseMock.Object);
 
-        var result = await controller.GetBookById(book.Id);
+        IResult result = await controller.GetBookById(book.Id);
 
-        var okResult = Assert.IsType<Ok<Book>>(result);
+        Ok<Book> okResult = Assert.IsType<Ok<Book>>(result);
         Assert.Same(book, okResult.Value);
         useCaseMock.Verify(
             x => x.Get(It.Is<GetSingleBookCommand>(command => command == new GetSingleBookCommand(book.Id))),

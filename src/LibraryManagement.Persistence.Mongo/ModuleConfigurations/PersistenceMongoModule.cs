@@ -13,8 +13,10 @@ namespace LibraryManagement.Persistence.Mongo.ModuleConfigurations;
 
 public static class PersistenceMongoModule
 {
-
-    public static IModuleRegistrator<TApplicationBuilder> AddPersistenceMongoModule<TApplicationBuilder>(this IModuleRegistrator<TApplicationBuilder> moduleRegistrator, Action<PersistenceMongoModuleOptions>? configureOptions = null) where TApplicationBuilder : IHostApplicationBuilder
+    public static IModuleRegistrator<TApplicationBuilder> AddPersistenceMongoModule<TApplicationBuilder>(
+        this IModuleRegistrator<TApplicationBuilder> moduleRegistrator,
+        Action<PersistenceMongoModuleOptions>? configureOptions = null)
+        where TApplicationBuilder : IHostApplicationBuilder
     {
         PersistenceMongoModuleEnvConfiguration optionsFromEnv = new();
         moduleRegistrator.ConfigurationManager.GetSection("PersistenceMongo").Bind(optionsFromEnv);
@@ -25,20 +27,19 @@ public static class PersistenceMongoModule
             options.DatabaseName = optionsFromEnv.DatabaseName ?? "library_management";
         });
 
-        if (configureOptions != null)
-        {
-            moduleRegistrator.Services.Configure(configureOptions);
-        }
+        if (configureOptions != null) moduleRegistrator.Services.Configure(configureOptions);
 
 
         moduleRegistrator.Services.AddSingleton<MongoClient>(serviceProvider =>
         {
-            var options = serviceProvider.GetRequiredService<IOptions<PersistenceMongoModuleOptions>>().Value;
+            PersistenceMongoModuleOptions options =
+                serviceProvider.GetRequiredService<IOptions<PersistenceMongoModuleOptions>>().Value;
             return new MongoClient(options.ConnectionString);
         }).AddScoped<IMongoDatabase>(serviceProvider =>
         {
-            var options = serviceProvider.GetRequiredService<IOptions<PersistenceMongoModuleOptions>>().Value;
-            var mongoClient = serviceProvider.GetRequiredService<MongoClient>();
+            PersistenceMongoModuleOptions options =
+                serviceProvider.GetRequiredService<IOptions<PersistenceMongoModuleOptions>>().Value;
+            MongoClient mongoClient = serviceProvider.GetRequiredService<MongoClient>();
 
             return mongoClient.GetDatabase(options.DatabaseName);
         });

@@ -1,3 +1,4 @@
+using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 
 using Microsoft.AspNetCore.Http;
@@ -8,7 +9,7 @@ public class GetBookController(IGetSingleBookUseCase getSingleBookUseCase) : IGe
 {
     public async Task<IResult> GetBookById(string id)
     {
-        var book = await getSingleBookUseCase.Get(
+        Book book = await getSingleBookUseCase.Get(
             new GetSingleBookCommand(id)
         );
 

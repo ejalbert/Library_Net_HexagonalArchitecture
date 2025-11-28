@@ -15,8 +15,8 @@ public class MongoOptionsBindingTests
         const string connectionString = "mongodb://integration-tests:27017";
         const string databaseName = "library_integration";
 
-        string? originalConnection = Environment.GetEnvironmentVariable("PersistenceMongo__ConnectionString");
-        string? originalDatabase = Environment.GetEnvironmentVariable("PersistenceMongo__DatabaseName");
+        var originalConnection = Environment.GetEnvironmentVariable("PersistenceMongo__ConnectionString");
+        var originalDatabase = Environment.GetEnvironmentVariable("PersistenceMongo__DatabaseName");
 
         try
         {
@@ -25,7 +25,7 @@ public class MongoOptionsBindingTests
 
             using ApplicationWebApplicationFactory factory = new();
             using IServiceScope scope = factory.Services.CreateScope();
-            var options = scope.ServiceProvider
+            PersistenceMongoModuleOptions options = scope.ServiceProvider
                 .GetRequiredService<IOptions<PersistenceMongoModuleOptions>>()
                 .Value;
 
