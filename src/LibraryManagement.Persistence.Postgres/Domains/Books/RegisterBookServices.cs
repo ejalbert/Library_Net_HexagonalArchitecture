@@ -1,6 +1,8 @@
 using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
+using LibraryManagement.Domain.Domains.Books.Patch;
+using LibraryManagement.Domain.Domains.Books.Update;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +17,9 @@ internal static class RegisterBookServices
             .AddSingleton<IBookEntityMapper, BookEntityMapper>()
             .AddScoped<ICreateNewBookPort, CreateNewBookAdapter>()
             .AddScoped<IGetSingleBookPort, GetSingleBookAdapter>()
-            .AddScoped<IDeleteBookPort, DeleteBookAdapter>();
+            .AddScoped<IDeleteBookPort, DeleteBookAdapter>()
+            .AddScoped<IUpdateBookPort, UpdateBookAdapter>()
+            .AddScoped<IPatchBookPort, PatchBookAdapter>();
 
         return services;
     }

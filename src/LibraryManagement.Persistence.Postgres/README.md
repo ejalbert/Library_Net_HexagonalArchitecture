@@ -1,7 +1,7 @@
 # LibraryManagement.Persistence.Postgres
 
 Entity Framework Core Postgres persistence module for the Library Management services. The current surface covers the
-book create/delete ports; extend it alongside new domain use cases.
+book create/get/update/patch/delete ports; extend it alongside new domain use cases.
 
 ## Prerequisites
 
