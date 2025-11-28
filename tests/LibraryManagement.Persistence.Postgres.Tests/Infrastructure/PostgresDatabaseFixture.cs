@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
 
+[CollectionDefinition(nameof(PostgresDatabaseCollection))]
+public sealed class PostgresDatabaseCollection : ICollectionFixture<PostgresDatabaseFixture>;
+
 public sealed class PostgresDatabaseFixture : IAsyncLifetime
 {
     private readonly IContainer _postgresContainer;

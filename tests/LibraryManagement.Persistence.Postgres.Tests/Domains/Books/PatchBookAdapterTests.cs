@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
 
-public class PatchBookAdapterTests(PostgresDatabaseFixture fixture) : IClassFixture<PostgresDatabaseFixture>
+[Collection(nameof(PostgresDatabaseCollection))]
+public class PatchBookAdapterTests(PostgresDatabaseFixture fixture)
 {
     [Fact]
     public async Task Patch_updates_specified_fields_and_keywords()

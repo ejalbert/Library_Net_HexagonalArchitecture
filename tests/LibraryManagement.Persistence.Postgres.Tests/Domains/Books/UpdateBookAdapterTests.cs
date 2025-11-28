@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
 
-public class UpdateBookAdapterTests(PostgresDatabaseFixture fixture) : IClassFixture<PostgresDatabaseFixture>
+[Collection(nameof(PostgresDatabaseCollection))]
+public class UpdateBookAdapterTests(PostgresDatabaseFixture fixture)
 {
     [Fact]
     public async Task Update_overwrites_all_fields_and_keywords()

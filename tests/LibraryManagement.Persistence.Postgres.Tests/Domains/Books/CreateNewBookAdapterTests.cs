@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
 
-public class CreateNewBookAdapterTests(PostgresDatabaseFixture fixture) : IClassFixture<PostgresDatabaseFixture>
+[Collection(nameof(PostgresDatabaseCollection))]
+public class CreateNewBookAdapterTests(PostgresDatabaseFixture fixture)
 {
     [Fact]
     public async Task Create_persists_book_with_keywords_and_returns_domain_model()

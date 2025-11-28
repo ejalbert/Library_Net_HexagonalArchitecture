@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
 
-public class DeleteBookAdapterTests(PostgresDatabaseFixture fixture) : IClassFixture<PostgresDatabaseFixture>
+[Collection(nameof(PostgresDatabaseCollection))]
+public class DeleteBookAdapterTests(PostgresDatabaseFixture fixture)
 {
     [Fact]
     public async Task Delete_existing_book_removes_entity_and_keywords()

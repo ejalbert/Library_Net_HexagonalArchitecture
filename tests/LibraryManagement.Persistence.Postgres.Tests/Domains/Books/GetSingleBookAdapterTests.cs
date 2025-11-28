@@ -5,7 +5,8 @@ using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
 
-public class GetSingleBookAdapterTests(PostgresDatabaseFixture fixture) : IClassFixture<PostgresDatabaseFixture>
+[Collection(nameof(PostgresDatabaseCollection))]
+public class GetSingleBookAdapterTests(PostgresDatabaseFixture fixture)
 {
     [Fact]
     public async Task GetById_returns_book_with_keywords()
