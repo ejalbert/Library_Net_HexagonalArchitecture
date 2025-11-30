@@ -1,5 +1,6 @@
 using LibraryManagement.Api.Rest.Domains.Authors;
 using LibraryManagement.Api.Rest.Domains.Books;
+using LibraryManagement.Api.Rest.Infrastructure.Tenants;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
@@ -35,7 +36,8 @@ public static class ApiModule
             .AddValidation()
             .AddProblemDetails()
             .AddAuthorServices()
-            .AddBookServices();
+            .AddBookServices()
+            .AddTenantServices();
 
 
         return moduleRegistrator;

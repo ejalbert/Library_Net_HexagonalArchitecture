@@ -1,5 +1,6 @@
 using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Domain.Domains.Books;
+using LibraryManagement.Domain.Infrastructure.Tenants;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
 using Microsoft.Extensions.Configuration;
@@ -26,7 +27,8 @@ public static class DomainModule
 
         moduleRegistrator.Services
             .AddAuthorServices()
-            .AddBookServices();
+            .AddBookServices()
+            .AddTenantServices();
 
         return moduleRegistrator;
     }

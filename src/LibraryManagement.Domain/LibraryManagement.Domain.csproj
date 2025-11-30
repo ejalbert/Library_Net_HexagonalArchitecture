@@ -18,7 +18,7 @@
 
 
     <ItemGroup>
-        <Folder Include="Domains\"/>
+      <Folder Include="Infrastructure\" />
     </ItemGroup>
 
 </Project>

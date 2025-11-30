@@ -1,17 +1,13 @@
+using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryManagement.Persistence.Postgres;
+namespace LibraryManagement.Persistence.Postgres.DbContext;
 
-public class LibraryManagementDbContext(DbContextOptions<LibraryManagementDbContext> options) : DbContext(options)
+public class LibraryManagementDbContext(DbContextOptions<LibraryManagementDbContext> options, IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase) : MultitenantDbContext(options, getCurrentUserTenantIdUseCase)
 {
     public DbSet<BookEntity> Books { get; set; } = null!;
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ConfigureBooks();
-    }
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     // {

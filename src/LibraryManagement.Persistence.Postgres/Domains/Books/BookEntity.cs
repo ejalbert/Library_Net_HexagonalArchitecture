@@ -1,6 +1,8 @@
+using LibraryManagement.Persistence.Postgres.DbContext;
+
 namespace LibraryManagement.Persistence.Postgres.Domains.Books;
 
-public class BookEntity
+public class BookEntity : MultitenantEntityBase
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Title { get; set; }
@@ -11,7 +13,7 @@ public class BookEntity
     public ICollection<BookKeywordEntity> Keywords { get; set; } = new List<BookKeywordEntity>();
 }
 
-public class BookKeywordEntity
+public class BookKeywordEntity : MultitenantEntityBase
 {
     public Guid BookId { get; set; }
     public string Keyword { get; set; }

@@ -1,7 +1,14 @@
+using System.Runtime.InteropServices.JavaScript;
+
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 
+using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
+using LibraryManagement.Persistence.Postgres.DbContext;
+
 using Microsoft.EntityFrameworkCore;
+
+using Moq;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
 
@@ -52,7 +59,10 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
                 .UseNpgsql(ConnectionString)
                 .Options;
 
-        return new LibraryManagementDbContext(options);
+        var useCaseMock =  new Mock<IGetCurrentUserTenantIdUseCase>();
+        useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("11111111-2222-3333-4444-555555555555");
+
+        return new LibraryManagementDbContext(options, useCaseMock.Object);
     }
 
     public async Task ResetDatabaseAsync()

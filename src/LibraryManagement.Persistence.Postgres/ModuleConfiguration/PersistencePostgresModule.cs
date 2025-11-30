@@ -1,4 +1,5 @@
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
+using LibraryManagement.Persistence.Postgres.DbContext;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +29,15 @@ public static class PersistencePostgresModule
 
         if (configureOptions != null) moduleRegistrator.Services.Configure(configureOptions);
 
+        moduleRegistrator.Services.AddScoped<IMultitenantSaveChangesInterceptor, MultitenantSaveChangesInterceptor>();
+
         moduleRegistrator.Services.AddDbContextFactory<LibraryManagementDbContext>((serviceProvider, options) =>
         {
             PersistencePostgresModuleOptions configs =
                 serviceProvider.GetRequiredService<IOptions<PersistencePostgresModuleOptions>>().Value;
 
-            options.UseNpgsql(configs.ConnectionString,
-                o => { o.MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations"); });
+            options.UseNpgsql(configs.ConnectionString);
+            options.AddInterceptors(serviceProvider.GetRequiredService<IMultitenantSaveChangesInterceptor>());
         }, ServiceLifetime.Scoped);
 
         moduleRegistrator.Services

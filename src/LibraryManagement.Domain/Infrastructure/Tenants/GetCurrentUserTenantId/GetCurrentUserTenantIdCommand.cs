@@ -1,0 +1,3 @@
+namespace LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
+
+public record GetCurrentUserTenantIdCommand;

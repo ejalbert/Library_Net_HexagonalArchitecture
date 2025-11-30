@@ -1,5 +1,6 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Search;
+using LibraryManagement.Persistence.Postgres.DbContext;
 
 using Microsoft.EntityFrameworkCore;
 

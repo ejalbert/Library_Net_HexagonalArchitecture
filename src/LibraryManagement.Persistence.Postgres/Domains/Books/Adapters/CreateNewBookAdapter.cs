@@ -1,5 +1,6 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
+using LibraryManagement.Persistence.Postgres.DbContext;
 
 namespace LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 

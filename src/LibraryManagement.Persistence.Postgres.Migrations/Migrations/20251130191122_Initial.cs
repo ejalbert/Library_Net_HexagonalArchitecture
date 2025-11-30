@@ -18,7 +18,8 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     AuthorId = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +31,8 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
                 columns: table => new
                 {
                     BookId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Keyword = table.Column<string>(type: "text", nullable: false)
+                    Keyword = table.Column<string>(type: "text", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
