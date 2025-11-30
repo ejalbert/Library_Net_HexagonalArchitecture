@@ -52,17 +52,24 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
         await _postgresContainer.DisposeAsync();
     }
 
-    public LibraryManagementDbContext CreateDbContext()
+    public LibraryManagementDbContext CreateDbContext(IGetCurrentUserTenantIdUseCase? getCurrentUserTenantIdUseCase = null)
     {
+        if (getCurrentUserTenantIdUseCase == null)
+        {
+            var useCaseMock =  new Mock<IGetCurrentUserTenantIdUseCase>();
+            useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("11111111-2222-3333-4444-555555555555");
+            getCurrentUserTenantIdUseCase = useCaseMock.Object;
+        }
+
         DbContextOptions<LibraryManagementDbContext> options =
             new DbContextOptionsBuilder<LibraryManagementDbContext>()
                 .UseNpgsql(ConnectionString)
+                .AddInterceptors(new MultitenantSaveChangesInterceptor(getCurrentUserTenantIdUseCase))
                 .Options;
 
-        var useCaseMock =  new Mock<IGetCurrentUserTenantIdUseCase>();
-        useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("11111111-2222-3333-4444-555555555555");
 
-        return new LibraryManagementDbContext(options, useCaseMock.Object);
+
+        return new LibraryManagementDbContext(options, getCurrentUserTenantIdUseCase);
     }
 
     public async Task ResetDatabaseAsync()
