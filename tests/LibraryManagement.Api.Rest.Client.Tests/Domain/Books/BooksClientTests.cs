@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 
+using LibraryManagement.Api.Rest.Client.Common.Searches;
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Patch;
@@ -85,8 +86,7 @@ public class BooksClientTests
     public async Task Search_SendsPostAndReturnsResponse()
     {
         var requestDto = new SearchBooksRequestDto("hobbit");
-        var expectedResponse = new SearchBooksResponseDto(new[]
-        {
+        var expectedResponse = new SearchBooksResponseDto([
             new BookDto
             {
                 Id = "book-1",
@@ -95,7 +95,7 @@ public class BooksClientTests
                 Description = "A journey",
                 Keywords = new[] { "fantasy" }
             }
-        });
+        ], new PaginationInfoDto(0, 1, 1));
         var handler = new TestHttpMessageHandler(async (request, cancellationToken) =>
         {
             Assert.Equal(HttpMethod.Post, request.Method);
@@ -113,7 +113,7 @@ public class BooksClientTests
 
         SearchBooksResponseDto response = await booksClient.Search(requestDto);
 
-        BookDto dto = Assert.Single(response.Books);
+        BookDto dto = Assert.Single(response.Results);
         Assert.Equal("book-1", dto.Id);
         Assert.Equal("The Hobbit", dto.Title);
         Assert.Equal("author-1", dto.AuthorId);

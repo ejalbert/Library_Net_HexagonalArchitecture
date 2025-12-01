@@ -6,6 +6,6 @@ internal static class SearchServiceRegistration
 {
     internal static IServiceCollection AddSearchService(this IServiceCollection services)
     {
-        return services.AddSingleton<ISearchRequestDtoMapper, SearchRequestDtoMapper>();
+        return services.AddSingleton<ISearchDtoMapper, SearchDtoMapper>();
     }
 }

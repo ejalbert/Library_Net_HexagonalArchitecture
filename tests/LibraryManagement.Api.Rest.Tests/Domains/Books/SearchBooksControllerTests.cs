@@ -57,12 +57,12 @@ public class SearchBooksControllerTests
         var useCaseMock = new Mock<ISearchBooksUseCase>();
         useCaseMock
             .Setup(x => x.Search(It.IsAny<SearchBooksCommand>()))
-            .ReturnsAsync(books);
+            .ReturnsAsync(new SearchResult<Book> {Results = books, Pagination = new(){ TotalItems = 2, PageIndex = 0, PageSize = 10 }});
         var bookMapperMock = new Mock<IBookDtoMapper>();
         bookMapperMock.Setup(x => x.ToDto(bookOne)).Returns(responseDtoOne);
         bookMapperMock.Setup(x => x.ToDto(bookTwo)).Returns(responseDtoTwo);
 
-        var searchRequestDtoMapperMock = new Mock<ISearchRequestDtoMapper>();
+        var searchRequestDtoMapperMock = new Mock<ISearchDtoMapper>();
 
 
         var controller = new SearchBooksController(useCaseMock.Object, bookMapperMock.Object, searchRequestDtoMapperMock.Object);
@@ -72,7 +72,7 @@ public class SearchBooksControllerTests
         Ok<SearchBooksResponseDto> okResult = Assert.IsType<Ok<SearchBooksResponseDto>>(result);
         SearchBooksResponseDto payload = Assert.IsType<SearchBooksResponseDto>(okResult.Value);
         Assert.Collection(
-            payload.Books,
+            payload.Results,
             dto => Assert.Same(responseDtoOne, dto),
             dto => Assert.Same(responseDtoTwo, dto));
         useCaseMock.Verify(

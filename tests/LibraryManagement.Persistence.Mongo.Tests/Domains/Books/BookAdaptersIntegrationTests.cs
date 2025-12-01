@@ -104,9 +104,9 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
 
         SearchBooksAdapter adapter = new(GetBookCollection(), _mapper);
 
-        IEnumerable<Book> results = await adapter.Search("ing", new Pagination(0,  10));
+        var results = await adapter.Search("ing", new Pagination(0,  10));
 
-        var titles = results.Select(book => book.Title).ToList();
+        var titles = results.Results.Select(book => book.Title).ToList();
 
         Assert.Contains("Refactoring", titles);
         Assert.DoesNotContain("Clean Code", titles);

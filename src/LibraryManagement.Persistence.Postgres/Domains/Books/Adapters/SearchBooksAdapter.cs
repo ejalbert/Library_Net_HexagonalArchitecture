@@ -11,11 +11,11 @@ namespace LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 
 public class SearchBooksAdapter(LibraryManagementDbContext context, IBookEntityMapper mapper) : ISearchBooksPort
 {
-    public async Task<IEnumerable<Book>> Search(string? searchTerm, Pagination pagination)
+    public async Task<SearchResult<Book>> Search(string? searchTerm, Pagination pagination)
     {
         Expression<Func<BookEntity, bool>> filter = b => EF.Functions.ILike(b.Title, $"%{searchTerm}%");
 
-        var count = context.Books.Count(filter);
+        var count = context.Books.LongCount(filter);
 
         var books = await context.Books
             .Include(b => b.Keywords)
@@ -23,6 +23,15 @@ public class SearchBooksAdapter(LibraryManagementDbContext context, IBookEntityM
             .Skip(pagination.PageIndex * pagination.PageSize)
             .Take(pagination.PageSize).ToListAsync();
 
-        return books.Select(mapper.ToDomain);
+        return new()
+        {
+            Results = books.Select(mapper.ToDomain),
+            Pagination = new()
+            {
+                PageIndex = pagination.PageIndex,
+                PageSize = pagination.PageSize,
+                TotalItems = count
+            }
+        };
     }
 }

@@ -77,7 +77,7 @@ internal class InMemoryBookPersistence :
         _books.Clear();
     }
 
-    public Task<IEnumerable<Book>> Search(string? searchTerm, Pagination pagination)
+    public Task<SearchResult<Book>> Search(string? searchTerm, Pagination pagination)
     {
         IEnumerable<Book> books = _books.Values;
 
@@ -85,6 +85,17 @@ internal class InMemoryBookPersistence :
             books = books.Where(book =>
                 book.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 
-        return Task.FromResult(books);
+        var results = books.ToList();
+
+        return Task.FromResult(new SearchResult<Book>()
+        {
+            Results = results,
+            Pagination = new()
+            {
+                TotalItems = results.Count,
+                PageIndex = pagination.PageIndex,
+                PageSize = pagination.PageSize
+            }
+        });
     }
 }

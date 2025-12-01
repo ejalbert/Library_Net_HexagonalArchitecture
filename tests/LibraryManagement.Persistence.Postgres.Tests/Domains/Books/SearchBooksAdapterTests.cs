@@ -26,9 +26,9 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
 
 
-        var results = (await adapter.Search("harry", new Pagination(0, 10))).ToList();
+        var results = await adapter.Search("harry", new Pagination(0, 10));
 
-        Assert.Equal(7, results.Count);
+        Assert.Equal(7, results.Results.Count());
     }
 
     [Fact]
@@ -65,10 +65,10 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
         SearchBooksAdapter adapter = new(context, new BookEntityMapper());
 
-        List<Book> results = (await adapter.Search("Clean", new Pagination(0, 10))).ToList();
+        var results = await adapter.Search("Clean", new Pagination(0, 10));
 
-        Assert.Single(results);
-        Assert.Equal("Clean Code", results[0].Title);
+        Assert.Single(results.Results);
+        Assert.Equal("Clean Code", results.Results.First().Title);
     }
 
     [Fact]
@@ -91,8 +91,8 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
         SearchBooksAdapter adapter = new(context, new BookEntityMapper());
 
-        List<Book> results = (await adapter.Search(null, new Pagination(0, 10))).ToList();
+        var results = await adapter.Search(null, new Pagination(0, 10));
 
-        Assert.Equal(10, results.Count);
+        Assert.Equal(10, results.Results.Count());
     }
 }

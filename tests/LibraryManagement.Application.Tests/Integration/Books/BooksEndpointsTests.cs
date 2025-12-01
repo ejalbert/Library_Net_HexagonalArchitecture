@@ -108,7 +108,7 @@ public class BooksEndpointsTests
         SearchBooksResponseDto? payload = await response.Content.ReadFromJsonAsync<SearchBooksResponseDto>();
 
         Assert.NotNull(payload);
-        BookDto book = Assert.Single(payload!.Books);
+        BookDto book = Assert.Single(payload!.Results);
         Assert.Equal("book-1", book.Id);
         Assert.Equal("author-1", book.AuthorId);
         Assert.Equal("author-1", book.AuthorId);

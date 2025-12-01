@@ -14,31 +14,33 @@ public class SearchBooksAdapterTests
     [Fact]
     public async Task Search_with_term_returns_titles_containing_term()
     {
-        List<BookEntity> seededBooks = new()
-        {
-            new BookEntity
+        List<BookEntity> seededBooks =
+        [
+            new()
             {
                 Title = "Clean Code", AuthorId = "author-1", Description = "Code craftsmanship",
                 Keywords = new List<string> { "clean-code" }
             },
-            new BookEntity
+
+            new()
             {
                 Title = "Domain-Driven Design", AuthorId = "author-2", Description = "DDD fundamentals",
                 Keywords = new List<string> { "ddd" }
             },
-            new BookEntity
+
+            new()
             {
                 Title = "Code Complete", AuthorId = "author-3", Description = "Complete guide",
                 Keywords = new List<string> { "code" }
             }
-        };
+        ];
 
         SearchBooksAdapter adapter = BuildAdapter(seededBooks, out _);
 
-        var results = (await adapter.Search("Clean", new Pagination(0, 10))).ToList();
+        var results = await adapter.Search("Clean", new Pagination(0, 10));
 
-        Assert.Single(results);
-        Assert.Equal("Clean Code", results[0].Title);
+        Assert.Single(results.Results);
+        Assert.Equal("Clean Code", results.Results.First().Title);
     }
 
     [Fact]
@@ -58,9 +60,9 @@ public class SearchBooksAdapterTests
         FindOptions<BookEntity, BookEntity>? usedOptions = null;
         SearchBooksAdapter adapter = BuildAdapter(seededBooks, out _, options => usedOptions = options);
 
-        var results = (await adapter.Search(null, new Pagination(0, 10))).ToList();
+        var results = await adapter.Search(null, new Pagination(0, 10));
 
-        Assert.Equal(10, results.Count);
+        Assert.Equal(10, results.Results.Count());
         Assert.Equal(10, usedOptions?.Limit);
         Assert.Equal(0, usedOptions?.Skip);
     }

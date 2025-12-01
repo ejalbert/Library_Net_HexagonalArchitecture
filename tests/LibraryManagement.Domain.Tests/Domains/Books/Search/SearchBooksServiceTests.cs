@@ -12,17 +12,24 @@ public class SearchBooksServiceTests
     public async Task Search_returns_books_from_port()
     {
         Mock<ISearchBooksPort> portMock = new();
-        IEnumerable<Book> expected = new[]
+        SearchResult<Book> expected = new()
         {
-            new Book
+            Results =
+            [
+                new Book
+                {
+                    Id = "book-1", Title = "Clean Code", AuthorId = "author-1", Description = "A guide to clean code",
+                    Keywords = new[] { "clean-code" }
+                },
+                new Book
+                {
+                    Id = "book-2", Title = "Domain-Driven Design", AuthorId = "author-2", Description = "DDD fundamentals",
+                    Keywords = new[] { "ddd" }
+                }
+            ],
+            Pagination =  new()
             {
-                Id = "book-1", Title = "Clean Code", AuthorId = "author-1", Description = "A guide to clean code",
-                Keywords = new[] { "clean-code" }
-            },
-            new Book
-            {
-                Id = "book-2", Title = "Domain-Driven Design", AuthorId = "author-2", Description = "DDD fundamentals",
-                Keywords = new[] { "ddd" }
+                TotalItems = 2, PageIndex = 0, PageSize = 10
             }
         };
 
@@ -31,7 +38,7 @@ public class SearchBooksServiceTests
 
         SearchBooksService service = new(portMock.Object);
 
-        IEnumerable<Book> result = await service.Search(new SearchBooksCommand("code", new Pagination(0, 10)));
+        var result = await service.Search(new SearchBooksCommand("code", new Pagination(0, 10)));
 
         Assert.Same(expected, result);
         portMock.Verify(port => port.Search("code", new Pagination(0, 10)), Times.Once);

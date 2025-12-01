@@ -11,7 +11,7 @@ public partial class Home(IRestAPiClient restApiClient)
 
     protected override async Task OnInitializedAsync()
     {
-        BookDetails = (await restApiClient.Books.Search(new SearchBooksRequestDto())).Books;
+        BookDetails = (await restApiClient.Books.Search(new SearchBooksRequestDto())).Results;
     }
 
     private static string FormatKeywords(IEnumerable<string> keywords)
