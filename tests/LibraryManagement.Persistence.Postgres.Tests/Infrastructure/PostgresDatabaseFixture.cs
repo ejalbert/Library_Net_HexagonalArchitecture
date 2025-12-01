@@ -2,7 +2,8 @@ using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
+using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 using LibraryManagement.Tests.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +58,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
     {
         if (getCurrentUserTenantIdUseCase == null)
         {
-            var useCaseMock =  new Mock<IGetCurrentUserTenantIdUseCase>();
+            var useCaseMock = new Mock<IGetCurrentUserTenantIdUseCase>();
             useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("11111111-2222-3333-4444-555555555555");
             getCurrentUserTenantIdUseCase = useCaseMock.Object;
         }

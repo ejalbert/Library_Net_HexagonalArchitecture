@@ -8,7 +8,7 @@ public class GetCurrentUserTenantIdAdapter(IHttpContextAccessor httpContextAcces
 {
     public string GetTenantId()
     {
-        var httpContext = httpContextAccessor.HttpContext ?? throw new InvalidOperationException("No HttpContext.");;
+        var httpContext = httpContextAccessor.HttpContext ?? throw new InvalidOperationException("No HttpContext."); ;
 
         return httpContext.User.FindFirst("tenant_id")?.Value ?? "00000000-0000-0000-0000-000000000001";
     }

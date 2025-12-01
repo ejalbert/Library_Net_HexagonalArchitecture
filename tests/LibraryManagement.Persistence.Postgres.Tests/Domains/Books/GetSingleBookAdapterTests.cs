@@ -1,5 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
@@ -21,7 +21,7 @@ public class GetSingleBookAdapterTests(PostgresDatabaseFixture fixture)
         BookEntity entity = new()
         {
             Title = "Effective C#",
-            AuthorId = "author-999",
+            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
             Description = "Best practices"
         };
 
@@ -35,7 +35,7 @@ public class GetSingleBookAdapterTests(PostgresDatabaseFixture fixture)
 
         Assert.Equal(entity.Id.ToString(), result.Id);
         Assert.Equal(entity.Title, result.Title);
-        Assert.Equal(entity.AuthorId, result.AuthorId);
+        Assert.Equal(entity.AuthorId.ToString(), result.AuthorId);
         Assert.Equal(entity.Description, result.Description);
         Assert.Equal(new[] { "csharp", "dotnet" }, result.Keywords);
     }

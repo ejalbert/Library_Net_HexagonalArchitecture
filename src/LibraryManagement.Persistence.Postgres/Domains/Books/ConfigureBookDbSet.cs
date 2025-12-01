@@ -15,6 +15,11 @@ internal static class ConfigureBookDbSet
 
     private static EntityTypeBuilder<BookEntity> ConfigureBookEntity(this EntityTypeBuilder<BookEntity> typeBuilder)
     {
+        typeBuilder.HasKey(b => b.Id);
+        typeBuilder.HasOne(b => b.Author).WithMany(a => a.Books).HasForeignKey(b => b.AuthorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
         return typeBuilder;
     }
 

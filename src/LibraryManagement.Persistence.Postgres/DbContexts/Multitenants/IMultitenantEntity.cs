@@ -1,4 +1,4 @@
-namespace LibraryManagement.Persistence.Postgres.DbContext;
+namespace LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 
 public interface IMultitenantEntity
 {

@@ -1,11 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
-using LibraryManagement.Domain.ModuleConfigurations;
-using LibraryManagement.ModuleBootstrapper.Extensions;
-using LibraryManagement.Persistence.Postgres;
-using LibraryManagement.Persistence.Postgres.DbContext;
-using LibraryManagement.Persistence.Postgres.ModuleConfiguration;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;

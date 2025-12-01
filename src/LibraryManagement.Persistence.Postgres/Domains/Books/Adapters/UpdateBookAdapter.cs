@@ -1,6 +1,6 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Update;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +16,7 @@ public class UpdateBookAdapter(IBookEntityMapper mapper, LibraryManagementDbCont
         if (entity is null) throw new InvalidOperationException($"Book '{id}' was not found.");
 
         entity.Title = title;
-        entity.AuthorId = authorId;
+        entity.AuthorId = Guid.Parse(authorId);
         entity.Description = description;
 
         entity.Keywords.Clear();

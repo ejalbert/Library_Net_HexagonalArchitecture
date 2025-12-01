@@ -1,5 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
@@ -20,7 +20,7 @@ public class UpdateBookAdapterTests(PostgresDatabaseFixture fixture)
         BookEntity entity = new()
         {
             Title = "Original Title",
-            AuthorId = "author-1",
+            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
             Description = "Original description",
             Keywords = [new BookKeywordEntity { Keyword = "legacy" }]
         };
@@ -37,13 +37,13 @@ public class UpdateBookAdapterTests(PostgresDatabaseFixture fixture)
 
         Assert.Equal(entity.Id, persisted.Id);
         Assert.Equal("Updated Title", persisted.Title);
-        Assert.Equal("author-2", persisted.AuthorId);
+        Assert.Equal("author-2", persisted.AuthorId.ToString());
         Assert.Equal("Updated description", persisted.Description);
         Assert.Equal(new[] { "fresh", "updated" }, persisted.Keywords.Select(k => k.Keyword));
 
         Assert.Equal(persisted.Id.ToString(), updated.Id);
         Assert.Equal(persisted.Title, updated.Title);
-        Assert.Equal(persisted.AuthorId, updated.AuthorId);
+        Assert.Equal(persisted.AuthorId.ToString(), updated.AuthorId);
         Assert.Equal(persisted.Description, updated.Description);
         Assert.Equal(persisted.Keywords.Select(k => k.Keyword), updated.Keywords);
     }

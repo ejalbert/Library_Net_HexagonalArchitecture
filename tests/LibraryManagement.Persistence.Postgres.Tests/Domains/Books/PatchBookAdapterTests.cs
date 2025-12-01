@@ -1,5 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
@@ -20,7 +20,7 @@ public class PatchBookAdapterTests(PostgresDatabaseFixture fixture)
         BookEntity entity = new()
         {
             Title = "Existing Title",
-            AuthorId = "author-1",
+            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
             Description = "Existing description",
             Keywords =
             [
@@ -34,18 +34,18 @@ public class PatchBookAdapterTests(PostgresDatabaseFixture fixture)
 
         PatchBookAdapter adapter = new(new BookEntityMapper(), context);
 
-        Book patched = await adapter.Patch(entity.Id.ToString(), null, "author-2", null, new[] { "patched" });
+        Book patched = await adapter.Patch(entity.Id.ToString(), null, "00000000-0000-0000-0000-111111111122", null, new[] { "patched" });
 
         BookEntity persisted = await context.Books.Include(b => b.Keywords).SingleAsync();
 
         Assert.Equal("Existing Title", persisted.Title);
-        Assert.Equal("author-2", persisted.AuthorId);
+        Assert.Equal("00000000-0000-0000-0000-111111111122", persisted.AuthorId.ToString());
         Assert.Equal("Existing description", persisted.Description);
         Assert.Equal(new[] { "patched" }, persisted.Keywords.Select(k => k.Keyword));
 
         Assert.Equal(persisted.Id.ToString(), patched.Id);
         Assert.Equal(persisted.Title, patched.Title);
-        Assert.Equal(persisted.AuthorId, patched.AuthorId);
+        Assert.Equal(persisted.AuthorId.ToString(), patched.AuthorId);
         Assert.Equal(persisted.Description, patched.Description);
         Assert.Equal(persisted.Keywords.Select(k => k.Keyword), patched.Keywords);
     }

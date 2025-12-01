@@ -1,7 +1,6 @@
 using LibraryManagement.Api.Rest.Infrastructure.Tenants.Adapters;
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManagement.Api.Rest.Infrastructure.Tenants;

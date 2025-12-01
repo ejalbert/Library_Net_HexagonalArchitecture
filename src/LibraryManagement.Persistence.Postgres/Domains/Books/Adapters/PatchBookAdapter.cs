@@ -1,6 +1,6 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Patch;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +25,7 @@ public class PatchBookAdapter(IBookEntityMapper mapper, LibraryManagementDbConte
 
         if (authorId is not null)
         {
-            entity.AuthorId = authorId;
+            entity.AuthorId = Guid.Parse(authorId);
             hasUpdates = true;
         }
 

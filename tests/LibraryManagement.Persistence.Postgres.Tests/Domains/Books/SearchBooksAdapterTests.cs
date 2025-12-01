@@ -1,5 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
@@ -19,21 +19,21 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
             new BookEntity
             {
                 Title = "Clean Code",
-                AuthorId = "author-1",
+                AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
                 Description = "Code craftsmanship",
                 Keywords = new List<BookKeywordEntity> { new() { Keyword = "clean-code" } }
             },
             new BookEntity
             {
                 Title = "Domain-Driven Design",
-                AuthorId = "author-2",
+                AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
                 Description = "DDD fundamentals",
                 Keywords = new List<BookKeywordEntity> { new() { Keyword = "ddd" } }
             },
             new BookEntity
             {
                 Title = "Code Complete",
-                AuthorId = "author-3",
+                AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
                 Description = "Complete guide",
                 Keywords = new List<BookKeywordEntity> { new() { Keyword = "code" } }
             });
@@ -56,7 +56,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
         var books = Enumerable.Range(1, 12).Select(index => new BookEntity
         {
             Title = $"Book {index:00}",
-            AuthorId = $"author-{index:00}",
+            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
             Description = $"Description {index:00}",
             Keywords = new List<BookKeywordEntity> { new() { Keyword = $"kw-{index:00}" } }
         });

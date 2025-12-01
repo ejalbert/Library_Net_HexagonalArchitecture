@@ -3,7 +3,7 @@ using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace LibraryManagement.Persistence.Postgres.DbContext;
+namespace LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 
 public interface IMultitenantSaveChangesInterceptor : ISaveChangesInterceptor;
 
@@ -22,11 +22,11 @@ public class MultitenantSaveChangesInterceptor(IGetCurrentUserTenantIdUseCase ge
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private void ApplyTenant(Microsoft.EntityFrameworkCore.DbContext? context)
+    private void ApplyTenant(DbContext? context)
     {
         if (context is null) return;
 
-        var tenantId = Guid.Parse(getCurrentUserTenantIdUseCase.GetTenantId(new ()));
+        var tenantId = Guid.Parse(getCurrentUserTenantIdUseCase.GetTenantId(new()));
 
         foreach (var entry in context.ChangeTracker.Entries<IMultitenantEntity>())
         {

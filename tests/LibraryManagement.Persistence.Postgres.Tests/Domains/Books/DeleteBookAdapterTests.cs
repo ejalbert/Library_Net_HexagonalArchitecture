@@ -1,4 +1,4 @@
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
@@ -22,7 +22,7 @@ public class DeleteBookAdapterTests(PostgresDatabaseFixture fixture)
         {
             Id = bookId,
             Title = "Clean Code",
-            AuthorId = "author-1",
+            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
             Description = "Craftsmanship",
             Keywords =
             [

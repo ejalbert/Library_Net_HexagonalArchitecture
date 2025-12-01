@@ -1,6 +1,6 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 
 namespace LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 
@@ -12,7 +12,7 @@ public class CreateNewBookAdapter(IBookEntityMapper mapper, LibraryManagementDbC
         var entity = new BookEntity
         {
             Title = title,
-            AuthorId = authorId,
+            AuthorId = Guid.Parse(authorId),
             Description = description
         };
 

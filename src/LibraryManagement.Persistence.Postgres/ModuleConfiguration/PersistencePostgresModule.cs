@@ -1,5 +1,7 @@
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
+using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
+using LibraryManagement.Persistence.Postgres.Domains.Authors;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 
 using Microsoft.EntityFrameworkCore;
@@ -41,9 +43,9 @@ public static class PersistencePostgresModule
         }, ServiceLifetime.Scoped);
 
         moduleRegistrator.Services
-            .AddBookServices();
-        //     .AddAuthorServices()
-        //     .AddBookServices();
+            .AddBookServices()
+            .AddAuthorServices();
+
 
         return moduleRegistrator;
     }

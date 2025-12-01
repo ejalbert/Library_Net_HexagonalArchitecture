@@ -19,23 +19,35 @@ public class SearchBooksControllerTests
     {
         var bookOne = new Book
         {
-            Id = "book-1", Title = "The Hobbit", AuthorId = "author-1", Description = "A hobbit tale",
+            Id = "book-1",
+            Title = "The Hobbit",
+            AuthorId = "author-1",
+            Description = "A hobbit tale",
             Keywords = new[] { "fantasy" }
         };
         var bookTwo = new Book
         {
-            Id = "book-2", Title = "The Silmarillion", AuthorId = "author-2", Description = "Lore of Middle-earth",
+            Id = "book-2",
+            Title = "The Silmarillion",
+            AuthorId = "author-2",
+            Description = "Lore of Middle-earth",
             Keywords = new[] { "fantasy", "lore" }
         };
         Book[] books = new[] { bookOne, bookTwo };
         var responseDtoOne = new BookDto
         {
-            Id = "book-1", Title = "The Hobbit", AuthorId = "author-1", Description = "A hobbit tale",
+            Id = "book-1",
+            Title = "The Hobbit",
+            AuthorId = "author-1",
+            Description = "A hobbit tale",
             Keywords = new[] { "fantasy" }
         };
         var responseDtoTwo = new BookDto
         {
-            Id = "book-2", Title = "The Silmarillion", AuthorId = "author-2", Description = "Lore of Middle-earth",
+            Id = "book-2",
+            Title = "The Silmarillion",
+            AuthorId = "author-2",
+            Description = "Lore of Middle-earth",
             Keywords = new[] { "fantasy", "lore" }
         };
         var request = new SearchBooksRequestDto("hobbit");

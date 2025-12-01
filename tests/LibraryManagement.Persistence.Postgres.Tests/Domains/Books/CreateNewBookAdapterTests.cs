@@ -1,5 +1,5 @@
 using LibraryManagement.Domain.Domains.Books;
-using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
@@ -21,7 +21,7 @@ public class CreateNewBookAdapterTests(PostgresDatabaseFixture fixture)
         CreateNewBookAdapter adapter = new(mapper, context);
 
         string title = "Test-Driven Development";
-        string authorId = "author-123";
+        string authorId = "00000000-0000-0000-0000-111111111111";
         string description = "How to drive design with tests";
         IReadOnlyCollection<string> keywords = new[] { "tdd", "red-green-refactor" };
 
@@ -36,7 +36,7 @@ public class CreateNewBookAdapterTests(PostgresDatabaseFixture fixture)
         Assert.Equal(keywords, created.Keywords);
 
         Assert.Equal(title, persisted.Title);
-        Assert.Equal(authorId, persisted.AuthorId);
+        Assert.Equal(authorId, persisted.AuthorId.ToString());
         Assert.Equal(description, persisted.Description);
         Assert.Equal(keywords.Count, persisted.Keywords.Count);
         Assert.All(persisted.Keywords, k => Assert.Equal(persisted.Id, k.BookId));

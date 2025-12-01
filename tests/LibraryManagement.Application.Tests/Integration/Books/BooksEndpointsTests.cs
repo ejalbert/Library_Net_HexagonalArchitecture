@@ -83,12 +83,18 @@ public class BooksEndpointsTests
         _persistence.Seed(
             new Book
             {
-                Id = "book-1", Title = "Pragmatic Hexagonal Architecture", AuthorId = "author-1",
-                Description = "Pragmatic guide", Keywords = new[] { "architecture" }
+                Id = "book-1",
+                Title = "Pragmatic Hexagonal Architecture",
+                AuthorId = "author-1",
+                Description = "Pragmatic guide",
+                Keywords = new[] { "architecture" }
             },
             new Book
             {
-                Id = "book-2", Title = "CQRS Patterns", AuthorId = "author-2", Description = "CQRS deep dive",
+                Id = "book-2",
+                Title = "CQRS Patterns",
+                AuthorId = "author-2",
+                Description = "CQRS deep dive",
                 Keywords = new[] { "cqrs" }
             }
         );
