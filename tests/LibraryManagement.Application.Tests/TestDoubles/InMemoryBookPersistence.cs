@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 
+using LibraryManagement.Domain.Common.Searches;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
@@ -66,17 +67,6 @@ internal class InMemoryBookPersistence :
         return Task.FromResult(updated);
     }
 
-    public Task<IEnumerable<Book>> Search(string? searchTerm)
-    {
-        IEnumerable<Book> books = _books.Values;
-
-        if (!string.IsNullOrWhiteSpace(searchTerm))
-            books = books.Where(book =>
-                book.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-
-        return Task.FromResult(books);
-    }
-
     public void Seed(params Book[] books)
     {
         foreach (Book book in books) _books[book.Id] = book;
@@ -85,5 +75,16 @@ internal class InMemoryBookPersistence :
     public void Reset()
     {
         _books.Clear();
+    }
+
+    public Task<IEnumerable<Book>> Search(string? searchTerm, Pagination pagination)
+    {
+        IEnumerable<Book> books = _books.Values;
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+            books = books.Where(book =>
+                book.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+
+        return Task.FromResult(books);
     }
 }

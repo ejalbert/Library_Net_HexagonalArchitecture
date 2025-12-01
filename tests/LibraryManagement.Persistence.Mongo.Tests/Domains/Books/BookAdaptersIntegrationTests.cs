@@ -1,3 +1,4 @@
+using LibraryManagement.Domain.Common.Searches;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
@@ -103,7 +104,7 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
 
         SearchBooksAdapter adapter = new(GetBookCollection(), _mapper);
 
-        IEnumerable<Book> results = await adapter.Search("ing");
+        IEnumerable<Book> results = await adapter.Search("ing", new Pagination(0,  10));
 
         var titles = results.Select(book => book.Title).ToList();
 

@@ -1,4 +1,5 @@
 using LibraryManagement.Api.Rest.Client;
+using LibraryManagement.Api.Rest.Client.Common.Searches;
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 

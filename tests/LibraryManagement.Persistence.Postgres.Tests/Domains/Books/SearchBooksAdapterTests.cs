@@ -1,3 +1,4 @@
+using LibraryManagement.Domain.Common.Searches;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
@@ -25,7 +26,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
 
 
-        var results = (await adapter.Search("harry")).ToList();
+        var results = (await adapter.Search("harry", new Pagination(0, 10))).ToList();
 
         Assert.Equal(7, results.Count);
     }
@@ -64,7 +65,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
         SearchBooksAdapter adapter = new(context, new BookEntityMapper());
 
-        List<Book> results = (await adapter.Search("Clean")).ToList();
+        List<Book> results = (await adapter.Search("Clean", new Pagination(0, 10))).ToList();
 
         Assert.Single(results);
         Assert.Equal("Clean Code", results[0].Title);
@@ -90,7 +91,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
         SearchBooksAdapter adapter = new(context, new BookEntityMapper());
 
-        List<Book> results = (await adapter.Search(null)).ToList();
+        List<Book> results = (await adapter.Search(null, new Pagination(0, 10))).ToList();
 
         Assert.Equal(10, results.Count);
     }

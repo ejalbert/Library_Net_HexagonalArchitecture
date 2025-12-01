@@ -1,3 +1,4 @@
+using LibraryManagement.Api.Rest.Common;
 using LibraryManagement.Api.Rest.Domains.Authors;
 using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.Api.Rest.Infrastructure.Tenants;
@@ -35,6 +36,7 @@ public static class ApiModule
             .AddOpenApi()
             .AddValidation()
             .AddProblemDetails()
+            .AddCommonServices()
             .AddAuthorServices()
             .AddBookServices()
             .AddTenantServices();

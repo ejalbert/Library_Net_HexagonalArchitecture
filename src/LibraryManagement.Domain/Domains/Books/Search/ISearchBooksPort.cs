@@ -1,6 +1,8 @@
+using LibraryManagement.Domain.Common.Searches;
+
 namespace LibraryManagement.Domain.Domains.Books.Search;
 
 public interface ISearchBooksPort
 {
-    Task<IEnumerable<Book>> Search(string? searchTerm);
+    Task<IEnumerable<Book>> Search(string? searchTerm, Pagination pagination);
 }

@@ -1,3 +1,4 @@
+using LibraryManagement.Domain.Common.Searches;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Search;
 
@@ -25,14 +26,14 @@ public class SearchBooksServiceTests
             }
         };
 
-        portMock.Setup(port => port.Search("code"))
+        portMock.Setup(port => port.Search("code", new Pagination(0, 10)))
             .ReturnsAsync(expected);
 
         SearchBooksService service = new(portMock.Object);
 
-        IEnumerable<Book> result = await service.Search(new SearchBooksCommand("code"));
+        IEnumerable<Book> result = await service.Search(new SearchBooksCommand("code", new Pagination(0, 10)));
 
         Assert.Same(expected, result);
-        portMock.Verify(port => port.Search("code"), Times.Once);
+        portMock.Verify(port => port.Search("code", new Pagination(0, 10)), Times.Once);
     }
 }
