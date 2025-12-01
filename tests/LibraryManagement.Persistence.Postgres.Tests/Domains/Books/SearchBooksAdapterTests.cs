@@ -3,6 +3,7 @@ using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
+using LibraryManagement.Persistence.Postgres.Seeders.Domain.Books;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
 using LibraryManagement.Persistence.Postgres.Tests.Domains.Authors.Extensions;
 
@@ -11,6 +12,24 @@ namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
 [Collection(nameof(PostgresDatabaseCollection))]
 public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 {
+    [Fact]
+    public async Task Search_With_Seeded_Books_Returns_Seeded_Books()
+    {
+        await fixture.ResetDatabaseAsync();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+
+        context.SeedAuthors().SeedBooks();
+
+
+        SearchBooksAdapter adapter = new(context, new BookEntityMapper());
+
+
+
+        var results = (await adapter.Search("harry")).ToList();
+
+        Assert.Equal(7, results.Count);
+    }
+
     [Fact]
     public async Task Search_with_term_returns_titles_containing_term()
     {

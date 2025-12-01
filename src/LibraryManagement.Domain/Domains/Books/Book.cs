@@ -7,4 +7,9 @@ public class Book
     public required string AuthorId { get; init; }
     public required string Description { get; init; }
     public required IReadOnlyCollection<string> Keywords { get; init; }
+
+    public override string ToString()
+    {
+        return $"{Id} - {Title}";
+    }
 }
