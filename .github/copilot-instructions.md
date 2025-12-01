@@ -39,4 +39,11 @@ Prime GitHub Copilot (Chat & IDE) with the context that guides this repository.
 - Do not introduce infrastructure-specific dependencies into the domain.
 - Avoid adding frameworks that bypass the module system or duplicate REST contracts.
 
+## Multitenancy Enforcement & Testing
+
+- The Postgres persistence layer uses an EF Core SaveChanges interceptor to enforce tenant boundaries by setting the `TenantId` property at save time, based on the current user's tenant ID (from `IGetCurrentUserTenantIdUseCase`).
+- When generating or updating tests for persistence, always use separate `DbContext` instances with different mocks of `IGetCurrentUserTenantIdUseCase` to simulate multiple tenants.
+- The interceptor will override any manually set `TenantId`, so tests must use context-specific mocks to insert/query entities for different tenants.
+- Reference and update `docs/adr/0001-multitenancy-enforcement-and-testing.md` and `docs/architecture.md` as needed.
+
 Keep responses concise, architecture-aware, and aligned with the roadmap in `docs/project-roadmap.md`.

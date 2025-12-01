@@ -70,3 +70,12 @@ dotnet ef database update \
 
 Ensure the connection string (appsettings or `PersistencePostgres__ConnectionString`) points to a running Postgres
 instance before running migrations.
+
+## Multitenancy Enforcement
+
+This module enforces tenant isolation using an EF Core SaveChanges interceptor (`MultitenantSaveChangesInterceptor`). All entities' `TenantId` properties are set at save time based on the current user's tenant ID (from `IGetCurrentUserTenantIdUseCase`).
+
+**Testing Guidance:**
+- Use separate `DbContext` instances with different mocks of `IGetCurrentUserTenantIdUseCase` to insert/query entities for different tenants.
+- The interceptor always overrides `TenantId` on save, so tests must use context-specific mocks to simulate multiple tenants.
+- See `docs/adr/0001-multitenancy-enforcement-and-testing.md` for details.

@@ -56,6 +56,17 @@ When adding new adapters, mirror them with a `{Project}.Tests` project and descr
 - The Web client registers `AddWebClientModule()` to ensure the REST client base address matches the API.
 - Component tests should emulate the pattern used by `BookPageTests`: `@inherits TestContext`, register dependencies (e.g., stubbed `IRestAPiClient`) inside the test body, and keep logic inside `.razor` while the partial `.razor.cs` remains empty.
 
+## Multitenancy Enforcement
+
+The Postgres persistence layer enforces tenant isolation using a SaveChanges interceptor (`MultitenantSaveChangesInterceptor`). This interceptor sets the `TenantId` property on all entities at save time, based on the current user's tenant ID (from `IGetCurrentUserTenantIdUseCase`).
+
+**Testing Pattern:**
+- Use separate `DbContext` instances with different mocks of `IGetCurrentUserTenantIdUseCase` to insert/query entities for different tenants.
+- The interceptor always overrides `TenantId` on save, so tests must use context-specific mocks to simulate multiple tenants.
+- See ADR `0001-multitenancy-enforcement-and-testing.md` for rationale and details.
+
+This ensures strict tenant isolation and robust test coverage for multitenancy boundaries.
+
 ## ADRs & Documentation
 
 Record significant decisions inside `docs/adr/`. Keep the README of every project in sync with the code they describe, and update `docs/project-roadmap.md` whenever milestones move forward.

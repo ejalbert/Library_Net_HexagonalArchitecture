@@ -103,4 +103,13 @@ dotnet test tests/LibraryManagement.Web.Tests/LibraryManagement.Web.Tests.csproj
 - **AI Collaboration**: `docs/ai-collaboration.md` – how humans and agents should work together (includes the Blazor testing rule).
 - **ADRs**: `docs/adr/` – record significant decisions.
 
+## Multitenancy Enforcement
+
+The Postgres persistence module enforces strict tenant isolation using an EF Core SaveChanges interceptor. All entities' `TenantId` properties are set at save time based on the current user's tenant ID (via `IGetCurrentUserTenantIdUseCase`).
+
+**Testing Guidance:**
+- Use separate `DbContext` instances with different mocks of `IGetCurrentUserTenantIdUseCase` to insert/query entities for different tenants.
+- The interceptor always overrides `TenantId` on save, so tests must use context-specific mocks to simulate multiple tenants.
+- See `docs/adr/0001-multitenancy-enforcement-and-testing.md` for details.
+
 Please keep READMEs and docs synchronized with the code whenever behaviour or dependencies change so future contributors (human or AI) can trust this repository.

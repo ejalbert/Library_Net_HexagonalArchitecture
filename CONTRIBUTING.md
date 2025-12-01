@@ -29,6 +29,13 @@ Thanks for helping build the Hexagonal Library Management System! This guide exp
 - Projects that integrate with external services (integrated library systems, email/SMS gateways, discovery layers) or act as system entry points must include integration tests validating those boundaries.
 - Add or update tests for all new behaviour and ensure `dotnet test` passes locally before pushing.
 
+## Multitenancy Enforcement & Testing
+
+- All persistence tests must use separate `DbContext` instances, each configured with a different mock of `IGetCurrentUserTenantIdUseCase`, to insert/query entities for different tenants.
+- The EF Core interceptor (`MultitenantSaveChangesInterceptor`) always overrides the `TenantId` property at save time, so tests must use context-specific mocks to simulate multiple tenants.
+- See `docs/adr/0001-multitenancy-enforcement-and-testing.md` for rationale and details.
+- Update documentation and ADRs whenever multitenancy behaviour or enforcement changes.
+
 ## Documentation
 
 - Update `README.md`, `docs/architecture.md`, and relevant ADRs when behaviour or decisions change.
