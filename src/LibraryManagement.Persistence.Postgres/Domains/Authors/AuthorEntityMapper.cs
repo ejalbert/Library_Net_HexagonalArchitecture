@@ -14,7 +14,11 @@ public interface IAuthorEntityMapper
 [Mapper]
 public partial class AuthorEntityMapper : IAuthorEntityMapper
 {
+    [MapperIgnoreTarget(nameof(AuthorEntity.Books))]
+    [MapperIgnoreTarget(nameof(AuthorEntity.TenantId))]
     public partial AuthorEntity ToEntity(Author author);
 
+    [MapperIgnoreSource(nameof(AuthorEntity.Books))]
+    [MapperIgnoreSource(nameof(AuthorEntity.TenantId))]
     public partial Author ToDomain(AuthorEntity authorEntity);
 }

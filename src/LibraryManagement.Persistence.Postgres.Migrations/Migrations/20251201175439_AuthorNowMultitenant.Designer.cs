@@ -3,6 +3,7 @@ using System;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    partial class LibraryManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251201175439_AuthorNowMultitenant")]
+    partial class AuthorNowMultitenant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

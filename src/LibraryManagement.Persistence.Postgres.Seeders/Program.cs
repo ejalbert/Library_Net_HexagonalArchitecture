@@ -2,6 +2,7 @@
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.DbContexts;
+using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Books;
@@ -25,11 +26,13 @@ Console.WriteLine("Starting Postgres seeder...");
 Console.WriteLine($"Using connection string: {connectionString}");
 
 builder.Services.AddScoped<IGetCurrentUserTenantIdUseCase, TenantProvider>();
+builder.Services.AddScoped<IMultitenantSaveChangesInterceptor, MultitenantSaveChangesInterceptor>();
 
-builder.Services.AddDbContext<LibraryManagementDbContext>(options =>
+builder.Services.AddDbContext<LibraryManagementDbContext>((sp, options) =>
 {
     options
         .UseNpgsql(connectionString)
+        .AddInterceptors(sp.GetRequiredService<IMultitenantSaveChangesInterceptor>())
         .UseSeeding((context,_) =>
         {
             Console.WriteLine("Seeding authors...");
@@ -42,7 +45,9 @@ builder.Services.AddDbContext<LibraryManagementDbContext>(options =>
         });
 });
 
+
 IHost app = builder.Build();
+
 
 var dbContext = app.Services.GetRequiredService<LibraryManagementDbContext>();
 dbContext.Database.EnsureCreated();
@@ -52,19 +57,20 @@ Console.WriteLine("Applying Seedings...");
 await app.StartAsync();
 Console.WriteLine("Seeding complete. Application exiting.");
 
-public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
-{
-    public LibraryManagementDbContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<LibraryManagementDbContext>();
-
-        var connectionString = "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
-
-        optionsBuilder.UseNpgsql(connectionString);
-
-        return new LibraryManagementDbContext(optionsBuilder.Options, new TenantProvider());
-    }
-}
+// public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
+// {
+//     public LibraryManagementDbContext CreateDbContext(string[] args)
+//     {
+//         var optionsBuilder = new DbContextOptionsBuilder<LibraryManagementDbContext>();
+//
+//         var connectionString = "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
+//
+//         optionsBuilder.UseNpgsql(connectionString);
+//         optionsBuilder.AddInterceptors()
+//
+//         return new LibraryManagementDbContext(optionsBuilder.Options, new TenantProvider());
+//     }
+// }
 
 internal class TenantProvider : IGetCurrentUserTenantIdUseCase
 {

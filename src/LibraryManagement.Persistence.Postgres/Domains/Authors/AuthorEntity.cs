@@ -1,8 +1,9 @@
+using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 
 namespace LibraryManagement.Persistence.Postgres.Domains.Authors;
 
-public class AuthorEntity
+public class AuthorEntity : MultitenantEntityBase
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
