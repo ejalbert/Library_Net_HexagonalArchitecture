@@ -103,18 +103,17 @@ internal static class DbContextSeeder
 
     internal static class Authors
     {
-        internal static readonly AuthorEntity AuthorOne = new()
+        internal static AuthorEntity AuthorOne => new()
         {
             Id = Guid.Parse("00000000-0000-0000-0000-111111111111"),
             Name = "Author One"
         };
 
-        internal static readonly AuthorEntity AuthorTwo = new()
+        internal static AuthorEntity AuthorTwo => new()
         {
             Id = Guid.Parse("00000000-0000-0000-0000-222222222222"),
             Name = "Author Two"
         };
     }
 }
-
 
