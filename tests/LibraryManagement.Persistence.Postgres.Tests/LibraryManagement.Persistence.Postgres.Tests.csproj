@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\src\LibraryManagement.Persistence.Postgres.Seeders\LibraryManagement.Persistence.Postgres.Seeders.csproj" />
         <ProjectReference Include="..\..\src\LibraryManagement.Persistence.Postgres\LibraryManagement.Persistence.Postgres.csproj"/>
         <ProjectReference Include="..\LibraryManagement.Tests.Abstractions\LibraryManagement.Tests.Abstractions.csproj"/>
     </ItemGroup>

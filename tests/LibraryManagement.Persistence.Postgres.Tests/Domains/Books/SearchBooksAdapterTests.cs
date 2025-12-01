@@ -2,7 +2,9 @@ using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
+using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
+using LibraryManagement.Persistence.Postgres.Tests.Domains.Authors.Extensions;
 
 namespace LibraryManagement.Persistence.Postgres.Tests.Domains.Books;
 
@@ -13,9 +15,9 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
     public async Task Search_with_term_returns_titles_containing_term()
     {
         await fixture.ResetDatabaseAsync();
-        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
-        var authorId = DbContextSeeder.Authors.AuthorOne.Id;
+        var authorId = context.Authors.JkRowling.Id;
 
         context.Books.AddRange(
             new BookEntity
@@ -53,9 +55,9 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
     public async Task Search_without_term_limits_to_ten_results()
     {
         await fixture.ResetDatabaseAsync();
-        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
-        var authorId = DbContextSeeder.Authors.AuthorOne.Id;
+        var authorId = context.Authors.JkRowling.Id;
 
         var books = Enumerable.Range(1, 12).Select(index => new BookEntity
         {

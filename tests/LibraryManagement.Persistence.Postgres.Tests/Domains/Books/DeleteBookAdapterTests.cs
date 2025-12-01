@@ -1,7 +1,9 @@
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
+using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
+using LibraryManagement.Persistence.Postgres.Tests.Domains.Authors.Extensions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -15,14 +17,14 @@ public class DeleteBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
         Guid bookId = Guid.NewGuid();
         BookEntity entity = new()
         {
             Id = bookId,
             Title = "Clean Code",
-            AuthorId = DbContextSeeder.Authors.AuthorOne.Id,
+            AuthorId = context.Authors.JkRowling.Id,
             Description = "Craftsmanship",
             Keywords =
             [

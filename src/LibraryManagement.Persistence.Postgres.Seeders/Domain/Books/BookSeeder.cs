@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.Seeders.Domain.Books;
 
-internal static class BookSeeder
+public static class BookSeeder
 {
-    internal static DbContext SeedBooks(this DbContext context)
+    public static TDbContext SeedBooks<TDbContext>(this TDbContext context) where TDbContext : DbContext
     {
         var books = context.Set<BookEntity>();
         var authors = context.Set<LibraryManagement.Persistence.Postgres.Domains.Authors.AuthorEntity>();

@@ -2,7 +2,9 @@ using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
+using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
+using LibraryManagement.Persistence.Postgres.Tests.Domains.Authors.Extensions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,9 +18,10 @@ public class PatchBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        var authorId = DbContextSeeder.Authors.AuthorOne.Id;
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
+        var authorId = context.Authors.JkRowling.Id;
+
         BookEntity entity = new()
         {
             Title = "Existing Title",

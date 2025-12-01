@@ -1,8 +1,9 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Postgres.DbContexts;
-using LibraryManagement.Persistence.Postgres.Domains.Authors;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
+using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
+using LibraryManagement.Persistence.Postgres.Tests.Domains.Authors.Extensions;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +18,13 @@ public class CreateNewBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        string authorId = DbContextSeeder.Authors.AuthorOne.Id.ToString();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
+
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
         BookEntityMapper mapper = new();
         CreateNewBookAdapter adapter = new(mapper, context);
+
+        string authorId = context.Authors.JkRowling.Id.ToString();
 
         string title = "Test-Driven Development";
 

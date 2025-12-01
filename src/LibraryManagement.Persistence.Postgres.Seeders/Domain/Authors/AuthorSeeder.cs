@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 
-internal static class AuthorSeeder
+public static class AuthorSeeder
 {
-    internal static DbContext SeedAuthors(this DbContext context)
+    public static TDbContext SeedAuthors<TDbContext>(this TDbContext context) where TDbContext : DbContext
     {
         var authors = context.Set<AuthorEntity>();
 
