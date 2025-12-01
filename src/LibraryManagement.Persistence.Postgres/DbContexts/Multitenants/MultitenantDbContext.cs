@@ -34,7 +34,6 @@ public abstract class MultitenantDbContext : DbContext
                     .HasQueryFilter("Filter by tenant", CreateTenantFilterExpression(entityType.ClrType, CurrentTenantId));
             }
         }
-        modelBuilder.ConfigureBooks();
     }
 
     private static LambdaExpression CreateTenantFilterExpression(Type entityType, Guid tenantId)

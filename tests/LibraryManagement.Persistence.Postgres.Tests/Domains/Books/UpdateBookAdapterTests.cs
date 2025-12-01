@@ -16,11 +16,13 @@ public class UpdateBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        var authorId = DbContextSeeder.Authors.AuthorOne.Id;
+
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
         BookEntity entity = new()
         {
             Title = "Original Title",
-            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+            AuthorId = authorId,
             Description = "Original description",
             Keywords = [new BookKeywordEntity { Keyword = "legacy" }]
         };
@@ -30,14 +32,14 @@ public class UpdateBookAdapterTests(PostgresDatabaseFixture fixture)
 
         UpdateBookAdapter adapter = new(new BookEntityMapper(), context);
 
-        Book updated = await adapter.Update(entity.Id.ToString(), "Updated Title", "author-2",
+        Book updated = await adapter.Update(entity.Id.ToString(), "Updated Title", authorId.ToString(),
             "Updated description", new[] { "fresh", "updated" });
 
         BookEntity persisted = await context.Books.Include(b => b.Keywords).SingleAsync();
 
         Assert.Equal(entity.Id, persisted.Id);
         Assert.Equal("Updated Title", persisted.Title);
-        Assert.Equal("author-2", persisted.AuthorId.ToString());
+        Assert.Equal(authorId, persisted.AuthorId);
         Assert.Equal("Updated description", persisted.Description);
         Assert.Equal(new[] { "fresh", "updated" }, persisted.Keywords.Select(k => k.Keyword));
 

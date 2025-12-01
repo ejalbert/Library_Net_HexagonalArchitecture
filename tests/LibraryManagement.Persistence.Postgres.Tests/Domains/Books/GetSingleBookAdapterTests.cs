@@ -14,14 +14,14 @@ public class GetSingleBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
         BookEntityMapper mapper = new();
         GetSingleBookAdapter adapter = new(context, mapper);
 
         BookEntity entity = new()
         {
             Title = "Effective C#",
-            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+            AuthorId = DbContextSeeder.Authors.AuthorOne.Id,
             Description = "Best practices"
         };
 

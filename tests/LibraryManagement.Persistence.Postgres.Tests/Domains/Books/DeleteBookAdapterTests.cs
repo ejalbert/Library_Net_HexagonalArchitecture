@@ -15,14 +15,14 @@ public class DeleteBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
 
         Guid bookId = Guid.NewGuid();
         BookEntity entity = new()
         {
             Id = bookId,
             Title = "Clean Code",
-            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+            AuthorId = DbContextSeeder.Authors.AuthorOne.Id,
             Description = "Craftsmanship",
             Keywords =
             [

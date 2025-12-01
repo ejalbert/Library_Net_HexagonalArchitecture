@@ -16,11 +16,13 @@ public class PatchBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        var authorId = DbContextSeeder.Authors.AuthorOne.Id;
+
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
         BookEntity entity = new()
         {
             Title = "Existing Title",
-            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+            AuthorId = authorId,
             Description = "Existing description",
             Keywords =
             [
@@ -34,12 +36,12 @@ public class PatchBookAdapterTests(PostgresDatabaseFixture fixture)
 
         PatchBookAdapter adapter = new(new BookEntityMapper(), context);
 
-        Book patched = await adapter.Patch(entity.Id.ToString(), null, "00000000-0000-0000-0000-111111111122", null, new[] { "patched" });
+        Book patched = await adapter.Patch(entity.Id.ToString(), null, authorId.ToString(), null, new[] { "patched" });
 
         BookEntity persisted = await context.Books.Include(b => b.Keywords).SingleAsync();
 
         Assert.Equal("Existing Title", persisted.Title);
-        Assert.Equal("00000000-0000-0000-0000-111111111122", persisted.AuthorId.ToString());
+        Assert.Equal(authorId, persisted.AuthorId);
         Assert.Equal("Existing description", persisted.Description);
         Assert.Equal(new[] { "patched" }, persisted.Keywords.Select(k => k.Keyword));
 

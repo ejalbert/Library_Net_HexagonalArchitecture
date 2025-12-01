@@ -4,6 +4,7 @@ using DotNet.Testcontainers.Containers;
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
+using LibraryManagement.Persistence.Postgres.Domains.Authors;
 using LibraryManagement.Tests.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
@@ -69,9 +70,9 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
                 .AddInterceptors(new MultitenantSaveChangesInterceptor(getCurrentUserTenantIdUseCase))
                 .Options;
 
+        var context = new LibraryManagementDbContext(options, getCurrentUserTenantIdUseCase);
 
-
-        return new LibraryManagementDbContext(options, getCurrentUserTenantIdUseCase);
+        return context ;
     }
 
     public async Task ResetDatabaseAsync()
@@ -81,3 +82,39 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
         await context.Database.EnsureCreatedAsync();
     }
 }
+
+internal static class DbContextSeeder
+{
+
+
+    extension(LibraryManagementDbContext context)
+    {
+        internal LibraryManagementDbContext WithAuthors()
+        {
+            context.Authors.AddRange(
+            Authors.AuthorOne,
+            Authors.AuthorTwo);
+
+            context.SaveChanges();
+
+            return context;
+        }
+    }
+
+    internal static class Authors
+    {
+        internal static readonly AuthorEntity AuthorOne = new()
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+            Name = "Author One"
+        };
+
+        internal static readonly AuthorEntity AuthorTwo = new()
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-222222222222"),
+            Name = "Author Two"
+        };
+    }
+}
+
+

@@ -13,27 +13,29 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
     public async Task Search_with_term_returns_titles_containing_term()
     {
         await fixture.ResetDatabaseAsync();
-        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
+
+        var authorId = DbContextSeeder.Authors.AuthorOne.Id;
 
         context.Books.AddRange(
             new BookEntity
             {
                 Title = "Clean Code",
-                AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+                AuthorId = authorId,
                 Description = "Code craftsmanship",
                 Keywords = new List<BookKeywordEntity> { new() { Keyword = "clean-code" } }
             },
             new BookEntity
             {
                 Title = "Domain-Driven Design",
-                AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+                AuthorId = authorId,
                 Description = "DDD fundamentals",
                 Keywords = new List<BookKeywordEntity> { new() { Keyword = "ddd" } }
             },
             new BookEntity
             {
                 Title = "Code Complete",
-                AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+                AuthorId = authorId,
                 Description = "Complete guide",
                 Keywords = new List<BookKeywordEntity> { new() { Keyword = "code" } }
             });
@@ -51,12 +53,14 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
     public async Task Search_without_term_limits_to_ten_results()
     {
         await fixture.ResetDatabaseAsync();
-        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
+
+        var authorId = DbContextSeeder.Authors.AuthorOne.Id;
 
         var books = Enumerable.Range(1, 12).Select(index => new BookEntity
         {
             Title = $"Book {index:00}",
-            AuthorId = Guid.Parse("00000000-0000-0000-0000-111111111111"),
+            AuthorId = authorId,
             Description = $"Description {index:00}",
             Keywords = new List<BookKeywordEntity> { new() { Keyword = $"kw-{index:00}" } }
         });

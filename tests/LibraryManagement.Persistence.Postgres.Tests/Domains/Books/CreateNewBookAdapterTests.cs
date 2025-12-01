@@ -1,5 +1,6 @@
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Postgres.DbContexts;
+using LibraryManagement.Persistence.Postgres.Domains.Authors;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
@@ -16,12 +17,14 @@ public class CreateNewBookAdapterTests(PostgresDatabaseFixture fixture)
     {
         await fixture.ResetDatabaseAsync();
 
-        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        string authorId = DbContextSeeder.Authors.AuthorOne.Id.ToString();
+
+        await using LibraryManagementDbContext context = fixture.CreateDbContext().WithAuthors();
         BookEntityMapper mapper = new();
         CreateNewBookAdapter adapter = new(mapper, context);
 
         string title = "Test-Driven Development";
-        string authorId = "00000000-0000-0000-0000-111111111111";
+
         string description = "How to drive design with tests";
         IReadOnlyCollection<string> keywords = new[] { "tdd", "red-green-refactor" };
 
