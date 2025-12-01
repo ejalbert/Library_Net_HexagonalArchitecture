@@ -1,3 +1,4 @@
+using LibraryManagement.Tests.Abstractions;
 using MongoDB.Driver;
 
 using Testcontainers.MongoDb;
@@ -9,10 +10,17 @@ public class MongoDbCollection : ICollectionFixture<MongoDbContainerFixture>;
 
 public sealed class MongoDbContainerFixture : IAsyncLifetime
 {
-    private readonly MongoDbContainer _container = new MongoDbBuilder()
-        .WithImage("mongo:7.0")
-        .WithCleanUp(true)
-        .Build();
+    private readonly MongoDbContainer _container;
+
+    public MongoDbContainerFixture()
+    {
+        DockerApiCompatibility.EnsureDockerApiVersion();
+
+        _container = new MongoDbBuilder()
+            .WithImage("mongo:7.0")
+            .WithCleanUp(true)
+            .Build();
+    }
 
     private IMongoClient? _client;
 

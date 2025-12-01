@@ -1,10 +1,9 @@
-using System.Runtime.InteropServices.JavaScript;
-
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.DbContext;
+using LibraryManagement.Tests.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +20,8 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
 
     public PostgresDatabaseFixture()
     {
+        DockerApiCompatibility.EnsureDockerApiVersion();
+
         _postgresContainer = new ContainerBuilder()
             .WithImage("postgres:18.1")
             .WithEnvironment("POSTGRES_USER", "postgres")
