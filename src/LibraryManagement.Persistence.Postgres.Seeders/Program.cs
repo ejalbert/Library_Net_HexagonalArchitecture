@@ -21,21 +21,36 @@ var connectionString = builder.Configuration.GetConnectionString("Default")
 
 
 
+Console.WriteLine("Starting Postgres seeder...");
+Console.WriteLine($"Using connection string: {connectionString}");
+
+builder.Services.AddScoped<IGetCurrentUserTenantIdUseCase, TenantProvider>();
+
 builder.Services.AddDbContext<LibraryManagementDbContext>(options =>
 {
     options
         .UseNpgsql(connectionString)
         .UseSeeding((context,_) =>
         {
-            context
-                .SeedAuthors()
-                .SeedBooks();
+            Console.WriteLine("Seeding authors...");
+            context.SeedAuthors();
+            Console.WriteLine("Authors seeded.");
+
+            Console.WriteLine("Seeding books...");
+            context.SeedBooks();
+            Console.WriteLine("Books seeded.");
         });
 });
 
 IHost app = builder.Build();
 
+var dbContext = app.Services.GetRequiredService<LibraryManagementDbContext>();
+dbContext.Database.EnsureCreated();
+
+Console.WriteLine("Applying Seedings...");
+
 await app.StartAsync();
+Console.WriteLine("Seeding complete. Application exiting.");
 
 public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
 {

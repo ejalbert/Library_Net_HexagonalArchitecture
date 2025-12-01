@@ -14,6 +14,7 @@ internal static class ConfigureAuthorDbSet
 
     private static EntityTypeBuilder<AuthorEntity> ConfigureAuthorEntity(this EntityTypeBuilder<AuthorEntity> typeBuilder)
     {
+        typeBuilder.ToTable("Authors");
         typeBuilder.HasKey(a => a.Id);
 
         return typeBuilder;

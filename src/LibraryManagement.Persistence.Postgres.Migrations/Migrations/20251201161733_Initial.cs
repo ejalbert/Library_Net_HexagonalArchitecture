@@ -12,7 +12,7 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AuthorEntity",
+                name: "Authors",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -20,7 +20,7 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuthorEntity", x => x.Id);
+                    table.PrimaryKey("PK_Authors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -37,15 +37,15 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Books_AuthorEntity_AuthorId",
+                        name: "FK_Books_Authors_AuthorId",
                         column: x => x.AuthorId,
-                        principalTable: "AuthorEntity",
+                        principalTable: "Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookKeywordEntity",
+                name: "BookKeyword",
                 columns: table => new
                 {
                     BookId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -54,9 +54,9 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookKeywordEntity", x => new { x.BookId, x.Keyword });
+                    table.PrimaryKey("PK_BookKeyword", x => new { x.BookId, x.Keyword });
                     table.ForeignKey(
-                        name: "FK_BookKeywordEntity_Books_BookId",
+                        name: "FK_BookKeyword_Books_BookId",
                         column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
@@ -73,13 +73,13 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BookKeywordEntity");
+                name: "BookKeyword");
 
             migrationBuilder.DropTable(
                 name: "Books");
 
             migrationBuilder.DropTable(
-                name: "AuthorEntity");
+                name: "Authors");
         }
     }
 }

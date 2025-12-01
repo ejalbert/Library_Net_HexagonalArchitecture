@@ -34,7 +34,7 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuthorEntity");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("LibraryManagement.Persistence.Postgres.Domains.Books.BookEntity", b =>
@@ -61,7 +61,7 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("LibraryManagement.Persistence.Postgres.Domains.Books.BookKeywordEntity", b =>
@@ -77,7 +77,7 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
 
                     b.HasKey("BookId", "Keyword");
 
-                    b.ToTable("BookKeywordEntity");
+                    b.ToTable("BookKeyword", (string)null);
                 });
 
             modelBuilder.Entity("LibraryManagement.Persistence.Postgres.Domains.Books.BookEntity", b =>
