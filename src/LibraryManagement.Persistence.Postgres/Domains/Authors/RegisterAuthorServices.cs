@@ -1,4 +1,5 @@
 using LibraryManagement.Domain.Domains.Authors.Create;
+using LibraryManagement.Domain.Domains.Authors.Search;
 using LibraryManagement.Persistence.Postgres.Domains.Authors.Adapters;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,8 @@ internal static class RegisterAuthorServices
     {
         return services
             .AddSingleton<IAuthorEntityMapper, AuthorEntityMapper>()
-            .AddScoped<ICreateAuthorPort, CreateAuthorAdapter>();
+            .AddScoped<ICreateAuthorPort, CreateAuthorAdapter>()
+            .AddScoped<ISearchAuthorsPort, SearchAuthorsAdapter>();
     }
 
 }

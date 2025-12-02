@@ -1,11 +1,13 @@
 using System.Collections.Concurrent;
 
+using LibraryManagement.Domain.Common.Searches;
 using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Domain.Domains.Authors.Create;
+using LibraryManagement.Domain.Domains.Authors.Search;
 
 namespace LibraryManagement.Application.Tests.TestDoubles;
 
-internal class InMemoryAuthorPersistence : ICreateAuthorPort
+internal class InMemoryAuthorPersistence : ICreateAuthorPort, ISearchAuthorsPort
 {
     private readonly ConcurrentDictionary<string, Author> _authors = new();
 
@@ -20,5 +22,37 @@ internal class InMemoryAuthorPersistence : ICreateAuthorPort
         _authors[author.Id] = author;
 
         return Task.FromResult(author);
+    }
+
+    public Task<SearchResult<Author>> Search(string? searchTerm, Pagination pagination)
+    {
+        IEnumerable<Author> authors = _authors.Values;
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+            authors = authors.Where(author =>
+                author.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+
+        List<Author> results = authors.ToList();
+
+        return Task.FromResult(new SearchResult<Author>
+        {
+            Results = results,
+            Pagination = new()
+            {
+                TotalItems = results.Count,
+                PageIndex = pagination.PageIndex,
+                PageSize = pagination.PageSize
+            }
+        });
+    }
+
+    public void Seed(params Author[] authors)
+    {
+        foreach (Author author in authors) _authors[author.Id] = author;
+    }
+
+    public void Reset()
+    {
+        _authors.Clear();
     }
 }

@@ -1,6 +1,8 @@
 using LibraryManagement.Api.Rest.Client.Domain.Authors;
 using LibraryManagement.Api.Rest.Client.Domain.Authors.Create;
+using LibraryManagement.Api.Rest.Client.Domain.Authors.Search;
 using LibraryManagement.Api.Rest.Domains.Authors.CreateAuthor;
+using LibraryManagement.Api.Rest.Domains.Authors.Search;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +18,8 @@ internal static class AuthorServices
     {
         services
             .AddScoped<IAuthorDtoMapper, AuthorDtoMapper>()
-            .AddScoped<ICreateAuthorController, CreateAuthorController>();
+            .AddScoped<ICreateAuthorController, CreateAuthorController>()
+            .AddScoped<ISearchAuthorsController, SearchAuthorsController>();
 
         return services;
     }
@@ -31,6 +34,13 @@ internal static class AuthorServices
             .WithName("Create Author")
             .WithDescription("Creates a new author entry")
             .Produces<AuthorDto>();
+
+        group.MapPost("/search",
+                ([FromBody] SearchAuthorsRequestDto request, ISearchAuthorsController controller) =>
+                    controller.SearchAuthors(request))
+            .WithName("Search Authors")
+            .WithDescription("Search for authors in the library")
+            .Produces<SearchAuthorsResponseDto>();
 
         return app;
     }
