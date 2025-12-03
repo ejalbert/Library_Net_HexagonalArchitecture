@@ -26,25 +26,28 @@ IHost app = builder.Build();
 
 await app.StartAsync();
 
-public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
+namespace LibraryManagement.Persistence.Postgres.Migrations
 {
-    public LibraryManagementDbContext CreateDbContext(string[] args)
+    public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
     {
-        var optionsBuilder = new DbContextOptionsBuilder<LibraryManagementDbContext>();
+        public LibraryManagementDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<LibraryManagementDbContext>();
 
-        var connectionString = "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
+            var connectionString = "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
 
-        optionsBuilder.UseNpgsql(connectionString,
-            sql => sql.MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations"));
+            optionsBuilder.UseNpgsql(connectionString,
+                sql => sql.MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations"));
 
-        return new LibraryManagementDbContext(optionsBuilder.Options, new TenantProvider());
+            return new LibraryManagementDbContext(optionsBuilder.Options, new TenantProvider());
+        }
     }
-}
 
-internal class TenantProvider : IGetCurrentUserTenantIdUseCase
-{
-    public string GetTenantId(GetCurrentUserTenantIdCommand command)
+    internal class TenantProvider : IGetCurrentUserTenantIdUseCase
     {
-        return "00000000-0000-0000-0000-000000000000";
+        public string GetTenantId(GetCurrentUserTenantIdCommand command)
+        {
+            return "00000000-0000-0000-0000-000000000000";
+        }
     }
 }

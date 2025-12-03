@@ -1,7 +1,6 @@
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
-using LibraryManagement.Persistence.Postgres.DbContexts;
+
 using Microsoft.EntityFrameworkCore;
-using Xunit;
 
 using Moq;
 

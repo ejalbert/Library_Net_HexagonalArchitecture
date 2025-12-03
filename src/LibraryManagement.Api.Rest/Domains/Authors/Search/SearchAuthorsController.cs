@@ -1,6 +1,5 @@
 using LibraryManagement.Api.Rest.Client.Domain.Authors.Search;
 using LibraryManagement.Api.Rest.Common.Searches;
-using LibraryManagement.Api.Rest.Domains.Authors;
 using LibraryManagement.Domain.Domains.Authors.Search;
 
 using Microsoft.AspNetCore.Http;

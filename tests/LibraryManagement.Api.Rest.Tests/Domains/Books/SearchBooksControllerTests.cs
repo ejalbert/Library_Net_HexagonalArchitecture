@@ -57,7 +57,7 @@ public class SearchBooksControllerTests
         var useCaseMock = new Mock<ISearchBooksUseCase>();
         useCaseMock
             .Setup(x => x.Search(It.IsAny<SearchBooksCommand>()))
-            .ReturnsAsync(new SearchResult<Book> {Results = books, Pagination = new(){ TotalItems = 2, PageIndex = 0, PageSize = 10 }});
+            .ReturnsAsync(new SearchResult<Book> { Results = books, Pagination = new() { TotalItems = 2, PageIndex = 0, PageSize = 10 } });
         var bookMapperMock = new Mock<IBookDtoMapper>();
         bookMapperMock.Setup(x => x.ToDto(bookOne)).Returns(responseDtoOne);
         bookMapperMock.Setup(x => x.ToDto(bookTwo)).Returns(responseDtoTwo);

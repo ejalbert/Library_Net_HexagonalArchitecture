@@ -27,9 +27,11 @@ public class SearchBooksServiceTests
                     Keywords = new[] { "ddd" }
                 }
             ],
-            Pagination =  new()
+            Pagination = new()
             {
-                TotalItems = 2, PageIndex = 0, PageSize = 10
+                TotalItems = 2,
+                PageIndex = 0,
+                PageSize = 10
             }
         };
 

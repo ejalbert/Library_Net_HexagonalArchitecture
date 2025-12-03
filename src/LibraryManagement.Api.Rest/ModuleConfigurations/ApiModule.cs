@@ -1,6 +1,7 @@
 using LibraryManagement.Api.Rest.Common;
 using LibraryManagement.Api.Rest.Domains.Authors;
 using LibraryManagement.Api.Rest.Domains.Books;
+using LibraryManagement.Api.Rest.Domains.BookSuggestions;
 using LibraryManagement.Api.Rest.Infrastructure.Tenants;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
@@ -39,6 +40,7 @@ public static class ApiModule
             .AddCommonServices()
             .AddAuthorServices()
             .AddBookServices()
+            .AddBookSuggestionServices()
             .AddTenantServices();
 
 
@@ -56,6 +58,7 @@ public static class ApiModule
 
         app.UseAuthorServices();
         app.UseBookServices();
+        app.UseBookSuggestionServices();
 
         return configurator;
     }

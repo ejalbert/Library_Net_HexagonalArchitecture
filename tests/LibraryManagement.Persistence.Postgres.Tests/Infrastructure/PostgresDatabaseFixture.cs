@@ -4,9 +4,6 @@ using DotNet.Testcontainers.Containers;
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
-using LibraryManagement.Persistence.Postgres.Domains.Authors;
-using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
-using LibraryManagement.Persistence.Postgres.Seeders.Domain.Books;
 using LibraryManagement.Tests.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
@@ -74,7 +71,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
 
         var context = new LibraryManagementDbContext(options, getCurrentUserTenantIdUseCase);
 
-        return context ;
+        return context;
     }
 
     public async Task ResetDatabaseAsync()

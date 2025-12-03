@@ -1,14 +1,13 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
-using LibraryManagement.Persistence.Postgres.Domains.Books;
+using LibraryManagement.Persistence.Postgres.Seeders;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Books;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,7 +32,7 @@ builder.Services.AddDbContext<LibraryManagementDbContext>((sp, options) =>
     options
         .UseNpgsql(connectionString)
         .AddInterceptors(sp.GetRequiredService<IMultitenantSaveChangesInterceptor>())
-        .UseSeeding((context,_) =>
+        .UseSeeding((context, _) =>
         {
             Console.WriteLine("Seeding authors...");
             context.SeedAuthors();
@@ -72,10 +71,13 @@ Console.WriteLine("Seeding complete. Application exiting.");
 //     }
 // }
 
-internal class TenantProvider : IGetCurrentUserTenantIdUseCase
+namespace LibraryManagement.Persistence.Postgres.Seeders
 {
-    public string GetTenantId(GetCurrentUserTenantIdCommand command)
+    internal class TenantProvider : IGetCurrentUserTenantIdUseCase
     {
-        return "00000000-0000-0000-0000-000000000001";
+        public string GetTenantId(GetCurrentUserTenantIdCommand command)
+        {
+            return "00000000-0000-0000-0000-000000000001";
+        }
     }
 }

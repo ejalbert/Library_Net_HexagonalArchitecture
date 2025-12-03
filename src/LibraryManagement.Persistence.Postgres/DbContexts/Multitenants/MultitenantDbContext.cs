@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
-using LibraryManagement.Persistence.Postgres.Domains.Books;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

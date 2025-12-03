@@ -1,5 +1,6 @@
 using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Domain.Domains.Books;
+using LibraryManagement.Domain.Domains.BookSuggestions;
 using LibraryManagement.Domain.Infrastructure.Tenants;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
@@ -28,6 +29,7 @@ public static class DomainModule
         moduleRegistrator.Services
             .AddAuthorServices()
             .AddBookServices()
+            .AddBookSuggestionServices()
             .AddTenantServices();
 
         return moduleRegistrator;

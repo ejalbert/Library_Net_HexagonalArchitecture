@@ -76,7 +76,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.Persisten
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{361AC955-162C-4846-9E88-23B5C8BD4685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.AI.OpenApi", "src\LibraryManagement.AI.OpenApi\LibraryManagement.AI.OpenApi.csproj", "{415E9455-5AD5-4D0B-A17F-A7AD7F2C63C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.AI.OpenAi", "src\LibraryManagement.AI.OpenAi\LibraryManagement.AI.OpenAi.csproj", "{415E9455-5AD5-4D0B-A17F-A7AD7F2C63C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.AI.OpenAi.Tests", "tests\LibraryManagement.AI.OpenAi.Tests\LibraryManagement.AI.OpenAi.Tests.csproj", "{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -364,6 +366,18 @@ Global
 		{415E9455-5AD5-4D0B-A17F-A7AD7F2C63C7}.Release|x64.Build.0 = Release|Any CPU
 		{415E9455-5AD5-4D0B-A17F-A7AD7F2C63C7}.Release|x86.ActiveCfg = Release|Any CPU
 		{415E9455-5AD5-4D0B-A17F-A7AD7F2C63C7}.Release|x86.Build.0 = Release|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Debug|x86.Build.0 = Debug|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Release|x64.Build.0 = Release|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -395,6 +409,7 @@ Global
 		{A34D6EA2-CBD1-4576-8230-7461C510BD91} = {FBAC0F06-0B56-4B80-8A68-B2C1C8ADC33F}
 		{180894D0-5EF6-470F-B7DF-F8D6C9F6DECB} = {FBAC0F06-0B56-4B80-8A68-B2C1C8ADC33F}
 		{415E9455-5AD5-4D0B-A17F-A7AD7F2C63C7} = {361AC955-162C-4846-9E88-23B5C8BD4685}
+		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0} = {361AC955-162C-4846-9E88-23B5C8BD4685}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {15AD5F77-410B-4CE1-9E13-3F3427A8B0D3}
