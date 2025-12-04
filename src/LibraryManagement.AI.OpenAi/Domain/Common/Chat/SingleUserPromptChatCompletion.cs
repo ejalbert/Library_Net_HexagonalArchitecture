@@ -1,4 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
+
 using LibraryManagement.AI.OpenAi.Domain.Common.Chat.Tools;
+using LibraryManagement.Domain.Domains.Ai.AiConsumptionTracking.CreateConsumption;
 
 using Microsoft.Extensions.Logging;
 
@@ -6,8 +9,14 @@ using OpenAI.Chat;
 
 namespace LibraryManagement.AI.OpenAi.Domain.Common.Chat;
 
-public class SingleUserPromptChatCompletion(ChatClient chatClient, ILogger logger)
+public interface ISingleUserPromptChatCompletion
 {
+    Task<string> ExecuteAsync(string initialContextPrompt, string userPrompt, params IDomainChatTool[] tools);
+}
+
+public class SingleUserPromptChatCompletion(ChatClient chatClient, ICreateAiConsumptionUseCase createAiConsumptionUseCase, ILogger<SingleUserPromptChatCompletion> logger) : ISingleUserPromptChatCompletion
+{
+    [Experimental("OPENAI001")]
     public async Task<string> ExecuteAsync(string initialContextPrompt, string userPrompt, params IDomainChatTool[] tools)
     {
         var toolMap = new Dictionary<string, IDomainChatTool>();
@@ -77,17 +86,17 @@ public class SingleUserPromptChatCompletion(ChatClient chatClient, ILogger logge
                         requiresAction = true;
                         break;
                     case ChatFinishReason.Length:
-                        throw new NotImplementedException(
+                        throw new Exception(
                             "Incomplete model output due to MaxTokens parameter or token limit exceeded.");
 
                     case ChatFinishReason.ContentFilter:
-                        throw new NotImplementedException("Omitted content due to a content filter flag.");
+                        throw new Exception("Omitted content due to a content filter flag.");
 
                     case ChatFinishReason.FunctionCall:
-                        throw new NotImplementedException("Deprecated in favor of tool calls.");
+                        throw new Exception("Deprecated in favor of tool calls.");
 
                     default:
-                        throw new NotImplementedException(completion.FinishReason.ToString());
+                        throw new Exception(completion.FinishReason.ToString());
                 }
 
             } while (requiresAction);
@@ -102,6 +111,9 @@ public class SingleUserPromptChatCompletion(ChatClient chatClient, ILogger logge
         }
         finally
         {
+            await createAiConsumptionUseCase.AddConsumptionAsync(new(inputTokens, outputTokes, totalTokens, chatClient.Model),
+                CancellationToken.None);
+
             logger.LogInformation("Tokens used: Input={InputTokens}, Output={OutputTokes}, Total={TotalTokensComputed}, TotalReported={TotalTokensReported}", inputTokens, outputTokes, inputTokens + outputTokes, totalTokens);
         }
     }

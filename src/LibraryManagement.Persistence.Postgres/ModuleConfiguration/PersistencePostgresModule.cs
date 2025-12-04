@@ -1,6 +1,7 @@
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
+using LibraryManagement.Persistence.Postgres.Domains.Ai;
 using LibraryManagement.Persistence.Postgres.Domains.Authors;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 
@@ -44,7 +45,8 @@ public static class PersistencePostgresModule
 
         moduleRegistrator.Services
             .AddBookServices()
-            .AddAuthorServices();
+            .AddAuthorServices()
+            .AddAiServices();
 
 
         return moduleRegistrator;

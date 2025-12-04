@@ -1,5 +1,5 @@
 using LibraryManagement.AI.OpenAi.Domain.BookSuggestion.Adapters;
-using LibraryManagement.Domain.Domains.BookSuggestions.Create;
+using LibraryManagement.Domain.Domains.Ai.BookSuggestions.Create;
 
 using Microsoft.Extensions.DependencyInjection;
 

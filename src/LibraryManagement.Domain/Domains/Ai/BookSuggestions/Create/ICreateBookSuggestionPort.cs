@@ -1,4 +1,4 @@
-namespace LibraryManagement.Domain.Domains.BookSuggestions.Create;
+namespace LibraryManagement.Domain.Domains.Ai.BookSuggestions.Create;
 
 public interface ICreateBookSuggestionPort
 {

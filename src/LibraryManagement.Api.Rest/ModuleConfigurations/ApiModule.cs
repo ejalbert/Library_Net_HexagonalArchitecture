@@ -1,4 +1,5 @@
 using LibraryManagement.Api.Rest.Common;
+using LibraryManagement.Api.Rest.Domains.Ai;
 using LibraryManagement.Api.Rest.Domains.Authors;
 using LibraryManagement.Api.Rest.Domains.Books;
 using LibraryManagement.Api.Rest.Domains.BookSuggestions;
@@ -40,7 +41,7 @@ public static class ApiModule
             .AddCommonServices()
             .AddAuthorServices()
             .AddBookServices()
-            .AddBookSuggestionServices()
+            .AddAiServices()
             .AddTenantServices();
 
 

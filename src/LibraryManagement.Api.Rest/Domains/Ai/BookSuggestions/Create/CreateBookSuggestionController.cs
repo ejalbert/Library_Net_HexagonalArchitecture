@@ -1,5 +1,5 @@
 using LibraryManagement.Api.Rest.Client.Domain.BookSuggestions.Create;
-using LibraryManagement.Domain.Domains.BookSuggestions.Create;
+using LibraryManagement.Domain.Domains.Ai.BookSuggestions.Create;
 
 using Microsoft.AspNetCore.Http;
 

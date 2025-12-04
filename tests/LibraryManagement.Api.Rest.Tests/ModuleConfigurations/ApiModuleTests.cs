@@ -7,6 +7,7 @@ using LibraryManagement.Api.Rest.Domains.Books.GetSingleBook;
 using LibraryManagement.Api.Rest.Domains.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books.UpdateBook;
 using LibraryManagement.Api.Rest.ModuleConfigurations;
+using LibraryManagement.Domain.Domains.Ai.BookSuggestions.Create;
 using LibraryManagement.Domain.Domains.Authors.Create;
 using LibraryManagement.Domain.Domains.Authors.Search;
 using LibraryManagement.Domain.Domains.Books.Create;
@@ -15,7 +16,6 @@ using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Patch;
 using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.Domain.Domains.Books.Update;
-using LibraryManagement.Domain.Domains.BookSuggestions.Create;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
 using LibraryManagement.ModuleBootstrapper.Extensions;
 

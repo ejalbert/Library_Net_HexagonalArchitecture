@@ -18,6 +18,7 @@
 
 
     <ItemGroup>
+      <Folder Include="Domains\Ai\AiConsumptionTracking\GetConsumption\" />
       <Folder Include="Infrastructure\" />
     </ItemGroup>
 

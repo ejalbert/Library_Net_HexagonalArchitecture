@@ -3,6 +3,7 @@ using System.ClientModel;
 using LibraryManagement.AI.OpenAi.Domain.Authors;
 using LibraryManagement.AI.OpenAi.Domain.Books;
 using LibraryManagement.AI.OpenAi.Domain.BookSuggestion;
+using LibraryManagement.AI.OpenAi.Domain.Common;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
 using Microsoft.Extensions.Configuration;
@@ -40,6 +41,7 @@ public static class OpenAiModule
         });
 
         moduleRegistrator.Services
+            .AddCommonServices()
             .AddBookServices()
             .AddAuthorServices()
             .AddBookSuggestionServices();

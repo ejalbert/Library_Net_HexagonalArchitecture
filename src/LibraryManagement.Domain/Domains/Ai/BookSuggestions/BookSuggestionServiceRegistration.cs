@@ -1,8 +1,8 @@
-using LibraryManagement.Domain.Domains.BookSuggestions.Create;
+using LibraryManagement.Domain.Domains.Ai.BookSuggestions.Create;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LibraryManagement.Domain.Domains.BookSuggestions;
+namespace LibraryManagement.Domain.Domains.Ai.BookSuggestions;
 
 internal static class BookSuggestionServiceRegistration
 {

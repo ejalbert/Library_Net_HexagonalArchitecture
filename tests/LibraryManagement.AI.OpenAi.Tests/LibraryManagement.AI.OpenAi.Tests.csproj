@@ -29,4 +29,8 @@
       <ProjectReference Include="..\LibraryManagement.Tests.Abstractions\LibraryManagement.Tests.Abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Domain\BookSuggestion\Adapters\" />
+    </ItemGroup>
+
 </Project>
