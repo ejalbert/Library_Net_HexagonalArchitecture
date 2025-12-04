@@ -4,5 +4,5 @@ namespace LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions;
 
 public interface IBookSuggestionClient
 {
-    Task<CreateBookSuggestionResponseDto> GetBookSuggestion(string prompt, CancellationToken cancellationToken);
+    Task<CreateBookSuggestionResponseDto> GetBookSuggestion(string prompt, CancellationToken cancellationToken = default);
 }

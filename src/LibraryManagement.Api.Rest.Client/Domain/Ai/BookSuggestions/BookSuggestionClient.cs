@@ -4,7 +4,7 @@ using LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions.Create;
 
 namespace LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions;
 
-public class BookSuggestionClient(RestApiClient client): IBookSuggestionClient
+public class BookSuggestionClient(IRestAPiClient client): IBookSuggestionClient
 {
     public async Task<CreateBookSuggestionResponseDto> GetBookSuggestion(string prompt, CancellationToken cancellationToken)
     {

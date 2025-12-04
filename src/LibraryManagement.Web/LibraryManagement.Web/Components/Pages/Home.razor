@@ -1,14 +1,42 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
-<h1>Library Management</h1>
+<div class="home-page">
+    <h1>Library Management</h1>
 
-<div style="display: flex; flex-direction: column; gap: 10px;">
-    @foreach (var book in BookDetails)
-    {
-        <NavLink @key="book.Id" class="book-link" href="@($"/book/{book.Id}")">
-            <span>@book.Title</span>
-        </NavLink>
-    }
+    <div class="suggestion-panel">
+        <label>
+            Help me find a book:
+            <InputTextArea  @bind-Value="@BookSuggestionInput"/>
+        </label>
+
+        <button @onclick="async ()=> await GenerateBookSuggestions()">Suggest Me!</button>
+
+        <div class="suggestion-result">
+            @if (IsLoadingSuggestions)
+            {
+                <p>Loading suggestions...</p>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(BookSuggestionResult))
+            {
+                <pre>
+@BookSuggestionResult
+</pre>
+            }
+
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        @foreach (var book in BookDetails)
+        {
+            <NavLink @key="book.Id" class="book-link" href="@($"/book/{book.Id}")">
+                <span>@book.Title</span>
+            </NavLink>
+        }
+    </div>
 </div>
+

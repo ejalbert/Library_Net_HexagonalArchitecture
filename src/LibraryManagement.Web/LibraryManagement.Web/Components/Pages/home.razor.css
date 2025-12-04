@@ -1,0 +1,18 @@
+.home-page{
+    .suggestion-panel{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+
+        label{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            textarea{
+                height: 150px;
+            }
+        }
+    }
+}
