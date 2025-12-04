@@ -1,4 +1,4 @@
-// See https://aka.ms/new-console-template for more information
+﻿// See https://aka.ms/new-console-template for more information
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.DbContexts;
@@ -6,6 +6,7 @@ using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 using LibraryManagement.Persistence.Postgres.Seeders;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Books;
+using LibraryManagement.Persistence.Postgres.Seeders.Infrastructure.Tenants;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +35,10 @@ builder.Services.AddDbContext<LibraryManagementDbContext>((sp, options) =>
         .AddInterceptors(sp.GetRequiredService<IMultitenantSaveChangesInterceptor>())
         .UseSeeding((context, _) =>
         {
+            Console.WriteLine("Seeding tenants...");
+            context.SeedTenants(sp.GetRequiredService<IGetCurrentUserTenantIdUseCase>());
+            Console.WriteLine("Tenants seeded.");
+
             Console.WriteLine("Seeding authors...");
             context.SeedAuthors();
             Console.WriteLine("Authors seeded.");
@@ -55,21 +60,6 @@ Console.WriteLine("Applying Seedings...");
 
 await app.StartAsync();
 Console.WriteLine("Seeding complete. Application exiting.");
-
-// public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
-// {
-//     public LibraryManagementDbContext CreateDbContext(string[] args)
-//     {
-//         var optionsBuilder = new DbContextOptionsBuilder<LibraryManagementDbContext>();
-//
-//         var connectionString = "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
-//
-//         optionsBuilder.UseNpgsql(connectionString);
-//         optionsBuilder.AddInterceptors()
-//
-//         return new LibraryManagementDbContext(optionsBuilder.Options, new TenantProvider());
-//     }
-// }
 
 namespace LibraryManagement.Persistence.Postgres.Seeders
 {

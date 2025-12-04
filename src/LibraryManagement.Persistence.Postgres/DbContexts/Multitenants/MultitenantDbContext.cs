@@ -38,9 +38,11 @@ public abstract class MultitenantDbContext : DbContext
             {
                 var typeBuilder = modelBuilder.Entity(entityType.ClrType);
 
-                typeBuilder.HasOne(nameof(TenantEntity), nameof(IMultitenantEntity.TenantId))
-                    .WithMany(nameof(IMultitenantEntity.TenantId)).IsRequired();
 
+                typeBuilder.HasOne(nameof(IMultitenantEntity.Tenant))
+                    .WithMany()
+                    .HasForeignKey(nameof(IMultitenantEntity.TenantId))
+                    .IsRequired();
 
                 typeBuilder.HasQueryFilter("Filter by tenant", CreateTenantFilterExpression(entityType.ClrType, CurrentTenantId));
             }
