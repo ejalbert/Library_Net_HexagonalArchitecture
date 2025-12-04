@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
+using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants.Domains.Tenants;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -9,6 +10,8 @@ namespace LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 
 public abstract class MultitenantDbContext : DbContext
 {
+    public DbSet<TenantEntity> Tenants { get; set; } = null!;
+
     protected MultitenantDbContext(DbContextOptions options, IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
         : base(options)
     {
@@ -25,12 +28,21 @@ public abstract class MultitenantDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ConfigureTenants();
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(IMultitenantEntity).IsAssignableFrom(entityType.ClrType))
             {
-                modelBuilder.Entity(entityType.ClrType)
-                    .HasQueryFilter("Filter by tenant", CreateTenantFilterExpression(entityType.ClrType, CurrentTenantId));
+                var typeBuilder = modelBuilder.Entity(entityType.ClrType);
+
+                typeBuilder.HasOne(nameof(TenantEntity), nameof(IMultitenantEntity.TenantId))
+                    .WithMany(nameof(IMultitenantEntity.TenantId)).IsRequired();
+
+
+                typeBuilder.HasQueryFilter("Filter by tenant", CreateTenantFilterExpression(entityType.ClrType, CurrentTenantId));
             }
         }
     }
