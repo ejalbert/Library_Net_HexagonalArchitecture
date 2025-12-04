@@ -15,10 +15,13 @@ public class MultitenancyAcceptanceTests(PostgresDatabaseFixture fixture)
         await fixture.ResetDatabaseAsync();
 
         // Insert for current tenant
+        var tenant1Guid = Guid.Parse("00000000-0000-0000-0000-000000000001");
         var getCurrentUserTenantIdUseCaseMock1 = new Mock<IGetCurrentUserTenantIdUseCase>();
-        getCurrentUserTenantIdUseCaseMock1.Setup(x => x.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("00000000-0000-0000-0000-000000000001");
+        getCurrentUserTenantIdUseCaseMock1.Setup(x => x.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns(tenant1Guid.ToString());
         await using (var context1 = fixture.CreateDbContext(getCurrentUserTenantIdUseCaseMock1.Object))
         {
+            context1.Tenants.Add(new(){Id = tenant1Guid, Name = "Tenant 1"});
+
             var bookForCurrentTenant = new LibraryManagement.Persistence.Postgres.Domains.Books.BookEntity
             {
                 Title = "Tenant Book",
@@ -30,10 +33,13 @@ public class MultitenancyAcceptanceTests(PostgresDatabaseFixture fixture)
         }
 
         // Insert for other tenant
+        var tenant2Guid =  Guid.Parse("00000000-0000-0000-0000-000000000002");
         var getCurrentUserTenantIdUseCaseMock2 = new Mock<IGetCurrentUserTenantIdUseCase>();
-        getCurrentUserTenantIdUseCaseMock2.Setup(x => x.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("00000000-0000-0000-0000-000000000002");
+        getCurrentUserTenantIdUseCaseMock2.Setup(x => x.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns(tenant2Guid.ToString);
         await using (var context2 = fixture.CreateDbContext(getCurrentUserTenantIdUseCaseMock2.Object))
         {
+            context2.Tenants.Add(new(){Id = tenant2Guid, Name =  "Tenant 2"});
+
             var bookForOtherTenant = new LibraryManagement.Persistence.Postgres.Domains.Books.BookEntity
             {
                 Title = "Other Tenant Book",
@@ -66,6 +72,7 @@ public class MultitenancyAcceptanceTests(PostgresDatabaseFixture fixture)
         Guid bookId;
         await using (var context1 = fixture.CreateDbContext(tenant1Mock.Object))
         {
+            context1.Tenants.AddRange(new(){Id =  tenant1Id, Name =  "Tenant 1"}, new(){Id =  tenant2Id, Name =  "Tenant 2"});
             var book = new LibraryManagement.Persistence.Postgres.Domains.Books.BookEntity
             {
                 Title = "Tenant1 Book",
@@ -99,6 +106,8 @@ public class MultitenancyAcceptanceTests(PostgresDatabaseFixture fixture)
 
         await using (var context = fixture.CreateDbContext(tenant1Mock.Object))
         {
+            context.Tenants.Add(new(){Id =  tenant1Id, Name =  "Tenant 1"});
+
             var book = new LibraryManagement.Persistence.Postgres.Domains.Books.BookEntity
             {
                 Title = "Fake Tenant Book",

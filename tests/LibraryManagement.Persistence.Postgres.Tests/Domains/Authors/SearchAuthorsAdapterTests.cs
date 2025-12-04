@@ -15,7 +15,8 @@ public class SearchAuthorsAdapterTests(PostgresDatabaseFixture fixture)
     public async Task Search_with_term_filters_by_name()
     {
         await fixture.ResetDatabaseAsync();
-        await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
+        await using LibraryManagementDbContext context = fixture.CreateDbContext();
+        context.SeedAuthors();
 
         SearchAuthorsAdapter adapter = new(context, new AuthorEntityMapper());
 

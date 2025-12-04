@@ -8,12 +8,14 @@ using LibraryManagement.Api.Rest.Domains.Books.Search;
 using LibraryManagement.Api.Rest.Domains.Books.UpdateBook;
 using LibraryManagement.Api.Rest.ModuleConfigurations;
 using LibraryManagement.Domain.Domains.Authors.Create;
+using LibraryManagement.Domain.Domains.Authors.Search;
 using LibraryManagement.Domain.Domains.Books.Create;
 using LibraryManagement.Domain.Domains.Books.Delete;
 using LibraryManagement.Domain.Domains.Books.GetSingle;
 using LibraryManagement.Domain.Domains.Books.Patch;
 using LibraryManagement.Domain.Domains.Books.Search;
 using LibraryManagement.Domain.Domains.Books.Update;
+using LibraryManagement.Domain.Domains.BookSuggestions.Create;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
 using LibraryManagement.ModuleBootstrapper.Extensions;
 
@@ -124,12 +126,14 @@ public class ApiModuleTests
     private static void RegisterUseCases(IServiceCollection services)
     {
         services.AddSingleton(Mock.Of<ICreateAuthorUseCase>());
+        services.AddSingleton(Mock.Of<ISearchAuthorsUseCase>());
         services.AddSingleton(Mock.Of<ICreateNewBookUseCase>());
         services.AddSingleton(Mock.Of<IDeleteBookUseCase>());
         services.AddSingleton(Mock.Of<IGetSingleBookUseCase>());
         services.AddSingleton(Mock.Of<ISearchBooksUseCase>());
         services.AddSingleton(Mock.Of<IUpdateBookUseCase>());
         services.AddSingleton(Mock.Of<IPatchBookUseCase>());
+        services.AddSingleton(Mock.Of<ICreateBookSuggestionUseCase>());
     }
 
     private static IEnumerable<RouteEndpoint> GetRouteEndpoints(WebApplication app)

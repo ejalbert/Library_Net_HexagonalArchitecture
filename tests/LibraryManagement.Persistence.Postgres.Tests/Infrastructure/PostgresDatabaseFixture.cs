@@ -4,6 +4,7 @@ using DotNet.Testcontainers.Containers;
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
+using LibraryManagement.Persistence.Postgres.Seeders.Infrastructure.Tenants;
 using LibraryManagement.Tests.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
@@ -54,15 +55,10 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
         await _postgresContainer.DisposeAsync();
     }
 
-    public LibraryManagementDbContext CreateDbContext(IGetCurrentUserTenantIdUseCase? getCurrentUserTenantIdUseCase = null)
-    {
-        if (getCurrentUserTenantIdUseCase == null)
-        {
-            var useCaseMock = new Mock<IGetCurrentUserTenantIdUseCase>();
-            useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("11111111-2222-3333-4444-555555555555");
-            getCurrentUserTenantIdUseCase = useCaseMock.Object;
-        }
 
+
+    public LibraryManagementDbContext CreateDbContext(IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
+    {
         DbContextOptions<LibraryManagementDbContext> options =
             new DbContextOptionsBuilder<LibraryManagementDbContext>()
                 .UseNpgsql(ConnectionString)
@@ -71,8 +67,18 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
 
         var context = new LibraryManagementDbContext(options, getCurrentUserTenantIdUseCase);
 
+        context.Database.EnsureCreated();
         return context;
     }
+
+    public LibraryManagementDbContext CreateDbContext()
+    {
+        var useCaseMock = new Mock<IGetCurrentUserTenantIdUseCase>();
+        useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("11111111-2222-3333-4444-555555555555");
+
+        return CreateDbContext(useCaseMock.Object).SeedTenants(useCaseMock.Object);
+    }
+
 
     public async Task ResetDatabaseAsync()
     {

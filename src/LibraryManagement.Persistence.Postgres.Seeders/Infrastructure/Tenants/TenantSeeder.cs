@@ -22,7 +22,7 @@ public static class TenantSeeder
             var tenant = new TenantEntity
             {
                 Id = Guid.Parse(getCurrentUserTenantIdUseCase.GetTenantId(new GetCurrentUserTenantIdCommand())),
-                Name = "Seeded Tenant"
+                Name = "Tenant 1"
             };
 
             tenants.Add(tenant);
