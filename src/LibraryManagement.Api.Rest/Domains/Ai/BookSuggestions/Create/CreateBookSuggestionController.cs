@@ -1,9 +1,9 @@
-using LibraryManagement.Api.Rest.Client.Domain.BookSuggestions.Create;
+using LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions.Create;
 using LibraryManagement.Domain.Domains.Ai.BookSuggestions.Create;
 
 using Microsoft.AspNetCore.Http;
 
-namespace LibraryManagement.Api.Rest.Domains.BookSuggestions.Create;
+namespace LibraryManagement.Api.Rest.Domains.Ai.BookSuggestions.Create;
 
 public interface ICreateBookSuggestionController
 {

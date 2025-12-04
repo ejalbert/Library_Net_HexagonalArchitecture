@@ -1,6 +1,6 @@
 namespace LibraryManagement.Api.Rest.Client.Domain.Books;
 
-public static class RestApiClientExtension
+public static class BooksRestApiClientExtension
 {
     extension(IRestAPiClient source)
     {

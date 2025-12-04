@@ -1,4 +1,4 @@
-using LibraryManagement.Api.Rest.Domains.BookSuggestions;
+using LibraryManagement.Api.Rest.Domains.Ai.BookSuggestions;
 
 using Microsoft.Extensions.DependencyInjection;
 
