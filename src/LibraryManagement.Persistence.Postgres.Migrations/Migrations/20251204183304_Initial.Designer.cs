@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    [Migration("20251204135054_AddTenantEntity")]
-    partial class AddTenantEntity
+    [Migration("20251204183304_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,39 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tenants", (string)null);
+                });
+
+            modelBuilder.Entity("LibraryManagement.Persistence.Postgres.Domains.Ai.AiConsumption.AiConsumptionEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("InputTokens")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ModelUsed")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<long>("OutputTokens")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("TotalTokens")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("AiConsumptions", (string)null);
                 });
 
             modelBuilder.Entity("LibraryManagement.Persistence.Postgres.Domains.Authors.AuthorEntity", b =>
@@ -105,6 +138,17 @@ namespace LibraryManagement.Persistence.Postgres.Migrations.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("BookKeyword", (string)null);
+                });
+
+            modelBuilder.Entity("LibraryManagement.Persistence.Postgres.Domains.Ai.AiConsumption.AiConsumptionEntity", b =>
+                {
+                    b.HasOne("LibraryManagement.Persistence.Postgres.DbContexts.Multitenants.Domains.Tenants.TenantEntity", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("LibraryManagement.Persistence.Postgres.Domains.Authors.AuthorEntity", b =>
