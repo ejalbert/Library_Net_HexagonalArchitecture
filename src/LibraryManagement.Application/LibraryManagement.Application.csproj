@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\LibraryManagement.AI.OpenAi\LibraryManagement.AI.OpenAi.csproj" />
+        <ProjectReference Include="..\LibraryManagement.AI.SemanticKernel\LibraryManagement.AI.SemanticKernel.csproj" />
         <ProjectReference Include="..\LibraryManagement.Api.Rest\LibraryManagement.Api.Rest.csproj" />
         <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
         <ProjectReference Include="..\LibraryManagement.Persistence.Mongo\LibraryManagement.Persistence.Mongo.csproj" />

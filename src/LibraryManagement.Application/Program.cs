@@ -1,4 +1,5 @@
 using LibraryManagement.AI.OpenAi.ModuleConfigurations;
+using LibraryManagement.AI.SemanticKernel.ModuleConfigurations;
 using LibraryManagement.Api.Rest.ModuleConfigurations;
 using LibraryManagement.Domain.ModuleConfigurations;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.Extensions;
@@ -16,7 +17,7 @@ builder
     .AddPersistenceMongoModule()
     .AddPersistencePostgresModule()
     .AddRestApiModule()
-    .AddOpenAiModule()
+    .AddSemanticKernelModule()
     .AddWebModule();
 
 WebApplication app = builder.Build();

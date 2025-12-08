@@ -6,11 +6,11 @@ The Library Management System follows Hexagonal (Ports & Adapters) architecture.
 
 | Layer | Projects | Responsibilities |
 | --- | --- | --- |
-| Domain | `LibraryManagement.Domain` | Aggregates, commands, use cases, and port interfaces. Currently focuses on the `Books` aggregate (create/search/get/update/delete). |
-| Application Host | `LibraryManagement.Application` | ASP.NET Core host that bootstraps every module and exposes HTTP/Blazor endpoints. |
-| Infrastructure (Driven adapters) | `LibraryManagement.Persistence.Mongo` | MongoDB implementation of the outbound ports. Uses Mapperly to convert between domain models and Mongo entities. |
-| Delivery (Driving adapters) | `LibraryManagement.Api.Rest`, `LibraryManagement.Web`/`.Client` | REST minimal APIs and Blazor UI that drive use cases via the REST client. |
-| Shared Contracts | `LibraryManagement.Api.Rest.Client` | DTOs + typed HTTP clients that keep server/client contracts aligned. |
+| Domain | `LibraryManagement.Domain` | Aggregates, commands, use cases, and port interfaces. Covers books (create/search/get/update/patch/delete), authors (create/search), AI book suggestions, AI consumption tracking, and tenant identification. |
+| Application Host | `LibraryManagement.Application` | ASP.NET Core host that bootstraps every module (domain, Mongo, Postgres, REST, OpenAI, Blazor). |
+| Infrastructure (Driven adapters) | `LibraryManagement.Persistence.Mongo`, `LibraryManagement.Persistence.Postgres`, `LibraryManagement.AI.OpenAi` | MongoDB implementation of book/author ports; EF Core Postgres implementation with multi-tenancy + AI consumption logging; OpenAI adapters for book suggestions and chat tool orchestration. |
+| Delivery (Driving adapters) | `LibraryManagement.Api.Rest`, `LibraryManagement.Web`/`.Client` | REST minimal APIs (`/api/v1/books`, `/api/v1/authors`, `/api/v1/ai/book-suggestions`) and Blazor UI (book listings, author creation, AI suggestions) that drive use cases via the REST client. |
+| Shared Contracts | `LibraryManagement.Api.Rest.Client` | DTOs + typed HTTP clients for books, authors, and AI book suggestions; keeps server/client contracts aligned. |
 | Bootstrapper | `LibraryManagement.ModuleBootstrapper*` | Module registration/configuration abstractions shared across hosts. |
 
 ## Module Composition
@@ -23,11 +23,13 @@ This pattern keeps service registration and endpoint configuration consistent wh
 
 ## Current Modules
 
-- **Domain** – `Book` entity plus create/search/get/update/delete use cases. Relies on outbound ports for persistence.
-- **Mongo Persistence** – Registers `MongoClient`, `IMongoDatabase`, `BookCollection`, mapper, and adapters for create/search/get/update/delete. Defaults to `mongodb://localhost:20027` / `library_management`. Tested via Testcontainers.
-- **REST Delivery** – Adds OpenAPI and maps `/api/v1/books` create/get/search/update/delete endpoints using DTOs from the REST client package.
-- **REST Client** – Provides `IBooksClient` (create/get/search/update/delete), DTOs, and DI helpers so other modules (e.g., Blazor) can call the REST API without duplicating contracts.
-- **Web Module** – Configures Razor/Blazor services, registers the REST client, and maps UI routes. The `Book` page fetches data through `restAPiClient.Books`.
+- **Domain** – Books and authors aggregates, AI book suggestions, AI consumption tracking, tenant services, and shared search abstractions. Outbound ports feed persistence and AI adapters.
+- **Mongo Persistence** – Registers `MongoClient`, `IMongoDatabase`, author/book collections, Mapperly mappers, and adapters for create/search/get/update/patch/delete. Defaults to `mongodb://localhost:20027` / `library_management`. Tested via Testcontainers.
+- **Postgres Persistence** – Registers `LibraryManagementDbContext` with multi-tenant save interceptor, adapters for books/authors, and AI consumption logging. Ships a paired migrations assembly.
+- **OpenAI Module** – Configures `ChatClient`, chat tools for searching books/authors, AI book suggestion agent, and consumption tracking.
+- **REST Delivery** – Adds OpenAPI and maps `/api/v1/books`, `/api/v1/authors`, and `/api/v1/ai/book-suggestions`. Bridges tenant IDs from the `tenant_id` claim to the domain port.
+- **REST Client** – Provides typed clients for books, authors, and AI book suggestions plus DI helpers so other modules (e.g., Blazor) can call the REST API without duplicating contracts.
+- **Web Module** – Configures Razor/Blazor services, registers the REST client, and maps UI routes. The Home page fetches books and AI suggestions; the Authors page handles author creation.
 
 ## Configuration Map
 
@@ -36,17 +38,22 @@ This pattern keeps service registration and endpoint configuration consistent wh
 | `RestApi:BasePath` | REST delivery module & REST client | `/api` (delivery), `http://localhost:5007/api` (client) |
 | `PersistenceMongo:ConnectionString` | Mongo module | `mongodb://localhost:20027` |
 | `PersistenceMongo:DatabaseName` | Mongo module | `library_management` |
+| `PersistencePostgres:ConnectionString` | Postgres module | `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres` |
+| `PersistencePostgres:DatabaseName` | Postgres module | `library_management` |
+| `OpenAi:ApiKey` / `OpenAi:Model` | OpenAI module | `""` (key) / `gpt-4.1-nano` (model) |
 | `Domain:*` | Domain module | Sample `Test` option (extend/replace as needed) |
 
 Always document new configuration keys in the relevant README + this table.
 
 ## Testing Strategy
 
-- **Domain** – Unit tests cover the pass-through use cases (create/search/get/update/delete) and will expand as invariants are introduced.
-- **Mongo Persistence** – xUnit + Testcontainers integration tests assert adapters persist and query correctly.
-- **REST Delivery** – xUnit tests validate module registration and endpoint routing using `WebApplicationBuilder`.
-- **REST Client** – xUnit tests intercept HTTP calls via custom handlers.
-- **Blazor UI** – bUnit tests reside in `.razor` files with `.razor.cs` partials (see `BookPageTests`) so discovery works.
+- **Domain** – Unit tests cover book CRUD/patch flows and authors; add AI and tenant coverage next.
+- **Mongo Persistence** – xUnit + Testcontainers integration tests assert author/book adapters persist and query correctly.
+- **Postgres Persistence** – xUnit + Testcontainers integration tests assert author/book adapters and multi-tenant enforcement; add AI consumption coverage next.
+- **REST Delivery** – xUnit tests validate module registration, option binding, DI wiring, and endpoint routing (books/authors/AI) using `WebApplicationBuilder`.
+- **REST Client** – xUnit tests intercept HTTP calls via custom handlers for books/authors; add AI client tests next.
+- **Blazor UI** – bUnit tests reside in `.razor` files with `.razor.cs` partials (see `BookPageTests` / `AuthorPageTests`) so discovery works.
+- **Integrated Host** – Application tests boot the real host with in-memory persistence to exercise REST + Blazor wiring.
 
 When adding new adapters, mirror them with a `{Project}.Tests` project and describe the coverage in its README.
 
@@ -54,6 +61,7 @@ When adding new adapters, mirror them with a `{Project}.Tests` project and descr
 
 - The Blazor Server app (`LibraryManagement.Web`) doubles as a hybrid host for Blazor WebAssembly by using `.AddInteractiveServerComponents()` and `.AddInteractiveWebAssemblyComponents()`.
 - The Web client registers `AddWebClientModule()` to ensure the REST client base address matches the API.
+- Components currently include a Home page with AI book suggestions and author listing/navigation plus an Author creation flow.
 - Component tests should emulate the pattern used by `BookPageTests`: `@inherits TestContext`, register dependencies (e.g., stubbed `IRestAPiClient`) inside the test body, and keep logic inside `.razor` while the partial `.razor.cs` remains empty.
 
 ## Multitenancy Enforcement

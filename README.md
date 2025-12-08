@@ -1,16 +1,16 @@
 # Hexagonal Library Management System
 
-A .NET 10 reference implementation of a modular Library Management System centred on Hexagonal (Ports & Adapters) architecture. The solution currently delivers a vertical slice for managing books end-to-end: domain use cases, MongoDB and Postgres persistence adapters, a REST delivery module, a typed REST client, and a Blazor UI that consumes the API.
+A .NET 10 reference implementation of a modular Library Management System centred on Hexagonal (Ports & Adapters) architecture. The solution now delivers a book + author slice end-to-end with OpenAI-powered suggestions: domain use cases, MongoDB and Postgres persistence adapters, a REST delivery module, a typed REST client, and a Blazor UI that consumes the API.
 
 ## Current Status
 
 - ✅ Module bootstrapper libraries (`LibraryManagement.ModuleBootstrapper*`) let any host compose modules in a consistent way.
-- ✅ Domain `Books` aggregate exposes create, search, get, update, and delete use cases plus outbound ports for persistence.
-- ✅ MongoDB adapter persists books (create/search/get/update/delete), including Mapperly-powered mappings and tested Testcontainers coverage.
-- ✅ Postgres adapter (EF Core) persists books (create/delete) with a dedicated migrations assembly.
-- ✅ REST API module maps minimal API endpoints under `/api/v1/books`, uses the domain use cases (create/get/search/update/delete), and publishes OpenAPI metadata.
-- ✅ REST client package ships a typed `IBooksClient` plus DI-friendly configuration helpers.
-- ✅ Blazor host (`LibraryManagement.Web` + `.Client`) renders the book listing by calling the REST client and is tested with bUnit.
+- ✅ Domain layer covers books (create/search/get/update/patch/delete), authors (create/search), AI book suggestions, AI consumption tracking, and tenant identification.
+- ✅ MongoDB adapter persists books and authors with Mapperly mappings plus Testcontainers coverage.
+- ✅ Postgres adapter (EF Core) persists books, authors, and AI consumption entries with multi-tenant enforcement and a dedicated migrations assembly.
+- ✅ REST API module maps `/api/v1/books`, `/api/v1/authors`, and `/api/v1/ai/book-suggestions` endpoints, publishes OpenAPI metadata, and bridges tenant IDs from HTTP claims.
+- ✅ REST client package ships typed clients for books, authors, and AI book suggestions plus DI-friendly configuration helpers.
+- ✅ Blazor host (`LibraryManagement.Web` + `.Client`) renders book listings, author creation, and an AI suggestion panel backed by the REST client.
 - 🚧 Additional domains (patrons, circulation, policies) still need to be modelled.
 
 See `docs/project-roadmap.md` for upcoming milestones.
@@ -20,9 +20,10 @@ See `docs/project-roadmap.md` for upcoming milestones.
 ```
 src/
   LibraryManagement.Application           # ASP.NET Core host that composes every module
-  LibraryManagement.Domain                # Domain model + use cases (currently books)
+  LibraryManagement.Domain                # Domain model + use cases (books, authors, AI, tenants)
+  LibraryManagement.AI.OpenAi             # OpenAI-driven outbound adapters (book suggestions, chat tools, consumption logging)
   LibraryManagement.Persistence.Mongo     # MongoDB outbound adapters
-  LibraryManagement.Persistence.Postgres  # EF Core Postgres outbound adapters (books)
+  LibraryManagement.Persistence.Postgres  # EF Core Postgres outbound adapters (books, authors, AI consumption)
   LibraryManagement.Persistence.Postgres.Migrations # EF Core migrations assembly for Postgres
   LibraryManagement.Api.Rest              # REST delivery module (minimal APIs)
   LibraryManagement.Api.Rest.Client       # Shared DTOs + typed HttpClient wrappers
@@ -47,16 +48,16 @@ tests/
 # Restore every project
 dotnet restore
 
-# Run the integrated host (REST API + Mongo/Postgres + Blazor)
+# Run the integrated host (REST API + Mongo/Postgres + Blazor + OpenAI)
 dotnet run --project src/LibraryManagement.Application/LibraryManagement.Application.csproj
 ```
 
-The host wires modules in `Program.cs` via `InitializeApplicationModuleConfiguration()` and the fluent `Add*Module()` extensions. Make sure the backing databases are running (e.g., `docker compose -f compose-dev.yaml up -d mongo postgres`). Configuration is read from the usual ASP.NET Core providers:
+The host wires modules in `Program.cs` via `InitializeApplicationModuleConfiguration()` and the fluent `Add*Module()` extensions. Make sure backing dependencies are running (e.g., `docker compose -f compose-dev.yaml up -d mongo postgres`). Configuration is read from the usual ASP.NET Core providers:
 
-- `RestApi` section -> REST base path (defaults to `/api`).
+- `RestApi` section -> REST base path (defaults to `/api`); also used by the REST client to set the typed `HttpClient` base address.
 - `PersistenceMongo` section -> Mongo connection string + database (defaults to `mongodb://localhost:20027`, `library_management`).
 - `PersistencePostgres` section -> Postgres connection string + database (defaults to `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres`).
-- `RestApi:BasePath` is also used by the REST client module to set the typed `HttpClient` base address.
+- `OpenAi` section -> OpenAI API key + model (defaults to `gpt-4.1-nano`); required for `/api/v1/ai/book-suggestions` and AI consumption logging.
 
 Use `compose.yaml` to build the Blazor server and WebAssembly client containers once you are ready to deploy UI artifacts independently.
 
@@ -69,6 +70,9 @@ dotnet test tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagement.Pe
 # Postgres adapters (uses Testcontainers -> requires Docker running)
 dotnet test tests/LibraryManagement.Persistence.Postgres.Tests/LibraryManagement.Persistence.Postgres.Tests.csproj
 
+# Domain unit tests
+dotnet test tests/LibraryManagement.Domain.Tests/LibraryManagement.Domain.Tests.csproj
+
 # REST API module behaviour
 dotnet test tests/LibraryManagement.Api.Rest.Tests/LibraryManagement.Api.Rest.Tests.csproj
 
@@ -77,6 +81,9 @@ dotnet test tests/LibraryManagement.Api.Rest.Client.Tests/LibraryManagement.Api.
 
 # Blazor components (bUnit)
 dotnet test tests/LibraryManagement.Web.Tests/LibraryManagement.Web.Tests.csproj
+
+# Integrated host (in-memory persistence)
+dotnet test tests/LibraryManagement.Application.Tests/LibraryManagement.Application.Tests.csproj
 ```
 
 > **Blazor testing rule** – Define each component test as a `.razor` file with a matching partial `.razor.cs` code-behind so the bUnit test runner can discover it (see `tests/LibraryManagement.Web.Tests/Components/BookPageTests.razor*`).
@@ -105,7 +112,7 @@ dotnet test tests/LibraryManagement.Web.Tests/LibraryManagement.Web.Tests.csproj
 
 ## Multitenancy Enforcement
 
-The Postgres persistence module enforces strict tenant isolation using an EF Core SaveChanges interceptor. All entities' `TenantId` properties are set at save time based on the current user's tenant ID (via `IGetCurrentUserTenantIdUseCase`).
+The Postgres persistence module enforces strict tenant isolation using an EF Core SaveChanges interceptor. All entities' `TenantId` properties are set at save time based on the current user's tenant ID (via `IGetCurrentUserTenantIdUseCase`, supplied by the REST adapter from the `tenant_id` claim and defaulting to `00000000-0000-0000-0000-000000000001` when absent).
 
 **Testing Guidance:**
 - Use separate `DbContext` instances with different mocks of `IGetCurrentUserTenantIdUseCase` to insert/query entities for different tenants.
