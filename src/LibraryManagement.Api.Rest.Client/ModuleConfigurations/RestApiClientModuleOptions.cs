@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 
 public class RestApiClientModuleOptions

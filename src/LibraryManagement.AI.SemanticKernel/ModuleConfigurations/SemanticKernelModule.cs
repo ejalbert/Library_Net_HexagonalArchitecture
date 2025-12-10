@@ -1,9 +1,18 @@
+using System.Collections.Concurrent;
+
 using LibraryManagement.AI.SemanticKernel.Domain.Authors;
 using LibraryManagement.AI.SemanticKernel.Domain.Books;
 using LibraryManagement.AI.SemanticKernel.Domain.BookSuggestions;
+using LibraryManagement.AI.SemanticKernel.LocalTools.Hub;
+using LibraryManagement.AI.SemanticKernel.LocalTools.Tools.ReadDirectory;
 using LibraryManagement.AI.SemanticKernel.SemanticKernel;
+using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Connections.Features;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,10 +54,148 @@ public static class SemanticKernelModule
             .AddScoped<IChatCompletionService>(sp => sp.GetRequiredService<ITokenAwareChatCompletionService>())
             .AddAuthorServices()
             .AddBookServices()
-            .AddBookSuggestionServices();
+            .AddBookSuggestionServices().AddSignalR();
 
 
             return moduleRegistrator;
+        }
+    }
+
+    extension(IModuleConfigurator moduleConfigurator)
+    {
+        public IModuleConfigurator UseSemanticKernelModule()
+        {
+            moduleConfigurator.App.MapHub<ToolHub>("api/v1/ai/tools/local");
+
+            return moduleConfigurator;
+        }
+    }
+}
+
+public class LocalToolBroker : IDisposable
+{
+    private readonly ConcurrentDictionary<string, TaskCompletionSource<object>> _pending =
+        new();
+
+    private readonly ToolHub _hub;
+    private readonly HttpContextAccessor _httpContextAccessor;
+
+    private bool _disposed = false;
+
+    private string ConnectionId => _httpContextAccessor.HttpContext!.Request.Headers[AddConnectionIdRequestHandler.ConnectionIdHeaderName]!;
+
+    public LocalToolBroker(HttpContextAccessor httpContextAccessor, ToolHub hub)
+    {
+        _hub = hub;
+        _httpContextAccessor = httpContextAccessor;
+
+        _hub.ToolCallResolved += OnToolCallResolved;
+    }
+
+    private async Task<object> SendRequestAsync(
+        Func<ToolHub, string, string, CancellationToken, Task> clientCall,
+        CancellationToken cancellationToken = default)
+    {
+        var connectionId = ConnectionId;
+        var correlationId = Guid.NewGuid().ToString();
+
+        var tcs = new TaskCompletionSource<object>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+
+        if (!_pending.TryAdd(ConnectionId, tcs))
+        {
+            throw new InvalidOperationException("Duplicate correlation ID.");
+        }
+
+        using var registration = cancellationToken.Register(() =>
+        {
+            if (_pending.TryRemove(correlationId, out var pendingTcs))
+            {
+                pendingTcs.TrySetCanceled(cancellationToken);
+            }
+        });
+
+        await clientCall(_hub, correlationId, connectionId, cancellationToken);
+
+
+        return await tcs.Task; // Wait until client replies
+    }
+
+    public Task SendAsync(string methodName, CancellationToken cancellationToken = default)
+    {
+        return SendRequestAsync((hub, corellationId, connectionId, token) =>
+        {
+            return hub.Clients.Client(connectionId)
+                .SendAsync(methodName, corellationId, token);
+        }, cancellationToken);
+    }
+
+    public Task SendAsync(string methodName, object? arg2, CancellationToken cancellationToken = default)
+    {
+        return SendRequestAsync((hub, corellationId, connectionId, token) =>
+        {
+            return hub.Clients.Client(connectionId)
+                .SendAsync(methodName, corellationId, arg2, token);
+        }, cancellationToken);
+    }
+
+    public Task SendAsync(string methodName, object? arg2, object? arg3, CancellationToken cancellationToken = default)
+    {
+        return SendRequestAsync((hub, corellationId, connectionId, token) =>
+        {
+            return hub.Clients.Client(connectionId)
+                .SendAsync(methodName, corellationId, arg2, arg3, token);
+        }, cancellationToken);
+    }
+
+    private void OnToolCallResolved(object? sender, ToolHub.ToolCallResolvedEventArgs e)
+    {
+        if (_pending.TryRemove(e.CorrelationId, out var tcs))
+        {
+            tcs.SetResult(e.Result);
+        }
+    }
+
+
+    private void Dispose(bool disposing)
+    {
+        if (disposing && !_disposed)
+        {
+            _hub.ToolCallResolved -= OnToolCallResolved;
+
+            _disposed = true;
+        }
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+    }
+}
+
+
+public class ToolHub(IHttpContextAccessor httpContext) : Hub
+{
+    public event ToolCallResolvedEventHandler ToolCallResolved;
+
+
+
+    public async Task LocalToolResponse(string corellationId, string toolName, object result)
+    {
+        ToolCallResolved?.Invoke(this, new ToolCallResolvedEventArgs(corellationId, result));
+        await Task.CompletedTask;
+    }
+
+    public delegate void ToolCallResolvedEventHandler(object? sender, ToolCallResolvedEventArgs e);
+    public class ToolCallResolvedEventArgs : EventArgs
+    {
+        public string CorrelationId { get; }
+        public object Result { get; }
+
+        public ToolCallResolvedEventArgs(string correlationId, object result)
+        {
+            CorrelationId = correlationId;
+            Result = result;
         }
     }
 }

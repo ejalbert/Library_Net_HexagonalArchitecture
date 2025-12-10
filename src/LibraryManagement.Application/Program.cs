@@ -26,7 +26,7 @@ IModuleConfigurator moduleConfigurator = app.UseApplicationModules();
 
 app.UseHttpsRedirection();
 
-moduleConfigurator.UseRestApiModule().UseWebModule();
+moduleConfigurator.UseRestApiModule().UseWebModule().UseSemanticKernelModule();
 
 app.Run();
 
