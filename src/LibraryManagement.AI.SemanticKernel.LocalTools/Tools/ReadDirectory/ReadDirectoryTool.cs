@@ -11,7 +11,7 @@ public class ReadDirectoryTool(HubConnection connection) : LocalToolBase(connect
         Connection.On<string, string>(ToolName, async (corellationId, directoryPath) =>
         {
             var entries = await ReadDirectoryAsync(directoryPath);
-            await Connection.SendAsync($"LocalToolResponse", corellationId, ToolName, entries);
+            await SendToolResponseAsync(corellationId, ToolName, entries);
         });
 
         return Task.CompletedTask;

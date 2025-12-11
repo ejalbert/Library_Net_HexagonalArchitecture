@@ -1,5 +1,6 @@
 using LibraryManagement.AI.SemanticKernel.LocalTools.Hub;
 using LibraryManagement.AI.SemanticKernel.LocalTools.Tools;
+using LibraryManagement.AI.SemanticKernel.LocalTools.Tools.Authors;
 using LibraryManagement.AI.SemanticKernel.LocalTools.Tools.ReadDirectory;
 using LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
@@ -28,7 +29,7 @@ public static class SemanticKernelLocalToolsModule
                 new HubConnectionBuilder().WithUrl("http://localhost:5007/api/v1/ai/tools/local").WithAutomaticReconnect().Build());
             services.AddSingleton<ILocalToolHub, LocalToolHub>();
 
-            services.AddReadDirectoryTool();
+            services.AddReadDirectoryTool().AddAuthorTools();
 
             return moduleRegistrator;
         }
@@ -38,7 +39,7 @@ public static class SemanticKernelLocalToolsModule
     {
         public IHost UseLocalToolsModule()
         {
-            host.UseReadDirectoryTool();
+            host.UseReadDirectoryTool().UseAuthorTools();
 
             return host;
         }

@@ -8,6 +8,11 @@ public abstract class LocalToolBase(HubConnection connection) : ILocalTool
 
     private bool _isDisposed;
 
+    protected Task SendToolResponseAsync<TResponse>(string corellationId, string toolName, TResponse response)
+    {
+        return Connection.SendAsync("LocalToolResponse", corellationId, toolName, response);
+    }
+
     public void Dispose()
     {
         Dispose(true);

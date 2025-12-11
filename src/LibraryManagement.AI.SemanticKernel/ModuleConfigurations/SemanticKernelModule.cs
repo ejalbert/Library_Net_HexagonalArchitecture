@@ -4,13 +4,11 @@ using LibraryManagement.AI.SemanticKernel.Domain.Authors;
 using LibraryManagement.AI.SemanticKernel.Domain.Books;
 using LibraryManagement.AI.SemanticKernel.Domain.BookSuggestions;
 using LibraryManagement.AI.SemanticKernel.LocalTools.Hub;
-using LibraryManagement.AI.SemanticKernel.LocalTools.Tools.ReadDirectory;
 using LibraryManagement.AI.SemanticKernel.SemanticKernel;
 using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -72,7 +70,18 @@ public static class SemanticKernelModule
     }
 }
 
-public class LocalToolBroker : IDisposable
+public interface ILocalToolClient : IDisposable
+{
+    bool IsConnected { get; }
+    string ConnectionId { get; }
+
+    Task<TResult> SendAsync<TResult>(string methodName, CancellationToken cancellationToken = default);
+    Task<TResult> SendAsync<TResult>(string methodName, object? arg2, CancellationToken cancellationToken = default);
+    Task<TResult> SendAsync<TResult>(string methodName, object? arg2, object? arg3, CancellationToken cancellationToken = default);
+}
+
+
+public class LocalToolClient : ILocalToolClient
 {
     private readonly ConcurrentDictionary<string, TaskCompletionSource<object>> _pending =
         new();
@@ -82,9 +91,10 @@ public class LocalToolBroker : IDisposable
 
     private bool _disposed = false;
 
-    private string ConnectionId => _httpContextAccessor.HttpContext!.Request.Headers[AddConnectionIdRequestHandler.ConnectionIdHeaderName]!;
+    public string ConnectionId => _httpContextAccessor.HttpContext!.Request.Headers[AddConnectionIdRequestHandler.ConnectionIdHeaderName]!;
+    public bool IsConnected => _hub.IsConnected(ConnectionId);
 
-    public LocalToolBroker(HttpContextAccessor httpContextAccessor, ToolHub hub)
+    public LocalToolClient(HttpContextAccessor httpContextAccessor, ToolHub hub)
     {
         _hub = hub;
         _httpContextAccessor = httpContextAccessor;
@@ -92,7 +102,7 @@ public class LocalToolBroker : IDisposable
         _hub.ToolCallResolved += OnToolCallResolved;
     }
 
-    private async Task<object> SendRequestAsync(
+    private async Task<TResult> SendRequestAsync<TResult>(
         Func<ToolHub, string, string, CancellationToken, Task> clientCall,
         CancellationToken cancellationToken = default)
     {
@@ -119,30 +129,31 @@ public class LocalToolBroker : IDisposable
         await clientCall(_hub, correlationId, connectionId, cancellationToken);
 
 
-        return await tcs.Task; // Wait until client replies
+
+        return  (TResult)await tcs.Task; // Wait until client replies
     }
 
-    public Task SendAsync(string methodName, CancellationToken cancellationToken = default)
+    public Task<TResult> SendAsync<TResult>(string methodName, CancellationToken cancellationToken = default)
     {
-        return SendRequestAsync((hub, corellationId, connectionId, token) =>
+        return SendRequestAsync<TResult>((hub, corellationId, connectionId, token) =>
         {
             return hub.Clients.Client(connectionId)
                 .SendAsync(methodName, corellationId, token);
         }, cancellationToken);
     }
 
-    public Task SendAsync(string methodName, object? arg2, CancellationToken cancellationToken = default)
+    public Task<TResult> SendAsync<TResult>(string methodName, object? arg2, CancellationToken cancellationToken = default)
     {
-        return SendRequestAsync((hub, corellationId, connectionId, token) =>
+        return SendRequestAsync<TResult>((hub, corellationId, connectionId, token) =>
         {
             return hub.Clients.Client(connectionId)
                 .SendAsync(methodName, corellationId, arg2, token);
         }, cancellationToken);
     }
 
-    public Task SendAsync(string methodName, object? arg2, object? arg3, CancellationToken cancellationToken = default)
+    public Task<TResult> SendAsync<TResult>(string methodName, object? arg2, object? arg3, CancellationToken cancellationToken = default)
     {
-        return SendRequestAsync((hub, corellationId, connectionId, token) =>
+        return SendRequestAsync<TResult>((hub, corellationId, connectionId, token) =>
         {
             return hub.Clients.Client(connectionId)
                 .SendAsync(methodName, corellationId, arg2, arg3, token);
@@ -176,8 +187,23 @@ public class LocalToolBroker : IDisposable
 
 public class ToolHub(IHttpContextAccessor httpContext) : Hub
 {
+    private ConcurrentDictionary<string, bool> _connectedClients =
+        new();
+
     public event ToolCallResolvedEventHandler ToolCallResolved;
 
+    public override Task OnConnectedAsync()
+    {
+        _connectedClients.TryAdd(Context.ConnectionId, true);
+        return base.OnConnectedAsync();
+    }
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        _connectedClients.TryRemove(Context.ConnectionId, out _);
+        return base.OnDisconnectedAsync(exception);
+    }
+
+    public bool IsConnected(string connectionId) => _connectedClients.ContainsKey(connectionId);
 
 
     public async Task LocalToolResponse(string corellationId, string toolName, object result)
@@ -187,15 +213,11 @@ public class ToolHub(IHttpContextAccessor httpContext) : Hub
     }
 
     public delegate void ToolCallResolvedEventHandler(object? sender, ToolCallResolvedEventArgs e);
-    public class ToolCallResolvedEventArgs : EventArgs
+    public class ToolCallResolvedEventArgs(string correlationId, object result) : EventArgs
     {
-        public string CorrelationId { get; }
-        public object Result { get; }
-
-        public ToolCallResolvedEventArgs(string correlationId, object result)
-        {
-            CorrelationId = correlationId;
-            Result = result;
-        }
+        public string CorrelationId { get; } = correlationId;
+        public object Result { get; } = result;
     }
+
+
 }
