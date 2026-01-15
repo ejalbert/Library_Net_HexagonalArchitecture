@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11222.16 d18.3
+VisualStudioVersion = 18.3.11222.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.Domain", "src\LibraryManagement.Domain\LibraryManagement.Domain.csproj", "{8A5DEEC1-613A-4C1C-97E9-D5E85EE44665}"
 EndProject
@@ -81,6 +81,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.AI.OpenAi.Tests", "tests\LibraryManagement.AI.OpenAi.Tests\LibraryManagement.AI.OpenAi.Tests.csproj", "{CA16E5D5-FC9C-4A99-A87E-12EF065732B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.AI.SemanticKernel", "src\LibraryManagement.AI.SemanticKernel\LibraryManagement.AI.SemanticKernel.csproj", "{DA7B4016-A7B8-4667-B449-DDAF4D414597}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop", "Desktop", "{F6A03D16-83EE-43CC-85BE-64B1347EE1BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.Clients.Desktop", "src\LibraryManagement.Clients.Desktop\LibraryManagement.Clients.Desktop.csproj", "{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -392,6 +396,18 @@ Global
 		{DA7B4016-A7B8-4667-B449-DDAF4D414597}.Release|x64.Build.0 = Release|Any CPU
 		{DA7B4016-A7B8-4667-B449-DDAF4D414597}.Release|x86.ActiveCfg = Release|Any CPU
 		{DA7B4016-A7B8-4667-B449-DDAF4D414597}.Release|x86.Build.0 = Release|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Debug|x64.Build.0 = Debug|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Debug|x86.Build.0 = Debug|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Release|x64.ActiveCfg = Release|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Release|x64.Build.0 = Release|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Release|x86.ActiveCfg = Release|Any CPU
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -425,6 +441,8 @@ Global
 		{415E9455-5AD5-4D0B-A17F-A7AD7F2C63C7} = {361AC955-162C-4846-9E88-23B5C8BD4685}
 		{CA16E5D5-FC9C-4A99-A87E-12EF065732B0} = {361AC955-162C-4846-9E88-23B5C8BD4685}
 		{DA7B4016-A7B8-4667-B449-DDAF4D414597} = {361AC955-162C-4846-9E88-23B5C8BD4685}
+		{F6A03D16-83EE-43CC-85BE-64B1347EE1BB} = {19317BBD-0626-44C0-A8DA-C9A95A069753}
+		{1627AAE8-6B7D-4236-8FF4-A6AC57DCCCB8} = {F6A03D16-83EE-43CC-85BE-64B1347EE1BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {15AD5F77-410B-4CE1-9E13-3F3427A8B0D3}

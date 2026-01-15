@@ -4,7 +4,6 @@ using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Authors;
 using LibraryManagement.Persistence.Postgres.Seeders.Domain.Books;
-using LibraryManagement.Persistence.Postgres.Seeders.Infrastructure.Tenants;
 using LibraryManagement.Persistence.Postgres.Tests.Domains.Authors.Extensions;
 using LibraryManagement.Persistence.Postgres.Tests.Infrastructure;
 

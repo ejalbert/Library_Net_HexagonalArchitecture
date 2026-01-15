@@ -1,11 +1,7 @@
-using LibraryManagement.AI.SemanticKernel.Domain.BookSuggestions.Adapters;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-
-using OpenAI.Chat;
 
 namespace LibraryManagement.AI.SemanticKernel.Domain.BookSuggestions;
 

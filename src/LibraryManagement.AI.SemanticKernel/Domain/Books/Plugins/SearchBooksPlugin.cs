@@ -1,7 +1,6 @@
 using System.ComponentModel;
 
 using LibraryManagement.Domain.Common.Searches;
-using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Domains.Books.Search;
 

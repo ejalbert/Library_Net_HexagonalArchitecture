@@ -1,9 +1,5 @@
-using System.ComponentModel;
-
 using LibraryManagement.Domain.Common.Searches;
 using LibraryManagement.Domain.Domains.Authors;
-
-using Microsoft.SemanticKernel;
 
 namespace LibraryManagement.AI.SemanticKernel.Domain.Authors.Plugins;
 

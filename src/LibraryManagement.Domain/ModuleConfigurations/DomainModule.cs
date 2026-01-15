@@ -1,5 +1,4 @@
 using LibraryManagement.Domain.Domains.Ai;
-using LibraryManagement.Domain.Domains.Ai.BookSuggestions;
 using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Domain.Infrastructure.Tenants;

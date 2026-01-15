@@ -1,4 +1,3 @@
-using LibraryManagement.AI.OpenAi.ModuleConfigurations;
 using LibraryManagement.AI.SemanticKernel.ModuleConfigurations;
 using LibraryManagement.Api.Rest.ModuleConfigurations;
 using LibraryManagement.Domain.ModuleConfigurations;
