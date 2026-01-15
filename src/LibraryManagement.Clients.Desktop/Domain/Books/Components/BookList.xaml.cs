@@ -29,34 +29,81 @@ internal interface IBookListViewModel : IObservableObject
 {
     IList<BookDto> Books { get; }
 
-    ICommand LoadBooksCommand { get; }
+    ICommand ToggleLoadBooksCommand { get; }
 
+    bool IsLoading { get; }
 }
 
 internal partial class BookListViewModel :   ObservableObject, IBookListViewModel
 {
     private readonly IRestAPiClient _restAPiClient;
 
+    private CancellationTokenSource? _loadBooksCts;
+
     [ObservableProperty]
     private IList<BookDto> _books = [];
 
+    [ObservableProperty]
+    private bool _isLoading;
 
-    public ICommand LoadBooksCommand { get; }
+    private readonly IAsyncRelayCommand _toggleLoadBooksCommand;
 
+    public ICommand ToggleLoadBooksCommand => _toggleLoadBooksCommand;
 
     public BookListViewModel(IRestAPiClient restAPiClient)
     {
         _restAPiClient = restAPiClient;
-        LoadBooksCommand = new AsyncRelayCommand(LoadBooks);
+        _toggleLoadBooksCommand = new AsyncRelayCommand(
+            ToggleLoadBooks,
+            AsyncRelayCommandOptions.AllowConcurrentExecutions);
 
     }
     
+    partial void OnIsLoadingChanged(bool value)
+    {
+    }
+
+    private async Task ToggleLoadBooks()
+    {
+        if (IsLoading)
+        {
+            CancelLoadBooks();
+            return;
+        }
+
+        await LoadBooks();
+    }
 
     private async Task LoadBooks(CancellationToken cancellationToken = default)
     {
-        
-        var result = await _restAPiClient.Books.Search(new(), cancellationToken);
-        Books = result.Results.ToList();
+        if (IsLoading)
+        {
+            return;
+        }
+
+        IsLoading = true;
+        _loadBooksCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+        try
+        {
+            await Task.Delay(5000, _loadBooksCts.Token); // Simulate loading delay
+            var result = await _restAPiClient.Books.Search(new(), _loadBooksCts.Token);
+            Books = result.Results.ToList();
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        finally
+        {
+            _loadBooksCts.Dispose();
+            _loadBooksCts = null;
+            IsLoading = false;
+        }
+    }
+
+    private void CancelLoadBooks()
+    {
+        _loadBooksCts?.Cancel();
     }
 }
 
@@ -64,7 +111,9 @@ internal class BookListViewModelDesignTime : IBookListViewModel
 {
     public IList<BookDto> Books { get; } = [new() { Title = "Mon livre", AuthorId = "", Id = "", Description = "Ceci est mon livre", Keywords = [] }];
 
-    public ICommand LoadBooksCommand { get; } = new RelayCommand(() => { });
+    public ICommand ToggleLoadBooksCommand { get; } = new RelayCommand(() => { });
+
+    public bool IsLoading => false;
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public event PropertyChangingEventHandler? PropertyChanging;
