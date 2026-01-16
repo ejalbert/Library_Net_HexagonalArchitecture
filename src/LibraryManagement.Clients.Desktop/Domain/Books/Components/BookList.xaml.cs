@@ -56,11 +56,6 @@ internal partial class BookListViewModel :   ObservableObject, IBookListViewMode
         _toggleLoadBooksCommand = new AsyncRelayCommand(
             ToggleLoadBooks,
             AsyncRelayCommandOptions.AllowConcurrentExecutions);
-
-    }
-    
-    partial void OnIsLoadingChanged(bool value)
-    {
     }
 
     private async Task ToggleLoadBooks()

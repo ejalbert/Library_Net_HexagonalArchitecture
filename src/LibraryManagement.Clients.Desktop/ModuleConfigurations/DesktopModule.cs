@@ -14,6 +14,7 @@ internal static class DesktopModule
     {
         builder.Services
             .AddTransient<MainWindow>()
+            .AddLocalization()
             .AddRestApiHttpClient(builder.ConfigurationManager)
             .AddBookServices();
             

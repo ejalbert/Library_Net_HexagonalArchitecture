@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:books="clr-namespace:LibraryManagement.Clients.Desktop.Domain.Books.Components"
         xmlns:local="clr-namespace:LibraryManagement.Clients.Desktop"
+        xmlns:loc="clr-namespace:LibraryManagement.Clients.Desktop.Localization"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{loc:Loc Key=MainWindow_Title}" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -15,7 +16,9 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0">
-            <TextBlock Text="Navigation" FontWeight="Bold" Margin="10"/>
+            <TextBlock Text="{loc:Loc Key=Navigation_Header}"
+                       FontWeight="Bold"
+                       Margin="10"/>
         </StackPanel>
 
         <books:BookList Grid.Column="1" />
