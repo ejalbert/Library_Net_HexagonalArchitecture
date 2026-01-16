@@ -11,7 +11,7 @@ internal static class RegisterBookServices
         internal IServiceCollection AddBookServices()
         {
             
-            services.AddTransient<IBookListViewModel, BookListViewModel>();
+            services.AddTransient<BookListViewModel>();
             return services;
         }
     }

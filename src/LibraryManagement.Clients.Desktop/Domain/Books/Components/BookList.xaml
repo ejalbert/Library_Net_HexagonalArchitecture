@@ -5,10 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LibraryManagement.Clients.Desktop.Domain.Books.Components"
              xmlns:resources="clr-namespace:LibraryManagement.Clients.Desktop.Domain.Books.Resources"
+             xmlns:mvvm="clr-namespace:LibraryManagement.Clients.Desktop.Mvvm"
              xmlns:loc="clr-namespace:LibraryManagement.Clients.Desktop.Localization"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=local:BookListViewModelDesignTime, IsDesignTimeCreatable=True}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             DataContext="{mvvm:Resolve Type={x:Type local:BookListViewModel}, DesignType={x:Type local:BookListViewModelDesignTime}}"
+             d:DesignHeight="450" d:DesignWidth="800"
+             mvvm:ObservableRecipientActivation.IsEnabled="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,6 +26,7 @@
                         <DataTrigger Binding="{Binding IsLoading}" Value="True">
                             <Setter Property="Content"
                                     Value="{loc:Loc Key=BookList_Cancel, ResourceType={x:Type resources:BookStrings}}"/>
+                            <Setter Property="Command" Value="{Binding ToggleLoadBooksCancelCommand}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

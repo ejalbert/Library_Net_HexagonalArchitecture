@@ -51,6 +51,7 @@ dotnet run --project LibraryManagement.Clients.Desktop.csproj
   - `AddRestApiHttpClient()` binds the `RestApi` section to create `IRestAPiClient`.
   - Book list component/view model (`BookList.xaml` / `BookListViewModel`) uses the typed client to search books.
 - Uses localization resources (`BookStrings.resx`, `BookStrings.fr.resx`) via `LocExtension`.
+- Resolves view models from `Ioc.Default` in XAML with `ResolveExtension` when needed.
 
 ## Environment & Configuration
 

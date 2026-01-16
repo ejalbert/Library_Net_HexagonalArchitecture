@@ -4,9 +4,10 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+
 using LibraryManagement.Clients.Desktop.Resources;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
 namespace LibraryManagement.Clients.Desktop.Localization;
@@ -41,13 +42,7 @@ public sealed class LocExtension : MarkupExtension
             return resourceManager.GetString(Key) ?? Key;
         }
 
-        var app = System.Windows.Application.Current;
-        if (app is not App typedApp || typedApp.Services == null)
-        {
-            return Key;
-        }
-
-        var factory = typedApp.Services.GetService<IStringLocalizerFactory>();
+        var factory = Ioc.Default.GetService<IStringLocalizerFactory>();
         if (factory == null)
         {
             return Key;
