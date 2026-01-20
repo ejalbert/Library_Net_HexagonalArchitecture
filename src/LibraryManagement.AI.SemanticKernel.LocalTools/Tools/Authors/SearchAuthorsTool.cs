@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace LibraryManagement.AI.SemanticKernel.LocalTools.Tools.Authors;
 
-public interface ISearchAuthorTool : ILocalTool
+public interface ISearchAuthorsTool : ILocalTool
 {
 
 }
 
-public class SearchAuthorTool(HubConnection connection, IRestAPiClient client) : LocalToolBase(connection), ISearchAuthorTool
+public class SearchAuthorsTool(HubConnection connection, IRestAPiClient client) : LocalToolBase(connection), ISearchAuthorsTool
 {
     public const string ToolName = "search_authors";
 

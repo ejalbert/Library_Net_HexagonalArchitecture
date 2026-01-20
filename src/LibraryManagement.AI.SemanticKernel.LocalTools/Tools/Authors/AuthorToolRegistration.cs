@@ -9,7 +9,7 @@ internal static class AuthorToolRegistration
     {
         internal IServiceCollection AddAuthorTools()
         {
-            services.AddSingleton<ISearchAuthorTool, SearchAuthorTool>();
+            services.AddSingleton<ISearchAuthorsTool, SearchAuthorsTool>();
             return services;
         }
     }
@@ -18,7 +18,7 @@ internal static class AuthorToolRegistration
     {
         internal IHost UseAuthorTools()
         {
-            host.Services.UseLocalTool<ISearchAuthorTool>();
+            host.Services.UseLocalTool<ISearchAuthorsTool>();
 
             return host;
         }
