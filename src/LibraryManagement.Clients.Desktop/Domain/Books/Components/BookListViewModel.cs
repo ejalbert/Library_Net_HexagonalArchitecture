@@ -38,7 +38,6 @@ internal partial class BookListViewModel(IRestAPiClient restAPiClient) : Observa
 
         try
         {
-            await Task.Delay(5000, cancellationToken); // Simulate loading delay
             var result = await restAPiClient.Books.Search(new(), cancellationToken);
             Books = result.Results.ToList();
         }

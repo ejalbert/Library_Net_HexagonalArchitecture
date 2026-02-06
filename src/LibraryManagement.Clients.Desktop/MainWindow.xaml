@@ -8,19 +8,15 @@
         xmlns:loc="clr-namespace:LibraryManagement.Clients.Desktop.Localization"
         mc:Ignorable="d"
         Title="{loc:Loc Key=MainWindow_Title}" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="5*"/>
-        </Grid.ColumnDefinitions>
+    
+    <DockPanel>       
 
-        <StackPanel Grid.Column="0">
+        <StackPanel DockPanel.Dock="Left" Grid.Column="0">
             <TextBlock Text="{loc:Loc Key=Navigation_Header}"
                        FontWeight="Bold"
                        Margin="10"/>
         </StackPanel>
 
-        <books:BookList Grid.Column="1" />
-    </Grid>
+        <books:BookList DockPanel.Dock="Right" Grid.Column="1" />
+    </DockPanel>
 </Window>
