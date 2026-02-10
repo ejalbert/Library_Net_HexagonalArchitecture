@@ -18,6 +18,7 @@
         <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
         <ProjectReference Include="..\LibraryManagement.Persistence.Mongo\LibraryManagement.Persistence.Mongo.csproj" />
         <ProjectReference Include="..\LibraryManagement.Persistence.Postgres\LibraryManagement.Persistence.Postgres.csproj" />
+        <ProjectReference Include="..\LibraryManagement.ServiceDefaults\LibraryManagement.ServiceDefaults.csproj" />
         <ProjectReference Include="..\LibraryManagement.Web\LibraryManagement.Web\LibraryManagement.Web.csproj" />
     </ItemGroup>
 

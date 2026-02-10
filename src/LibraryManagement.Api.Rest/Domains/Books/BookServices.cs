@@ -37,7 +37,7 @@ internal static class BookServices
 
     internal static WebApplication UseBookServices(this WebApplication app)
     {
-        RouteGroupBuilder group = app.MapGroup("/api").MapGroup("/v1/books").WithGroupName("Books");
+        RouteGroupBuilder group = app.MapGroup("/api").MapGroup("/v1/books").WithTags("Books");
 
         group
             .MapPost("",

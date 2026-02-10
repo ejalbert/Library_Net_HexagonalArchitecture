@@ -26,7 +26,7 @@ internal static class AuthorServices
 
     internal static WebApplication UseAuthorServices(this WebApplication app)
     {
-        RouteGroupBuilder group = app.MapGroup("/api").MapGroup("/v1/authors").WithGroupName("Authors");
+        RouteGroupBuilder group = app.MapGroup("/api").MapGroup("/v1/authors").WithTags("Authors");
 
         group.MapPost("",
                 ([FromBody] CreateAuthorRequestDto request, ICreateAuthorController controller) =>

@@ -12,13 +12,14 @@ using LibraryManagement.Web.ModuleConfigurations;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder
+    .AddServiceDefaults()
     .InitializeApplicationModuleConfiguration()
     .AddDomainModule()
     .AddPersistenceMongoModule()
     .AddPersistencePostgresModule()
     .AddRestApiModule()
-    .AddSemanticKernelModule()
-    .AddWebModule();
+    .AddSemanticKernelModule();
+    //.AddWebModule();
 
 WebApplication app = builder.Build();
 
@@ -26,8 +27,12 @@ IModuleConfigurator moduleConfigurator = app.UseApplicationModules();
 
 app.UseHttpsRedirection();
 
-moduleConfigurator.UseRestApiModule().UseWebModule().UseSemanticKernelModule();
+moduleConfigurator.UseRestApiModule()
+    .UseSemanticKernelModule();
+    //.UseWebModule();
 
+
+app.MapDefaultEndpoints();
 app.Run();
 
 namespace LibraryManagement.Application
