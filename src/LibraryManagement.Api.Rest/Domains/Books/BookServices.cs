@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 using LibraryManagement.Api.Rest.Client.Domain.Books;
@@ -47,20 +48,20 @@ internal static class BookServices
             .WithDescription("Create a new book in the library")
             .Produces<BookDto>();
 
-        group.MapGet("{id}", ([Required] string id, IGetBookController controller) => controller.GetBookById(id))
+        group.MapGet("{id}", ([Required, Description("Book identifier")] string id, IGetBookController controller) => controller.GetBookById(id))
             .WithName("Get Book By Id")
             .WithDescription("Get a single book by its unique identifier")
             .Produces<BookDto>();
 
         group.MapPut("{id}",
-                ([Required] string id, [FromBody] UpdateBookRequestDto requestDto, IUpdateBookController controller) =>
+                ([Required, Description("Book identifier")] string id, [FromBody] UpdateBookRequestDto requestDto, IUpdateBookController controller) =>
                     controller.UpdateBook(id, requestDto))
             .WithName("Update Book")
             .WithDescription("Update a book in the library")
             .Produces<BookDto>();
 
         group.MapPatch("{id}",
-                ([Required] string id, [FromBody] PatchBookRequestDto requestDto, IPatchBookController controller) =>
+                ([Required, Description("Book identifier")] string id, [FromBody] PatchBookRequestDto requestDto, IPatchBookController controller) =>
                     controller.PatchBook(id, requestDto))
             .WithName("Patch Book")
             .WithDescription("Partially update a book in the library")
@@ -73,7 +74,7 @@ internal static class BookServices
             .WithDescription("Search for books in the library")
             .Produces<SearchBooksResponseDto>();
 
-        group.MapDelete("{id}", ([Required] string id, IDeleteBookController controller) => controller.DeleteBook(id))
+        group.MapDelete("{id}", ([Required, Description("Book identifier")] string id, IDeleteBookController controller) => controller.DeleteBook(id))
             .WithName("Delete Book")
             .WithDescription("Delete a book from the library")
             .Produces(StatusCodes.Status204NoContent);

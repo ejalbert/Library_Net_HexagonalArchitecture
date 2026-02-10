@@ -11,6 +11,7 @@ endpoints that forward to the book use cases and `/api/v1/authors` for the autho
 - Maps book endpoints for create, get-by-id, search, update, and delete scenarios using DTOs from the REST client
   package and Mapperly-based mappers.
 - Maps author creation endpoint that forwards to `ICreateAuthorUseCase`.
+- Applies `System.ComponentModel.Description` annotations to path parameters for consistent OpenAPI metadata.
 
 ## Directory Layout
 

@@ -95,6 +95,7 @@ dotnet test tests/LibraryManagement.Application.Tests/LibraryManagement.Applicat
 3. Surface capabilities through delivery adapters such as the REST module and Blazor UI.
 4. Mirror each project with a `{Project}.Tests` counterpart; integration adapters should exercise real dependencies through Testcontainers when possible.
 5. Keep docs (`docs/architecture.md`, `docs/ai-collaboration.md`, ADRs) current whenever behaviour changes.
+6. For REST contracts, annotate DTOs and path parameters with `System.ComponentModel.Description` so OpenAPI metadata is consistent.
 
 ### Tooling
 

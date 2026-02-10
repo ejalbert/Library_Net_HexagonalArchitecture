@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Net.Http.Json;
 
 using LibraryManagement.Api.Rest.Client.Domain.Books.Create;
@@ -20,12 +21,13 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
         return (await response.Content.ReadFromJsonAsync<BookDto>(cancellationToken))!;
     }
 
-    public Task<BookDto> Get(string bookId, CancellationToken cancellationToken = default)
+    public Task<BookDto> Get([Description("Book identifier")] string bookId,
+        CancellationToken cancellationToken = default)
     {
         return client.HttpClient.GetFromJsonAsync<BookDto>($"{BasePath}/{bookId}", cancellationToken)!;
     }
 
-    public async Task<BookDto> Update(string bookId, UpdateBookRequestDto requestDto,
+    public async Task<BookDto> Update([Description("Book identifier")] string bookId, UpdateBookRequestDto requestDto,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage response =
@@ -36,7 +38,7 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
         return (await response.Content.ReadFromJsonAsync<BookDto>(cancellationToken))!;
     }
 
-    public async Task<BookDto> Patch(string bookId, PatchBookRequestDto requestDto,
+    public async Task<BookDto> Patch([Description("Book identifier")] string bookId, PatchBookRequestDto requestDto,
         CancellationToken cancellationToken = default)
     {
         using HttpRequestMessage request = new(HttpMethod.Patch, $"{BasePath}/{bookId}")
@@ -62,7 +64,8 @@ internal class BooksClient(IRestAPiClient client) : IBooksClient
         return (await response.Content.ReadFromJsonAsync<SearchBooksResponseDto>(cancellationToken))!;
     }
 
-    public async Task Delete(string bookId, CancellationToken cancellationToken = default)
+    public async Task Delete([Description("Book identifier")] string bookId,
+        CancellationToken cancellationToken = default)
     {
         HttpResponseMessage response = await _httpClient.DeleteAsync($"{BasePath}/{bookId}", cancellationToken);
 

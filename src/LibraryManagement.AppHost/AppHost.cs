@@ -39,9 +39,9 @@ builder.AddContainer("pgadmin", "dpage/pgadmin4:9.10.0")
 var application = builder.AddProject<Projects.LibraryManagement_Application>("application")
     .WithReference(mongodb)
     .WithReference(postgresdb)
-    .WithSwagger()
-    .WithRedoc()
-    .WithScalar();
+    .WithSwagger(path:"/dev-ui/swagger")
+    .WithRedoc(path:"/dev-ui/api-docs")
+    .WithScalar(path:"/dev-ui/scalar");
 
 builder.Build().Run();
 

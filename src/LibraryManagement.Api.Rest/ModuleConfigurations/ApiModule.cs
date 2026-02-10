@@ -62,12 +62,21 @@ public static class ApiModule
 
             app.UseSwaggerUI(o =>
             {
+                o.RoutePrefix = "dev-ui/swagger";
                 o.SwaggerEndpoint(openApiV1, "OpenAPI V1");
             });
 
-            app.UseReDoc(o=>o.SpecUrl(openApiV1));
+            app.UseReDoc(o =>
+            {
+                o.RoutePrefix = "dev-ui/api-docs";
+                o.SpecUrl(openApiV1);
+            });
 
-            app.MapScalarApiReference();
+            app.MapScalarApiReference("dev-ui/scalar",o =>
+            {
+
+                o.WithOpenApiRoutePattern("/api/{documentName}.json");
+            });
         }
 
         app.UseRouting();

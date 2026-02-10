@@ -1,3 +1,10 @@
+using System.ComponentModel;
+
 namespace LibraryManagement.Api.Rest.Client.Common.Searches;
 
-public abstract record SearchResponseDtoBase<TResult>(IEnumerable<TResult> Results, PaginationInfoDto Pagination);
+[Description("Base DTO for search responses")]
+public abstract record SearchResponseDtoBase<TResult>(
+    [property: Description("Search results")]
+    IEnumerable<TResult> Results,
+    [property: Description("Pagination info for the results")]
+    PaginationInfoDto Pagination);
