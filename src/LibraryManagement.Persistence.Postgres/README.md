@@ -27,18 +27,23 @@ When running inside the compose network, use host `postgres` instead of `localho
 
 ## Configuration
 
-The module binds to `PersistencePostgres` configuration:
+The module prefers `ConnectionStrings:postgres` for the connection string, falling back to `PersistencePostgres`.
+
+Example configuration:
 
 ```json
 {
+  "ConnectionStrings": {
+    "postgres": "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres"
+  },
   "PersistencePostgres": {
-    "ConnectionString": "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres",
     "DatabaseName": "library_management"
   }
 }
 ```
 
-Values can be supplied via appsettings or environment variables (e.g., `PersistencePostgres__ConnectionString`).
+Values can be supplied via appsettings or environment variables (e.g., `ConnectionStrings__postgres` or
+`PersistencePostgres__ConnectionString`).
 
 ## Usage
 

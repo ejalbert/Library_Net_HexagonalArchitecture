@@ -1,4 +1,4 @@
-# AGENTS.md instructions for /Users/etiennejalbert/Library/CloudStorage/OneDrive-Constellio/MAC/sources/Net/Library_Net_HexagonalArchitecture
+# AGENTS.md instructions for Library_Net_HexagonalArchitecture
 
 <INSTRUCTIONS>
 ## Repository Context

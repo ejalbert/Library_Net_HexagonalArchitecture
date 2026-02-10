@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibraryManagement.Application\LibraryManagement.Application.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Persistence.Postgres.Migrations\LibraryManagement.Persistence.Postgres.Migrations.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Persistence.Postgres.Seeders\LibraryManagement.Persistence.Postgres.Seeders.csproj" />
   </ItemGroup>
 
 </Project>

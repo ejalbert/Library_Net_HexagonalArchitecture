@@ -15,7 +15,8 @@ using Microsoft.Extensions.Hosting;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("Default")
+var connectionString = builder.Configuration["ConnectionStrings:postgres"]
+                       ?? builder.Configuration.GetConnectionString("Default")
                        ?? builder.Configuration["ConnectionStrings:Default"]
                        ?? builder.Configuration["PersistencePostgres:ConnectionString"]
                        ?? "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";

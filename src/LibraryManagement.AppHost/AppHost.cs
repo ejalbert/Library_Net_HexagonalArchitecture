@@ -19,22 +19,21 @@ var mongodb = mongo.AddDatabase("library-management-mongo");
 builder.AddRedis("redis")
     .WithDataVolume();
 
-var postgres = builder.AddPostgres("postgres", postgresUser, postgresPassword, port: 5432)
-    .WithDataVolume();
+var postgresService = builder
+    .AddPostgres("postgresService", postgresUser, postgresPassword, port: 5432)
+    .WithDataVolume()
+    .WithPgAdmin()
+    .WithExternalHttpEndpoints();
 
-var postgresdb = postgres.AddDatabase("library-dev", "library_dev");
+var postgresdb = postgresService
+    .AddDatabase("postgres", "library_dev");
+
+
 
 builder.AddRabbitMQ("rabbitmq", rabbitUser, rabbitPassword)
     .WithDataVolume()
-    .WithManagementPlugin();
-
-builder.AddContainer("pgadmin", "dpage/pgadmin4:9.10.0")
-    .WithEnvironment("PGADMIN_DEFAULT_EMAIL", "admin@local.com")
-    .WithEnvironment("PGADMIN_DEFAULT_PASSWORD", "admin")
-    .WithEnvironment("PGADMIN_CONFIG_SERVER_MODE", "False")
-    .WithHttpEndpoint(targetPort: 80, port: 5050, name: "pgadmin")
-    .WithExternalHttpEndpoints()
-    .WithVolume("pgadmin-data", "/var/lib/pgadmin");
+    .WithManagementPlugin()
+    .WithExternalHttpEndpoints();
 
 var application = builder.AddProject<Projects.LibraryManagement_Application>("application")
     .WithReference(mongodb)
@@ -43,6 +42,10 @@ var application = builder.AddProject<Projects.LibraryManagement_Application>("ap
     .WithRedoc(path:"/dev-ui/api-docs")
     .WithScalar(path:"/dev-ui/scalar");
 
-builder.Build().Run();
+builder.AddProject<Projects.LibraryManagement_Persistence_Postgres_Seeders>("postgres-seeders")
+    .WithExplicitStart()
+    .WithReference(postgresdb);
 
+var app = builder.Build();
 
+app.Run();
