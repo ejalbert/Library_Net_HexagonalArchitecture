@@ -7,12 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\LibraryManagement.AI.SemanticKernel.LocalTools\LibraryManagement.AI.SemanticKernel.LocalTools.csproj" />
       <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
+      <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper.AspNetCore\LibraryManagement.ModuleBootstrapper.AspNetCore.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.SemanticKernel" Version="1.68.0" />
-      <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.68.0" />
+      <PackageReference Include="Microsoft.SemanticKernel" Version="1.70.0" />
+      <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.70.0" />
+      <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="SemanticKernel\RemotePlugins\" />
     </ItemGroup>
 
 </Project>

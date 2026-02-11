@@ -2,8 +2,10 @@ using LibraryManagement.AI.SemanticKernel.Domain.Authors;
 using LibraryManagement.AI.SemanticKernel.Domain.Books;
 using LibraryManagement.AI.SemanticKernel.Domain.BookSuggestions;
 using LibraryManagement.AI.SemanticKernel.SemanticKernel;
+using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.ModuleRegistrators;
 
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,14 +43,27 @@ public static class SemanticKernelModule
                 var options = sp.GetRequiredService<IOptions<SemanticKernelModuleOptions>>().Value;
                 return new OpenAIChatCompletionService(options.Model, options.ApiKey);
             })
+            .AddScoped<ILocalToolClient, LocalToolClient>()
             .AddScoped<ITokenAwareChatCompletionService, TokenAwareChatCompletionService>()
             .AddScoped<IChatCompletionService>(sp => sp.GetRequiredService<ITokenAwareChatCompletionService>())
+            .AddSingleton<ToolHub>()
+            .AddScoped<IToolHub>(sp=> sp.GetRequiredService<ToolHub>())
             .AddAuthorServices()
             .AddBookServices()
-            .AddBookSuggestionServices();
+            .AddBookSuggestionServices().AddSignalR();
 
 
             return moduleRegistrator;
+        }
+    }
+
+    extension(IModuleConfigurator moduleConfigurator)
+    {
+        public IModuleConfigurator UseSemanticKernelModule()
+        {
+            moduleConfigurator.App.MapHub<ToolHub>("api/v1/ai/tools/local");
+
+            return moduleConfigurator;
         }
     }
 }

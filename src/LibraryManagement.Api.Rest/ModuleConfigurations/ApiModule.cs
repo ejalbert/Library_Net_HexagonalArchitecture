@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
+using Scalar.AspNetCore;
+
 namespace LibraryManagement.Api.Rest.ModuleConfigurations;
 
 public static class ApiModule
@@ -53,7 +55,29 @@ public static class ApiModule
         WebApplication app = configurator.App;
         RestApiModuleOptions options = app.Services.GetRequiredService<IOptions<RestApiModuleOptions>>().Value;
 
-        if (app.Environment.IsDevelopment()) app.MapOpenApi("/api/{documentName}.json");
+        if (app.Environment.IsDevelopment())
+        {
+            var openApiV1 = "/api/v1.json";
+            app.MapOpenApi("/api/{documentName}.json");
+
+            app.UseSwaggerUI(o =>
+            {
+                o.RoutePrefix = "dev-ui/swagger";
+                o.SwaggerEndpoint(openApiV1, "OpenAPI V1");
+            });
+
+            app.UseReDoc(o =>
+            {
+                o.RoutePrefix = "dev-ui/api-docs";
+                o.SpecUrl(openApiV1);
+            });
+
+            app.MapScalarApiReference("dev-ui/scalar",o =>
+            {
+
+                o.WithOpenApiRoutePattern("/api/{documentName}.json");
+            });
+        }
 
         app.UseRouting();
 

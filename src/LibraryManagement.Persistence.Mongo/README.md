@@ -51,9 +51,9 @@ dotnet test ../../tests/LibraryManagement.Persistence.Mongo.Tests/LibraryManagem
 
 ## Configuration
 
-`PersistenceMongoModule` binds `PersistenceMongo:ConnectionString` and `DatabaseName`, defaulting to
-`mongodb://localhost:20027` and `library_management`. Module consumers can override these via configuration or delegate
-options.
+`PersistenceMongoModule` prefers `ConnectionStrings:mongodb` for the connection string, falling back to
+`PersistenceMongo:ConnectionString`. Defaults apply to `mongodb://localhost:20027` and `library_management` when no
+configuration is supplied. Module consumers can override these via configuration or delegate options.
 
 ## Tests
 

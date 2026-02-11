@@ -33,10 +33,9 @@ dotnet run
 ## Configuration
 
 - `RestApi:BasePath` – forwarded to the REST delivery module and REST client (defaults to `/api`).
-- `PersistenceMongo:ConnectionString` / `DatabaseName` – consumed by the Mongo module when constructing `MongoClient`
-  and `IMongoDatabase`.
-- `PersistencePostgres:ConnectionString` / `DatabaseName` – consumed by the Postgres module for EF Core configuration
-  (defaults align with the `postgres` service in `compose-dev.yaml`).
+- `ConnectionStrings:mongodb` – preferred MongoDB connection string (fallback: `PersistenceMongo:ConnectionString`).
+- `ConnectionStrings:postgres` – preferred Postgres connection string (fallback: `PersistencePostgres:ConnectionString`).
+- `PersistenceMongo:DatabaseName` / `PersistencePostgres:DatabaseName` – database names for Mongo and Postgres modules.
 - `OpenAi:ApiKey` / `OpenAi:Model` – used by the OpenAI module for book suggestions and AI consumption tracking.
 - `Domain:Test` – sample option showing how the Domain module binds configuration (extend/replace once meaningful
   settings exist).

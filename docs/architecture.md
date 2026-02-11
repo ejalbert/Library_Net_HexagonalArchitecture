@@ -24,8 +24,8 @@ This pattern keeps service registration and endpoint configuration consistent wh
 ## Current Modules
 
 - **Domain** – Books and authors aggregates, AI book suggestions, AI consumption tracking, tenant services, and shared search abstractions. Outbound ports feed persistence and AI adapters.
-- **Mongo Persistence** – Registers `MongoClient`, `IMongoDatabase`, author/book collections, Mapperly mappers, and adapters for create/search/get/update/patch/delete. Defaults to `mongodb://localhost:20027` / `library_management`. Tested via Testcontainers.
-- **Postgres Persistence** – Registers `LibraryManagementDbContext` with multi-tenant save interceptor, adapters for books/authors, and AI consumption logging. Ships a paired migrations assembly.
+- **Mongo Persistence** – Registers `MongoClient`, `IMongoDatabase`, author/book collections, Mapperly mappers, and adapters for create/search/get/update/patch/delete. Prefers `ConnectionStrings:mongodb` (fallback `PersistenceMongo:ConnectionString`). Defaults to `mongodb://localhost:20027` / `library_management`. Tested via Testcontainers.
+- **Postgres Persistence** – Registers `LibraryManagementDbContext` with multi-tenant save interceptor, adapters for books/authors, and AI consumption logging. Prefers `ConnectionStrings:postgres` (fallback `PersistencePostgres:ConnectionString`). Ships a paired migrations assembly.
 - **OpenAI Module** – Configures `ChatClient`, chat tools for searching books/authors, AI book suggestion agent, and consumption tracking.
 - **REST Delivery** – Adds OpenAPI and maps `/api/v1/books`, `/api/v1/authors`, and `/api/v1/ai/book-suggestions`. Bridges tenant IDs from the `tenant_id` claim to the domain port.
 - **REST Client** – Provides typed clients for books, authors, and AI book suggestions plus DI helpers so other modules (e.g., Blazor) can call the REST API without duplicating contracts.
@@ -36,10 +36,12 @@ This pattern keeps service registration and endpoint configuration consistent wh
 | Section | Consumer | Default |
 | --- | --- | --- |
 | `RestApi:BasePath` | REST delivery module & REST client | `/api` (delivery), `http://localhost:5007/api` (client) |
-| `PersistenceMongo:ConnectionString` | Mongo module | `mongodb://localhost:20027` |
+| `ConnectionStrings:mongodb` | Mongo module | `mongodb://localhost:20027` |
 | `PersistenceMongo:DatabaseName` | Mongo module | `library_management` |
-| `PersistencePostgres:ConnectionString` | Postgres module | `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres` |
+| `ConnectionStrings:postgres` | Postgres module | `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres` |
 | `PersistencePostgres:DatabaseName` | Postgres module | `library_management` |
+| `PersistenceMongo:ConnectionString` | Mongo module (fallback) | `mongodb://localhost:20027` |
+| `PersistencePostgres:ConnectionString` | Postgres module (fallback) | `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres` |
 | `OpenAi:ApiKey` / `OpenAi:Model` | OpenAI module | `""` (key) / `gpt-4.1-nano` (model) |
 | `Domain:*` | Domain module | Sample `Test` option (extend/replace as needed) |
 

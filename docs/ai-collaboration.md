@@ -15,6 +15,7 @@ Humans and coding assistants co-develop this repository. Follow these guidelines
 - Use actionable `TODO(agent): description` comments for open questions.
 - Maintain Markdown checklists for multi-step work so progress is visible.
 - Keep the solution structure mirrored between code and docs; every project (including tests) must have an up-to-date README.
+- Annotate REST contracts (DTOs and path parameters) with `System.ComponentModel.Description` to standardize metadata.
 
 ## Testing Expectations
 

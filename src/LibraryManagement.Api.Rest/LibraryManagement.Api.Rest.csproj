@@ -7,13 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj"/>
-        <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj"/>
-        <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper.AspNetCore\LibraryManagement.ModuleBootstrapper.AspNetCore.csproj"/>
-    </ItemGroup>
+        <ProjectReference Include="..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj" />
+        <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
+        <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper.AspNetCore\LibraryManagement.ModuleBootstrapper.AspNetCore.csproj" />        
+    </ItemGroup>   
+    
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.12.37" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="10.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.2" />
     </ItemGroup>
 
 </Project>

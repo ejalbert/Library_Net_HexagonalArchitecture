@@ -11,6 +11,7 @@ using LibraryManagement.Web.ModuleConfigurations;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder
+    .AddServiceDefaults()
     .InitializeApplicationModuleConfiguration()
     .AddDomainModule()
     .AddPersistenceMongoModule()
@@ -25,8 +26,12 @@ IModuleConfigurator moduleConfigurator = app.UseApplicationModules();
 
 app.UseHttpsRedirection();
 
-moduleConfigurator.UseRestApiModule().UseWebModule();
+moduleConfigurator.UseRestApiModule()
+    .UseSemanticKernelModule()
+    .UseWebModule();
 
+
+app.MapDefaultEndpoints();
 app.Run();
 
 namespace LibraryManagement.Application

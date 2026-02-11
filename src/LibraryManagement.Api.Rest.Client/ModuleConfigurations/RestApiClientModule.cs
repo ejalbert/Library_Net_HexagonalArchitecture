@@ -6,8 +6,10 @@ namespace LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 
 public static class RestApiClientModule
 {
+
+
     public static IServiceCollection AddRestApiHttpClient<TConfigurationManager>(this IServiceCollection services,
-        TConfigurationManager configurationManager, Action<RestApiClientModuleOptions>? configureOptions = null)
+        TConfigurationManager configurationManager, Action<RestApiClientModuleOptions>? configureOptions = null, Action<IHttpClientBuilder>? configureClient = null)
         where TConfigurationManager : IConfiguration, IConfigurationBuilder
     {
         RestApiClientEnvConfiguration optionsFromEnv = new();
@@ -28,13 +30,18 @@ public static class RestApiClientModule
 
         if (configureOptions != null) services.Configure(configureOptions);
 
-        services.AddHttpClient<IRestAPiClient, RestApiClient>((serviceProvider, client) =>
+        var httpClientBuilder = services.AddHttpClient<IRestAPiClient, RestApiClient>((serviceProvider, client) =>
         {
             RestApiClientModuleOptions options =
                 serviceProvider.GetRequiredService<IOptions<RestApiClientModuleOptions>>().Value;
 
             client.BaseAddress = new Uri(options.BasePath);
         });
+
+        if (configureClient != null)
+        {
+            configureClient(httpClientBuilder);
+        }
 
         return services;
     }

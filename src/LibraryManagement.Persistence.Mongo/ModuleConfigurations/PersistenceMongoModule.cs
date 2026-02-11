@@ -23,7 +23,8 @@ public static class PersistenceMongoModule
 
         moduleRegistrator.Services.AddOptions<PersistenceMongoModuleOptions>().Configure(options =>
         {
-            options.ConnectionString = optionsFromEnv.ConnectionString ?? "mongodb://localhost:20027";
+            string? connectionString = moduleRegistrator.ConfigurationManager["ConnectionStrings:mongodb"];
+            options.ConnectionString = connectionString ?? optionsFromEnv.ConnectionString ?? "mongodb://localhost:20027";
             options.DatabaseName = optionsFromEnv.DatabaseName ?? "library_management";
         });
 

@@ -13,6 +13,7 @@ package to avoid duplicating contract knowledge.
 - Provides `IRestAPiClient` plus `AddRestApiHttpClient()` so hosts can register a configured `HttpClient` based on the
   `RestApi` configuration section.
 - Includes a helper extension (`restAPiClient.Books`) to obtain the typed client from an injected `IRestAPiClient`.
+- DTOs and path parameters are annotated with `System.ComponentModel.Description` to keep contract metadata consistent.
 
 ## Dependencies
 

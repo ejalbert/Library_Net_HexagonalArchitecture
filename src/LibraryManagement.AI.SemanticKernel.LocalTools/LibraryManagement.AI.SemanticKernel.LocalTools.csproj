@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>      
+      <ProjectReference Include="..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj" />      
+      <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper\LibraryManagement.ModuleBootstrapper.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.3" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.3" />
+    </ItemGroup>
+
+</Project>

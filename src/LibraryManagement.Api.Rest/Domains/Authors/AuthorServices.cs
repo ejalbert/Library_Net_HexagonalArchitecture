@@ -26,14 +26,16 @@ internal static class AuthorServices
 
     internal static WebApplication UseAuthorServices(this WebApplication app)
     {
-        RouteGroupBuilder group = app.MapGroup("/api").MapGroup("/v1/authors").WithGroupName("Authors");
+        RouteGroupBuilder group = app.MapGroup("/api").MapGroup("/v1/authors").WithTags("Authors");
+        group.ProducesProblem(StatusCodes.Status403Forbidden);
 
         group.MapPost("",
                 ([FromBody] CreateAuthorRequestDto request, ICreateAuthorController controller) =>
                     controller.CreateAuthor(request))
             .WithName("Create Author")
             .WithDescription("Creates a new author entry")
-            .Produces<AuthorDto>();
+            .Produces<AuthorDto>(StatusCodes.Status201Created);
+
 
         group.MapPost("/search",
                 ([FromBody] SearchAuthorsRequestDto request, ISearchAuthorsController controller) =>

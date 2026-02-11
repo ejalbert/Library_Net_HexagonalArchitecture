@@ -10,8 +10,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0"/>
-        <PackageReference Include="Riok.Mapperly" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.3" />
+        <PackageReference Include="Microsoft.DotNet.HotReload.WebAssembly.Browser" Version="10.0.103" />
+        <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,11 +22,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj"/>
+        <ProjectReference Include="..\..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Pages\"/>
+        <Folder Include="Pages\" />
     </ItemGroup>
 
 </Project>
