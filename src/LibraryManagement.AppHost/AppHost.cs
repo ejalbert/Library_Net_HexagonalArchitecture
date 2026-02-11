@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 using Aspire.Hosting.ApplicationModel;
 
 using LibraryManagement.AppHost;
@@ -26,8 +28,11 @@ var postgresService = builder
     .WithExternalHttpEndpoints();
 
 var postgresdb = postgresService
-    .AddDatabase("postgres", "library_dev");
-
+    .AddDatabase("postgres", "library_dev")
+    .WithCreateNewMigrationCommand()
+    .WithRemoveMigrationCommand()
+    .WithMigrateDatabaseCommand()
+    .WithRevertAllMigrationsCommand();
 
 
 builder.AddRabbitMQ("rabbitmq", rabbitUser, rabbitPassword)
@@ -35,7 +40,7 @@ builder.AddRabbitMQ("rabbitmq", rabbitUser, rabbitPassword)
     .WithManagementPlugin()
     .WithExternalHttpEndpoints();
 
-var application = builder.AddProject<Projects.LibraryManagement_Application>("application")
+builder.AddProject<Projects.LibraryManagement_Application>("application")
     .WithReference(mongodb)
     .WithReference(postgresdb)
     .WithSwagger(path:"/dev-ui/swagger")
@@ -45,6 +50,7 @@ var application = builder.AddProject<Projects.LibraryManagement_Application>("ap
 builder.AddProject<Projects.LibraryManagement_Persistence_Postgres_Seeders>("postgres-seeders")
     .WithExplicitStart()
     .WithReference(postgresdb);
+
 
 var app = builder.Build();
 
