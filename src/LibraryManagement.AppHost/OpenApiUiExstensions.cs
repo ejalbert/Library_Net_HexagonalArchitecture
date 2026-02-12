@@ -1,5 +1,8 @@
 using System.Diagnostics;
 
+using DnsClient.Internal;
+
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LibraryManagement.AppHost;
@@ -15,11 +18,14 @@ internal static class EfCoreExtensions
             return builder.WithEfCoreCommands<T>(
                 "migrate-database",
                 "Migrate Database to Latest",
-                _ =>
+                async context =>
                 {
-                    return Task.FromResult("database update " +
+                    var connectionString = await builder.Resource.ConnectionStringExpression.GetValueAsync(context.CancellationToken);
+                    
+                    return "database update " +
                                            $"--project {MigrationsProjectPath} " +
-                                           $"--startup-project {MigrationsProjectPath}");
+                                           $"--startup-project {MigrationsProjectPath} "+
+                                           $"--connection {connectionString}";
                 }
             );
         }
@@ -29,11 +35,16 @@ internal static class EfCoreExtensions
             return builder.WithEfCoreCommands<T>(
                 "revert-all-database-migration",
                 "Revert all Database Migration",
-                _ =>
+                async context =>
                 {
-                    return Task.FromResult("database update 0 " +
+                    var connectionString = await builder.Resource.ConnectionStringExpression.GetValueAsync(context.CancellationToken);
+
+                    
+
+                    return "database update 0 " +
                                            $"--project {MigrationsProjectPath} " +
-                                           $"--startup-project {MigrationsProjectPath}");
+                                           $"--startup-project {MigrationsProjectPath} " +
+                                           $"--connection {connectionString}";
                 }
             );
         }

@@ -9,46 +9,45 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+
+
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-var connectionString = builder.Configuration["ConnectionStrings:postgres"]
+ContextFactory.ConnectionString = builder.Configuration["ConnectionStrings:postgres"]
                        ?? builder.Configuration.GetConnectionString("Default")
                        ?? builder.Configuration["ConnectionStrings:Default"]
                        ?? builder.Configuration["PersistencePostgres:ConnectionString"]
-                       ?? "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
+                       ?? ContextFactory.ConnectionString;
 
 
 
 builder.Services.AddDbContext<LibraryManagementDbContext>(options =>
-    options.UseNpgsql(connectionString,
+    options.UseNpgsql(ContextFactory.ConnectionString,
         sql => sql.MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations")));
 
 IHost app = builder.Build();
 
 await app.StartAsync();
 
-namespace LibraryManagement.Persistence.Postgres.Migrations
+public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
 {
-    public class ContextFactory : IDesignTimeDbContextFactory<LibraryManagementDbContext>
+    internal static string ConnectionString = "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
+
+    public LibraryManagementDbContext CreateDbContext(string[] args)
     {
-        public LibraryManagementDbContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<LibraryManagementDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<LibraryManagementDbContext>();        
 
-            var connectionString = "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
+        optionsBuilder.UseNpgsql(ContextFactory.ConnectionString,
+            sql => sql.MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations"));
 
-            optionsBuilder.UseNpgsql(connectionString,
-                sql => sql.MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations"));
-
-            return new LibraryManagementDbContext(optionsBuilder.Options, new TenantProvider());
-        }
+        return new LibraryManagementDbContext(optionsBuilder.Options, new TenantProvider());
     }
+}
 
-    internal class TenantProvider : IGetCurrentUserTenantIdUseCase
+internal class TenantProvider : IGetCurrentUserTenantIdUseCase
+{
+    public string GetTenantId(GetCurrentUserTenantIdCommand command)
     {
-        public string GetTenantId(GetCurrentUserTenantIdCommand command)
-        {
-            return "00000000-0000-0000-0000-000000000000";
-        }
+        return "00000000-0000-0000-0000-000000000000";
     }
 }
