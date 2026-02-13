@@ -39,13 +39,16 @@ builder.AddRabbitMQ("rabbitmq", rabbitUser, rabbitPassword)
 builder.AddProject<Projects.LibraryManagement_Application>("application")
     .WithReference(mongodb)
     .WithReference(postgresdb)
+    .WaitFor(postgresdb)
+    .WaitFor(mongodb)
     .WithSwagger(path:"/dev-ui/swagger")
     .WithRedoc(path:"/dev-ui/api-docs")
     .WithScalar(path:"/dev-ui/scalar");
 
 builder.AddProject<Projects.LibraryManagement_Persistence_Postgres_Seeders>("postgres-seeders")
     .WithExplicitStart()
-    .WithReference(postgresdb);
+    .WithReference(postgresdb)
+    .WaitFor(postgresService);
 
 
 var app = builder.Build();
