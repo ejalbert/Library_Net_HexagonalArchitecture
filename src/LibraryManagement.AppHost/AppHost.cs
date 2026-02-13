@@ -1,4 +1,5 @@
 using LibraryManagement.AppHost;
+using LibraryManagement.AppHost.Extensions;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -36,7 +37,7 @@ builder.AddRabbitMQ("rabbitmq", rabbitUser, rabbitPassword)
     .WithManagementPlugin()
     .WithExternalHttpEndpoints();
 
-builder.AddProject<Projects.LibraryManagement_Application>("application")
+var application = builder.AddProject<Projects.LibraryManagement_Application>("application")
     .WithReference(mongodb)
     .WithReference(postgresdb)
     .WaitFor(postgresdb)
@@ -49,6 +50,8 @@ builder.AddProject<Projects.LibraryManagement_Persistence_Postgres_Seeders>("pos
     .WithExplicitStart()
     .WithReference(postgresdb)
     .WaitFor(postgresService);
+
+builder.AddViteApp("react-client", "../LibraryManagement.Web.React").WithReference(application);
 
 
 var app = builder.Build();

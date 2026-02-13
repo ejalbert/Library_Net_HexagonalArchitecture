@@ -1,11 +1,8 @@
 using System.Diagnostics;
 
-using DnsClient.Internal;
-
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace LibraryManagement.AppHost;
+namespace LibraryManagement.AppHost.Extensions;
 
 internal static class EfCoreExtensions
 {
@@ -21,11 +18,11 @@ internal static class EfCoreExtensions
                 async context =>
                 {
                     var connectionString = await builder.Resource.ConnectionStringExpression.GetValueAsync(context.CancellationToken);
-                    
+
                     return "database update " +
-                                           $"--project {MigrationsProjectPath} " +
-                                           $"--startup-project {MigrationsProjectPath} "+
-                                           $"--connection {connectionString}";
+                           $"--project {MigrationsProjectPath} " +
+                           $"--startup-project {MigrationsProjectPath} "+
+                           $"--connection {connectionString}";
                 }
             );
         }
@@ -39,12 +36,12 @@ internal static class EfCoreExtensions
                 {
                     var connectionString = await builder.Resource.ConnectionStringExpression.GetValueAsync(context.CancellationToken);
 
-                    
+
 
                     return "database update 0 " +
-                                           $"--project {MigrationsProjectPath} " +
-                                           $"--startup-project {MigrationsProjectPath} " +
-                                           $"--connection {connectionString}";
+                           $"--project {MigrationsProjectPath} " +
+                           $"--startup-project {MigrationsProjectPath} " +
+                           $"--connection {connectionString}";
                 }
             );
         }
@@ -70,16 +67,42 @@ internal static class EfCoreExtensions
             return builder.WithEfCoreCommands<T>(
                 "add-ef-migration",
                 "Add EF Migration",
-                 _ =>
+                async context =>
                 {
-                    var migrationName = "CHANGE_ME";
+                    var services = context.ServiceProvider;
+#pragma warning disable ASPIREINTERACTION001
+                    var interactionService =  services.GetRequiredService<IInteractionService>();
+#pragma warning restore ASPIREINTERACTION001
 
-                    return Task.FromResult($"migrations add {migrationName} " +
-                                           $"--project {MigrationsProjectPath} " +
-                                           $"--startup-project {MigrationsProjectPath} " +
-                                           "--output-dir Migrations");
+                    var migrationNameResult = await interactionService.PromptInputAsync("New Migration Name", "Please enter a name for the new migration", "Migration Name", "Short clear name", new ()
+                    {
+                        ValidationCallback = ctx =>
+                        {
+                            var input = ctx.Inputs[0];
+                            if(string.IsNullOrWhiteSpace(input.Value))
+                            {
+                                ctx.AddValidationError(input, "Migration name cannot be empty");
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    });
+
+                    if (migrationNameResult is { Canceled: false, Data: not null })
+                    {
+                        var migrationName = migrationNameResult.Data?.Value ?? "CHANGE_ME";
+
+                        return $"migrations add {migrationName} " +
+                               $"--project {MigrationsProjectPath} " +
+                               $"--startup-project {MigrationsProjectPath} " +
+                               "--output-dir Migrations";
+                    }
+                    else
+                    {
+                        throw new TaskCanceledException();
+                    }
                 }
-                );
+            );
         }
 
         internal IResourceBuilder<T> WithEfCoreCommands(string name, string displayName, Func<ExecuteCommandContext, Task<string>> getArgsAsync)
@@ -140,63 +163,5 @@ internal static class EfCoreExtensions
         }
 
         return directory?.FullName ?? Directory.GetCurrentDirectory();
-    }
-}
-
-internal static class OpenApiUiExstensions
-{
-
-
-    extension<T>(IResourceBuilder<T> builder) where T : IResourceWithEndpoints
-    {
-        internal IResourceBuilder<T> WithSwagger(string name = "swagger-ui-docs", string displayName = "Swagger API Documentation", string path = "/swagger")
-        {
-            return builder.WithOpenApiUi(name, displayName, path,
-                "Document", IconVariant.Filled);
-        }
-
-        internal IResourceBuilder<T> WithRedoc(string name = "redoc-docs", string displayName = "ReDoc API Documentation", string path = "/api-docs")
-        {
-            return builder.WithOpenApiUi(name, displayName, path,
-                "Document", IconVariant.Filled);
-        }
-
-        internal IResourceBuilder<T> WithScalar(string name = "scalar-docs", string displayName = "Scalar API Documentation", string path = "/scalar/v1")
-        {
-            return builder.WithOpenApiUi(name, displayName, path,
-                "Document", IconVariant.Filled);
-        }
-
-        private IResourceBuilder<T> WithOpenApiUi(string name,
-            string displayName, string path, string iconName, IconVariant iconVariant)
-        {
-            return builder.WithCommand(name, displayName, executeCommand: _ =>
-            {
-                try
-                {
-                    var endpoint = builder.GetEndpoint("https");
-
-                    var url =  $"{endpoint.Url}{path}";
-
-                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true});
-
-                    return Task.FromResult(new ExecuteCommandResult
-                    {
-                        Success = true
-                    });
-                }
-                catch (Exception ex)
-                {
-                    return Task.FromResult(new ExecuteCommandResult {Success = false, ErrorMessage = ex.ToString()});
-                }
-
-
-            }, new CommandOptions()
-            {
-                UpdateState = context=>context.ResourceSnapshot.HealthStatus == HealthStatus.Healthy ? ResourceCommandState.Enabled : ResourceCommandState.Disabled,
-                IconName = iconName,
-                IconVariant = iconVariant
-            });
-        }
     }
 }
