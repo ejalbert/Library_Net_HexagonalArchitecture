@@ -7,6 +7,10 @@ public interface ILocalToolClient : IDisposable
 
     Task<TResult> SendAsync<TResult>(string methodName, CancellationToken cancellationToken = default);
     Task<TResult> SendAsync<TResult>(string methodName, object? arg2, CancellationToken cancellationToken = default);
-    Task<TResult> SendAsync<TResult>(string methodName, object? arg2, object? arg3, CancellationToken cancellationToken = default);
-    Task<TResult> SendAsync<TResult>(string methodName, object? arg2, object? arg3, object? arg4, CancellationToken cancellationToken = default);
+
+    Task<TResult> SendAsync<TResult>(string methodName, object? arg2, object? arg3,
+        CancellationToken cancellationToken = default);
+
+    Task<TResult> SendAsync<TResult>(string methodName, object? arg2, object? arg3, object? arg4,
+        CancellationToken cancellationToken = default);
 }

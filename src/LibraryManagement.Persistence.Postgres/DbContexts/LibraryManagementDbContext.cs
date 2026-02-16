@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence.Postgres.DbContexts;
 
-public class LibraryManagementDbContext(DbContextOptions<LibraryManagementDbContext> options, IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase) : MultitenantDbContext(options, getCurrentUserTenantIdUseCase)
+public class LibraryManagementDbContext(
+    DbContextOptions<LibraryManagementDbContext> options,
+    IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
+    : MultitenantDbContext(options, getCurrentUserTenantIdUseCase)
 {
     public DbSet<BookEntity> Books { get; set; } = null!;
     public DbSet<AuthorEntity> Authors { get; set; } = null!;

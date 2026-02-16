@@ -15,5 +15,4 @@ internal static class RegisterAuthorServices
             .AddScoped<ICreateAuthorPort, CreateAuthorAdapter>()
             .AddScoped<ISearchAuthorsPort, SearchAuthorsAdapter>();
     }
-
 }

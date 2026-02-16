@@ -10,17 +10,17 @@ using OpenAI.Chat;
 
 namespace LibraryManagement.AI.OpenAi.Domain.Books.Tools;
 
-public class SearchBooksChatTool(ISearchBooksUseCase searchBooksUseCase) : SearchChatToolBase<Book>(functionName: nameof(SearchBooksChatTool),
-    tool: ChatTool.CreateFunctionTool(
-        functionName: nameof(SearchBooksChatTool),
-        functionDescription:
+public class SearchBooksChatTool(ISearchBooksUseCase searchBooksUseCase) : SearchChatToolBase<Book>(
+    nameof(SearchBooksChatTool),
+    ChatTool.CreateFunctionTool(
+        nameof(SearchBooksChatTool),
         """
         Search for books in the library catalog. It is not possible to search by author name here.
         You need to cross reference with the author id. For now the best approach is to search all books by using an empty search
 
         the content returned will include alist of reesults with the books found, along with pagination information.
         """,
-        functionParameters: BinaryData.FromBytes(Encoding.UTF8.GetBytes(
+        BinaryData.FromBytes(Encoding.UTF8.GetBytes(
             $$"""
               {
                 "type": "object",
@@ -47,8 +47,8 @@ public class SearchBooksChatTool(ISearchBooksUseCase searchBooksUseCase) : Searc
               }
               """)))), ISearchBooksChatTool
 {
-
-    protected override Task<SearchResult<Book>> ExecuteSearchAsync(string? searchTerm, Pagination? pagination, JsonDocument arguments)
+    protected override Task<SearchResult<Book>> ExecuteSearchAsync(string? searchTerm, Pagination? pagination,
+        JsonDocument arguments)
     {
         return searchBooksUseCase.Search(new SearchBooksCommand(searchTerm, pagination));
     }

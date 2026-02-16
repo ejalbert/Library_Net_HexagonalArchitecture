@@ -20,9 +20,10 @@ public static class SemanticKernelModule
     extension<TApplicationBuilder>(IModuleRegistrator<TApplicationBuilder> moduleRegistrator)
         where TApplicationBuilder : IHostApplicationBuilder
     {
-        public IModuleRegistrator<TApplicationBuilder> AddSemanticKernelModule(Action<SemanticKernelModuleOptions>? configureOptions = null)
+        public IModuleRegistrator<TApplicationBuilder> AddSemanticKernelModule(
+            Action<SemanticKernelModuleOptions>? configureOptions = null)
         {
-            var services = moduleRegistrator.Services;
+            IServiceCollection services = moduleRegistrator.Services;
 
             SemanticKernelModuleEnvConfiguration optionsFromEnv = new();
             moduleRegistrator.ConfigurationManager.GetSection("OpenAi").Bind(optionsFromEnv);
@@ -39,18 +40,19 @@ public static class SemanticKernelModule
                 .AddBookSuggestionServices();
 
             services.AddScoped<OpenAIChatCompletionService>(sp =>
-            {
-                var options = sp.GetRequiredService<IOptions<SemanticKernelModuleOptions>>().Value;
-                return new OpenAIChatCompletionService(options.Model, options.ApiKey);
-            })
-            .AddScoped<ILocalToolClient, LocalToolClient>()
-            .AddScoped<ITokenAwareChatCompletionService, TokenAwareChatCompletionService>()
-            .AddScoped<IChatCompletionService>(sp => sp.GetRequiredService<ITokenAwareChatCompletionService>())
-            .AddSingleton<ToolHub>()
-            .AddScoped<IToolHub>(sp=> sp.GetRequiredService<ToolHub>())
-            .AddAuthorServices()
-            .AddBookServices()
-            .AddBookSuggestionServices().AddSignalR();
+                {
+                    SemanticKernelModuleOptions options =
+                        sp.GetRequiredService<IOptions<SemanticKernelModuleOptions>>().Value;
+                    return new OpenAIChatCompletionService(options.Model, options.ApiKey);
+                })
+                .AddScoped<ILocalToolClient, LocalToolClient>()
+                .AddScoped<ITokenAwareChatCompletionService, TokenAwareChatCompletionService>()
+                .AddScoped<IChatCompletionService>(sp => sp.GetRequiredService<ITokenAwareChatCompletionService>())
+                .AddSingleton<ToolHub>()
+                .AddScoped<IToolHub>(sp => sp.GetRequiredService<ToolHub>())
+                .AddAuthorServices()
+                .AddBookServices()
+                .AddBookSuggestionServices().AddSignalR();
 
 
             return moduleRegistrator;

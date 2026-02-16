@@ -9,7 +9,7 @@
     <div class="suggestion-panel">
         <label>
             Help me find a book:
-            <InputTextArea  @bind-Value="@BookSuggestionInput"/>
+            <InputTextArea @bind-Value="@BookSuggestionInput"/>
         </label>
 
         <button @onclick="async ()=> await GenerateBookSuggestions()">Suggest Me!</button>

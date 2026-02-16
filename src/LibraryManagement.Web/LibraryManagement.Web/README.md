@@ -39,4 +39,5 @@ dotnet run --project src/LibraryManagement.Web/LibraryManagement.Web/LibraryMana
 
 ## Tests
 
-- `tests/LibraryManagement.Web.Tests` exercises the Blazor components with bUnit (see README for the naming rule that pairs `.razor` tests with `.razor.cs`).
+- `tests/LibraryManagement.Web.Tests` exercises the Blazor components with bUnit (see README for the naming rule that
+  pairs `.razor` tests with `.razor.cs`).

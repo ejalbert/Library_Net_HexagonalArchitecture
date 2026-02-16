@@ -16,7 +16,7 @@ public class SearchAuthorsAdapter(IAuthorCollection authorCollection, IAuthorEnt
             searchTerm == null ||
             author.Name.Contains(searchTerm);
 
-        long count = await authorCollection.Collection.CountDocumentsAsync(filter);
+        var count = await authorCollection.Collection.CountDocumentsAsync(filter);
 
         IAsyncCursor<AuthorEntity> searchRequest = await authorCollection.Collection.FindAsync(
             filter,
@@ -29,7 +29,7 @@ public class SearchAuthorsAdapter(IAuthorCollection authorCollection, IAuthorEnt
         return new SearchResult<Author>
         {
             Results = searchRequest.ToEnumerable().Select(mapper.ToDomain).ToList(),
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 PageIndex = pagination.PageIndex,
                 PageSize = pagination.PageSize,

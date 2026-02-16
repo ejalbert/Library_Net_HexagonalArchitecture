@@ -1,4 +1,5 @@
 using LibraryManagement.Domain.Common.Searches;
+using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books;
 using LibraryManagement.Persistence.Mongo.Domains.Books.Adapters;
 using LibraryManagement.Persistence.Mongo.Tests.Infrastructure;
@@ -37,7 +38,7 @@ public class SearchBooksAdapterTests
 
         SearchBooksAdapter adapter = BuildAdapter(seededBooks, out _);
 
-        var results = await adapter.Search("Clean", new Pagination(0, 10));
+        SearchResult<Book> results = await adapter.Search("Clean", new Pagination(0, 10));
 
         Assert.Single(results.Results);
         Assert.Equal("Clean Code", results.Results.First().Title);
@@ -60,7 +61,7 @@ public class SearchBooksAdapterTests
         FindOptions<BookEntity, BookEntity>? usedOptions = null;
         SearchBooksAdapter adapter = BuildAdapter(seededBooks, out _, options => usedOptions = options);
 
-        var results = await adapter.Search(null, new Pagination(0, 10));
+        SearchResult<Book> results = await adapter.Search(null, new Pagination(0, 10));
 
         Assert.Equal(10, results.Results.Count());
         Assert.Equal(10, usedOptions?.Limit);

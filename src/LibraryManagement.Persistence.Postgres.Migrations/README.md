@@ -36,9 +36,11 @@ dotnet ef database update \
 
 - `ConnectionStrings:postgres` (preferred) or `PersistencePostgres:ConnectionString` – target database for migrations.
 - `ConnectionStrings:Default` is still honored for legacy tooling.
-- Defaults to `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres` when no value is supplied.
+- Defaults to `Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres` when no value is
+  supplied.
 
-Keep this project referenced from the Postgres module so runtime calls use the same migrations assembly (`UseNpgsql(...MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations"))`).
+Keep this project referenced from the Postgres module so runtime calls use the same migrations assembly (
+`UseNpgsql(...MigrationsAssembly("LibraryManagement.Persistence.Postgres.Migrations"))`).
 
 ```bash
 dotnet ef database add AddAuthorEntity -p .\src\LibraryManagement.Persistence.Postgres.Migrations\LibraryManagement.Persistence.Postgres.Migrations.csproj -s .\src\LibraryManagement.Persistence.Postgres.Migrations\LibraryManagement.Persistence.Postgres.Migrations.csproj

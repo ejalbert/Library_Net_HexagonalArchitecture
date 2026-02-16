@@ -5,5 +5,6 @@ namespace LibraryManagement.AI.SemanticKernel.Domain.Authors.Plugins;
 
 public interface ISearchAuthorLocalToolClient
 {
-    Task<SearchAuthorsResponseDto> SearchAuthorsAsync(string searchTerm, Pagination pagination, CancellationToken cancellationToken = default);
+    Task<SearchAuthorsResponseDto> SearchAuthorsAsync(string searchTerm, Pagination pagination,
+        CancellationToken cancellationToken = default);
 }

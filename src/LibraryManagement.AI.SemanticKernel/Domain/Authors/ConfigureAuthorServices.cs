@@ -10,8 +10,8 @@ internal static class ConfigureAuthorServices
     {
         internal IServiceCollection AddAuthorServices()
         {
-            return services.AddScoped<ISearchAuthorPlugin, SearchAuthorsPlugin>().AddScoped<ISearchAuthorLocalToolClient, SearchAuthorLocalToolClient>();
+            return services.AddScoped<ISearchAuthorPlugin, SearchAuthorsPlugin>()
+                .AddScoped<ISearchAuthorLocalToolClient, SearchAuthorLocalToolClient>();
         }
     }
-
 }

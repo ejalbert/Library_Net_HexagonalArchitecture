@@ -22,7 +22,6 @@ var connectionString = builder.Configuration["ConnectionStrings:postgres"]
                        ?? "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";
 
 
-
 Console.WriteLine("Starting Postgres seeder...");
 Console.WriteLine($"Using connection string: {connectionString}");
 
@@ -54,7 +53,7 @@ builder.Services.AddDbContext<LibraryManagementDbContext>((sp, options) =>
 IHost app = builder.Build();
 
 
-var dbContext = app.Services.GetRequiredService<LibraryManagementDbContext>();
+LibraryManagementDbContext dbContext = app.Services.GetRequiredService<LibraryManagementDbContext>();
 dbContext.Database.EnsureCreated();
 
 Console.WriteLine("Applying Seedings...");

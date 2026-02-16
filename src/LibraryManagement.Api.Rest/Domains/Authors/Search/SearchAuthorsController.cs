@@ -1,5 +1,7 @@
 using LibraryManagement.Api.Rest.Client.Domain.Authors.Search;
 using LibraryManagement.Api.Rest.Common.Searches;
+using LibraryManagement.Domain.Common.Searches;
+using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Domain.Domains.Authors.Search;
 
 using Microsoft.AspNetCore.Http;
@@ -11,16 +13,18 @@ public interface ISearchAuthorsController
     Task<IResult> SearchAuthors(SearchAuthorsRequestDto requestDto, CancellationToken cancellationToken = default);
 }
 
-public class SearchAuthorsController(ISearchAuthorsUseCase searchAuthorsUseCase, IAuthorDtoMapper mapper,
+public class SearchAuthorsController(
+    ISearchAuthorsUseCase searchAuthorsUseCase,
+    IAuthorDtoMapper mapper,
     ISearchDtoMapper searchDtoMapper)
     : ISearchAuthorsController
 {
     public async Task<IResult> SearchAuthors(SearchAuthorsRequestDto requestDto,
         CancellationToken cancellationToken = default)
     {
-        var pagination = requestDto.Pagination != null ? searchDtoMapper.ToDomain(requestDto.Pagination) : null;
+        Pagination? pagination = requestDto.Pagination != null ? searchDtoMapper.ToDomain(requestDto.Pagination) : null;
 
-        var searchResult =
+        SearchResult<Author> searchResult =
             await searchAuthorsUseCase.Search(new SearchAuthorsCommand(requestDto.SearchTerm, pagination));
 
         return Results.Ok(new SearchAuthorsResponseDto(

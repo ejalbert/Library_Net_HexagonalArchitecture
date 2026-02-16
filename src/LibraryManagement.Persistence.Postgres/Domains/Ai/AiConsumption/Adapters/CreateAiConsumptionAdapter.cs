@@ -8,9 +8,9 @@ public class CreateAiConsumptionAdapter(LibraryManagementDbContext context) : IC
     public Task AddConsumptionAsync(long inputTokens, long outputTokens, long totalTokens, string modelUsed,
         CancellationToken cancellationToken)
     {
-        context.TenantAiConsumptions.Add(new()
+        context.TenantAiConsumptions.Add(new AiConsumptionEntity
         {
-            InputTokens =  inputTokens,
+            InputTokens = inputTokens,
             OutputTokens = outputTokens,
             TotalTokens = totalTokens,
             ModelUsed = modelUsed

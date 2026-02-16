@@ -26,9 +26,6 @@ public class LocalToolHub(HubConnection connection) : ILocalToolHub
 
     public async ValueTask DisposeAsync()
     {
-        if (connection.State != HubConnectionState.Disconnected)
-        {
-            await DisconnectAsync();
-        }
+        if (connection.State != HubConnectionState.Disconnected) await DisconnectAsync();
     }
 }

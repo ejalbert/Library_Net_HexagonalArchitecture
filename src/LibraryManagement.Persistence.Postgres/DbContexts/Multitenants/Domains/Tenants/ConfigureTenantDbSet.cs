@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LibraryManagement.Persistence.Postgres.DbContexts.Multitenants.Domains.Tenants;
 
@@ -8,7 +9,7 @@ internal static class ConfigureTenantDbSet
     {
         internal ModelBuilder ConfigureTenants()
         {
-            var typeBuilder = modelBuilder.Entity<TenantEntity>();
+            EntityTypeBuilder<TenantEntity> typeBuilder = modelBuilder.Entity<TenantEntity>();
 
             typeBuilder.ToTable("Tenants").HasKey(t => t.Id);
 

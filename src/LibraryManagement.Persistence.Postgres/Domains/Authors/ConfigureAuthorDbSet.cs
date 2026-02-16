@@ -12,12 +12,12 @@ internal static class ConfigureAuthorDbSet
         return modelBuilder;
     }
 
-    private static EntityTypeBuilder<AuthorEntity> ConfigureAuthorEntity(this EntityTypeBuilder<AuthorEntity> typeBuilder)
+    private static EntityTypeBuilder<AuthorEntity> ConfigureAuthorEntity(
+        this EntityTypeBuilder<AuthorEntity> typeBuilder)
     {
         typeBuilder.ToTable("Authors");
         typeBuilder.HasKey(a => a.Id);
 
         return typeBuilder;
     }
-
 }

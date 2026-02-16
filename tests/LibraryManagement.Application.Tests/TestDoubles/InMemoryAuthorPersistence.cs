@@ -32,12 +32,12 @@ internal class InMemoryAuthorPersistence : ICreateAuthorPort, ISearchAuthorsPort
             authors = authors.Where(author =>
                 author.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 
-        List<Author> results = authors.ToList();
+        var results = authors.ToList();
 
         return Task.FromResult(new SearchResult<Author>
         {
             Results = results,
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 TotalItems = results.Count,
                 PageIndex = pagination.PageIndex,

@@ -9,6 +9,3 @@ public class CreateBookSuggestionAdapter(IBookSuggestionAgent bookSuggestionAgen
         return bookSuggestionAgent.SuggestBooksAsync(prompt);
     }
 }
-
-
-

@@ -1,29 +1,34 @@
+using Aspire.Hosting.JavaScript;
+
 using LibraryManagement.AppHost.Extensions;
 
-var builder = DistributedApplication.CreateBuilder(args);
+using Projects;
 
-var postgresUser = builder.AddParameter("postgres-user", "postgres", publishValueAsDefault: true);
-var postgresPassword = builder.AddParameter("postgres-password", "postgres", publishValueAsDefault: false, secret: true);
+IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
-var rabbitUser = builder.AddParameter("rabbitmq-user", "guest", publishValueAsDefault: true);
-var rabbitPassword = builder.AddParameter("rabbitmq-password", "guest", publishValueAsDefault: false, secret: true);
+IResourceBuilder<ParameterResource> postgresUser = builder.AddParameter("postgres-user", "postgres", true);
+IResourceBuilder<ParameterResource> postgresPassword =
+    builder.AddParameter("postgres-password", "postgres", false, true);
 
-var mongo = builder.AddMongoDB("mongo")
+IResourceBuilder<ParameterResource> rabbitUser = builder.AddParameter("rabbitmq-user", "guest", true);
+IResourceBuilder<ParameterResource> rabbitPassword = builder.AddParameter("rabbitmq-password", "guest", false, true);
+
+IResourceBuilder<MongoDBServerResource> mongo = builder.AddMongoDB("mongo")
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
 
-var mongodb = mongo.AddDatabase("library-management-mongo");
+IResourceBuilder<MongoDBDatabaseResource> mongodb = mongo.AddDatabase("library-management-mongo");
 
 builder.AddRedis("redis")
     .WithDataVolume();
 
-var postgresService = builder
-    .AddPostgres("postgresService", postgresUser, postgresPassword, port: 5432)
+IResourceBuilder<PostgresServerResource> postgresService = builder
+    .AddPostgres("postgresService", postgresUser, postgresPassword, 5432)
     .WithDataVolume()
     .WithPgAdmin()
     .WithExternalHttpEndpoints();
 
-var postgresdb = postgresService
+IResourceBuilder<PostgresDatabaseResource> postgresdb = postgresService
     .AddDatabase("postgres", "library_dev")
     .WithCreateNewMigrationCommand()
     .WithRemoveMigrationCommand()
@@ -36,25 +41,25 @@ builder.AddRabbitMQ("rabbitmq", rabbitUser, rabbitPassword)
     .WithManagementPlugin()
     .WithExternalHttpEndpoints();
 
-var application = builder.AddProject<Projects.LibraryManagement_Application>("application")
+IResourceBuilder<ProjectResource> application = builder.AddProject<LibraryManagement_Application>("application")
     .WithReference(mongodb)
     .WithReference(postgresdb)
     .WaitFor(postgresdb)
     .WaitFor(mongodb)
-    .WithSwagger(path:"/dev-ui/swagger")
-    .WithRedoc(path:"/dev-ui/api-docs")
-    .WithScalar(path:"/dev-ui/scalar");
+    .WithSwagger(path: "/dev-ui/swagger")
+    .WithRedoc(path: "/dev-ui/api-docs")
+    .WithScalar(path: "/dev-ui/scalar");
 
-builder.AddProject<Projects.LibraryManagement_Persistence_Postgres_Seeders>("postgres-seeders")
+builder.AddProject<LibraryManagement_Persistence_Postgres_Seeders>("postgres-seeders")
     .WithExplicitStart()
     .WithReference(postgresdb)
     .WaitFor(postgresService);
 
-var reactClient = builder.AddViteApp("react-client", "../LibraryManagement.Web.React")
+IResourceBuilder<ViteAppResource> reactClient = builder.AddViteApp("react-client", "../LibraryManagement.Web.React")
     .WithReference(application)
     .WithGenerateApiClientCommand(application);
 
 
-var app = builder.Build();
+DistributedApplication app = builder.Build();
 
 app.Run();

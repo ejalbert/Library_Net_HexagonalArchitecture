@@ -1,4 +1,5 @@
 using LibraryManagement.Domain.Common.Searches;
+using LibraryManagement.Domain.Domains.Books;
 using LibraryManagement.Persistence.Postgres.DbContexts;
 using LibraryManagement.Persistence.Postgres.Domains.Books;
 using LibraryManagement.Persistence.Postgres.Domains.Books.Adapters;
@@ -24,8 +25,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
         SearchBooksAdapter adapter = new(context, new BookEntityMapper());
 
 
-
-        var results = await adapter.Search("harry", new Pagination(0, 10));
+        SearchResult<Book> results = await adapter.Search("harry", new Pagination(0, 10));
 
         Assert.Equal(7, results.Results.Count());
     }
@@ -36,7 +36,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
         await fixture.ResetDatabaseAsync();
         await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
-        var authorId = context.Authors.JkRowling.Id;
+        Guid authorId = context.Authors.JkRowling.Id;
 
         context.Books.AddRange(
             new BookEntity
@@ -64,7 +64,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
         SearchBooksAdapter adapter = new(context, new BookEntityMapper());
 
-        var results = await adapter.Search("Clean", new Pagination(0, 10));
+        SearchResult<Book> results = await adapter.Search("Clean", new Pagination(0, 10));
 
         Assert.Single(results.Results);
         Assert.Equal("Clean Code", results.Results.First().Title);
@@ -76,9 +76,9 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
         await fixture.ResetDatabaseAsync();
         await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
-        var authorId = context.Authors.JkRowling.Id;
+        Guid authorId = context.Authors.JkRowling.Id;
 
-        var books = Enumerable.Range(1, 12).Select(index => new BookEntity
+        IEnumerable<BookEntity> books = Enumerable.Range(1, 12).Select(index => new BookEntity
         {
             Title = $"Book {index:00}",
             AuthorId = authorId,
@@ -90,7 +90,7 @@ public class SearchBooksAdapterTests(PostgresDatabaseFixture fixture)
 
         SearchBooksAdapter adapter = new(context, new BookEntityMapper());
 
-        var results = await adapter.Search(null, new Pagination(0, 10));
+        SearchResult<Book> results = await adapter.Search(null, new Pagination(0, 10));
 
         Assert.Equal(10, results.Results.Count());
     }

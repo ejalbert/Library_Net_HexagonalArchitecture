@@ -17,16 +17,16 @@ public class SearchBooksAdapter(LibraryManagementDbContext context, IBookEntityM
 
         var count = context.Books.LongCount(filter);
 
-        var books = await context.Books
+        List<BookEntity> books = await context.Books
             .Include(b => b.Keywords)
             .Where(filter)
             .Skip(pagination.PageIndex * pagination.PageSize)
             .Take(pagination.PageSize).ToListAsync();
 
-        return new()
+        return new SearchResult<Book>
         {
             Results = books.Select(mapper.ToDomain),
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 PageIndex = pagination.PageIndex,
                 PageSize = pagination.PageSize,

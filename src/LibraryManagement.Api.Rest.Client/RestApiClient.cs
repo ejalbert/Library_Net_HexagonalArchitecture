@@ -14,12 +14,9 @@ public class RestApiClient : IRestAPiClient
         Uri? baseAddress = httpClient.BaseAddress;
         if (baseAddress == null) return httpClient;
 
-        string basePath = baseAddress.ToString().TrimEnd('/');
+        var basePath = baseAddress.ToString().TrimEnd('/');
 
-        if (!basePath.EndsWith("/api", StringComparison.OrdinalIgnoreCase))
-        {
-            basePath += "/api";
-        }
+        if (!basePath.EndsWith("/api", StringComparison.OrdinalIgnoreCase)) basePath += "/api";
 
         httpClient.BaseAddress = new Uri($"{basePath}/");
         return httpClient;

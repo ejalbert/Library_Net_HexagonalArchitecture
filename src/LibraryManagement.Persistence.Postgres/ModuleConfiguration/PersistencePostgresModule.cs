@@ -25,7 +25,7 @@ public static class PersistencePostgresModule
 
         moduleRegistrator.Services.AddOptions<PersistencePostgresModuleOptions>().Configure(options =>
         {
-            string? connectionString = moduleRegistrator.ConfigurationManager["ConnectionStrings:postgres"];
+            var connectionString = moduleRegistrator.ConfigurationManager["ConnectionStrings:postgres"];
             options.ConnectionString = connectionString ??
                                        optionsFromEnv.ConnectionString ??
                                        "Host=localhost;Port=5432;Database=library_dev;Username=postgres;Password=postgres";

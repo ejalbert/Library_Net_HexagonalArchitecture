@@ -19,16 +19,15 @@ public class CreateNewBookAdapterTests(PostgresDatabaseFixture fixture)
         await fixture.ResetDatabaseAsync();
 
 
-
         await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
         BookEntityMapper mapper = new();
         CreateNewBookAdapter adapter = new(mapper, context);
 
-        string authorId = context.Authors.JkRowling.Id.ToString();
+        var authorId = context.Authors.JkRowling.Id.ToString();
 
-        string title = "Test-Driven Development";
+        var title = "Test-Driven Development";
 
-        string description = "How to drive design with tests";
+        var description = "How to drive design with tests";
         IReadOnlyCollection<string> keywords = new[] { "tdd", "red-green-refactor" };
 
         Book created = await adapter.Create(title, authorId, description, keywords);

@@ -17,8 +17,10 @@ dotnet test tests/LibraryManagement.Persistence.Postgres.Tests/LibraryManagement
 
 ## Multitenancy Enforcement
 
-- The Postgres persistence tests must use separate `DbContext` instances, each with a different mock of `IGetCurrentUserTenantIdUseCase`, to insert/query entities for different tenants.
-- The EF Core interceptor always overrides `TenantId` on save, so tests must use context-specific mocks to simulate multiple tenants.
+- The Postgres persistence tests must use separate `DbContext` instances, each with a different mock of
+  `IGetCurrentUserTenantIdUseCase`, to insert/query entities for different tenants.
+- The EF Core interceptor always overrides `TenantId` on save, so tests must use context-specific mocks to simulate
+  multiple tenants.
 - See `docs/adr/0001-multitenancy-enforcement-and-testing.md` for rationale and details.
 
 Add concrete test cases before shipping new Postgres behaviours to keep the EF model and migrations trustworthy.

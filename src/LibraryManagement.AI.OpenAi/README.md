@@ -1,6 +1,7 @@
 # LibraryManagement.AI.OpenAi
 
-Infrastructure module that provides OpenAI-powered capabilities for the library domain. The module implements outbound ports for AI-driven features such as book suggestions and exposes chat tools for searching books and authors.
+Infrastructure module that provides OpenAI-powered capabilities for the library domain. The module implements outbound
+ports for AI-driven features such as book suggestions and exposes chat tools for searching books and authors.
 
 ## Key Capabilities
 
@@ -92,7 +93,8 @@ Note: Use double underscores (`__`) to represent nested configuration sections i
 
 #### Option 3: appsettings.Development.json (Local Only)
 
-Create a local `appsettings.Development.json` file that is ignored by git (ensure `.gitignore` includes `appsettings.Development.json` with sensitive data):
+Create a local `appsettings.Development.json` file that is ignored by git (ensure `.gitignore` includes
+`appsettings.Development.json` with sensitive data):
 
 ```json
 {
@@ -103,7 +105,8 @@ Create a local `appsettings.Development.json` file that is ignored by git (ensur
 }
 ```
 
-**Important:** Ensure this file is in `.gitignore` if it contains real secrets. The current `.gitignore` includes `*.user` files but not development appsettings by default.
+**Important:** Ensure this file is in `.gitignore` if it contains real secrets. The current `.gitignore` includes
+`*.user` files but not development appsettings by default.
 
 #### Option 4: .env Files
 

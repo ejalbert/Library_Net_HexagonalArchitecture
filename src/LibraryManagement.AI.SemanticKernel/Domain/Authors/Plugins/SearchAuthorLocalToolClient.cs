@@ -7,8 +7,10 @@ namespace LibraryManagement.AI.SemanticKernel.Domain.Authors.Plugins;
 
 public class SearchAuthorLocalToolClient(ILocalToolClient localToolClient) : ISearchAuthorLocalToolClient
 {
-    public Task<SearchAuthorsResponseDto> SearchAuthorsAsync(string searchTerm, Pagination pagination, CancellationToken cancellationToken = default)
+    public Task<SearchAuthorsResponseDto> SearchAuthorsAsync(string searchTerm, Pagination pagination,
+        CancellationToken cancellationToken = default)
     {
-        return localToolClient.SendAsync<SearchAuthorsResponseDto>(SearchAuthorsTool.ToolName, searchTerm, pagination.PageIndex, pagination.PageSize, cancellationToken);
+        return localToolClient.SendAsync<SearchAuthorsResponseDto>(SearchAuthorsTool.ToolName, searchTerm,
+            pagination.PageIndex, pagination.PageSize, cancellationToken);
     }
 }

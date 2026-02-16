@@ -6,10 +6,9 @@ namespace LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 
 public static class RestApiClientModule
 {
-
-
     public static IServiceCollection AddRestApiHttpClient<TConfigurationManager>(this IServiceCollection services,
-        TConfigurationManager configurationManager, Action<RestApiClientModuleOptions>? configureOptions = null, Action<IHttpClientBuilder>? configureClient = null)
+        TConfigurationManager configurationManager, Action<RestApiClientModuleOptions>? configureOptions = null,
+        Action<IHttpClientBuilder>? configureClient = null)
         where TConfigurationManager : IConfiguration, IConfigurationBuilder
     {
         RestApiClientEnvConfiguration optionsFromEnv = new();
@@ -17,31 +16,26 @@ public static class RestApiClientModule
 
         services.AddOptions<RestApiClientModuleOptions>().Configure(options =>
         {
-            string basePath = optionsFromEnv.BasePath ?? "http://localhost:5007";
+            var basePath = optionsFromEnv.BasePath ?? "http://localhost:5007";
 
             basePath = basePath.TrimEnd('/');
-            if (!basePath.EndsWith("/api", StringComparison.OrdinalIgnoreCase))
-            {
-                basePath += "/api";
-            }
+            if (!basePath.EndsWith("/api", StringComparison.OrdinalIgnoreCase)) basePath += "/api";
 
             options.BasePath = $"{basePath}/";
         });
 
         if (configureOptions != null) services.Configure(configureOptions);
 
-        var httpClientBuilder = services.AddHttpClient<IRestAPiClient, RestApiClient>((serviceProvider, client) =>
-        {
-            RestApiClientModuleOptions options =
-                serviceProvider.GetRequiredService<IOptions<RestApiClientModuleOptions>>().Value;
+        IHttpClientBuilder httpClientBuilder =
+            services.AddHttpClient<IRestAPiClient, RestApiClient>((serviceProvider, client) =>
+            {
+                RestApiClientModuleOptions options =
+                    serviceProvider.GetRequiredService<IOptions<RestApiClientModuleOptions>>().Value;
 
-            client.BaseAddress = new Uri(options.BasePath);
-        });
+                client.BaseAddress = new Uri(options.BasePath);
+            });
 
-        if (configureClient != null)
-        {
-            configureClient(httpClientBuilder);
-        }
+        if (configureClient != null) configureClient(httpClientBuilder);
 
         return services;
     }

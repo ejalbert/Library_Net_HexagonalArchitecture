@@ -104,7 +104,7 @@ public sealed class BookAdaptersIntegrationTests(MongoDbContainerFixture fixture
 
         SearchBooksAdapter adapter = new(GetBookCollection(), _mapper);
 
-        var results = await adapter.Search("ing", new Pagination(0, 10));
+        SearchResult<Book> results = await adapter.Search("ing", new Pagination(0, 10));
 
         var titles = results.Results.Select(book => book.Title).ToList();
 

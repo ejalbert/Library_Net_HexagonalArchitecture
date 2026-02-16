@@ -8,7 +8,7 @@ using Microsoft.SemanticKernel;
 
 namespace LibraryManagement.AI.SemanticKernel.Domain.Books.Plugins;
 
-public class SearchBooksPlugin(ISearchBooksUseCase searchBooksUseCase): ISearchBooksPlugin
+public class SearchBooksPlugin(ISearchBooksUseCase searchBooksUseCase) : ISearchBooksPlugin
 {
     [KernelFunction("search_books")]
     [Description("""
@@ -21,6 +21,6 @@ public class SearchBooksPlugin(ISearchBooksUseCase searchBooksUseCase): ISearchB
         [Description("The term to search for books. Typically a name or part of a name. can be empty to get all books")]
         string searchTerm, Pagination pagination)
     {
-        return searchBooksUseCase.Search(new(searchTerm, pagination));
+        return searchBooksUseCase.Search(new SearchBooksCommand(searchTerm, pagination));
     }
 }

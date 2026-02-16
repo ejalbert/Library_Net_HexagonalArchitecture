@@ -1,13 +1,15 @@
 using LibraryManagement.Domain.Infrastructure.Tenants.GetCurrentUserTenantId;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 
 public interface IMultitenantSaveChangesInterceptor : ISaveChangesInterceptor;
 
-public class MultitenantSaveChangesInterceptor(IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase) : SaveChangesInterceptor, IMultitenantSaveChangesInterceptor
+public class MultitenantSaveChangesInterceptor(IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
+    : SaveChangesInterceptor, IMultitenantSaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
@@ -15,8 +17,9 @@ public class MultitenantSaveChangesInterceptor(IGetCurrentUserTenantIdUseCase ge
         return base.SavingChanges(eventData, result);
     }
 
-    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result,
-        CancellationToken cancellationToken = new CancellationToken())
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = new())
     {
         ApplyTenant(eventData.Context);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
@@ -26,10 +29,9 @@ public class MultitenantSaveChangesInterceptor(IGetCurrentUserTenantIdUseCase ge
     {
         if (context is null) return;
 
-        var tenantId = Guid.Parse(getCurrentUserTenantIdUseCase.GetTenantId(new()));
+        var tenantId = Guid.Parse(getCurrentUserTenantIdUseCase.GetTenantId(new GetCurrentUserTenantIdCommand()));
 
-        foreach (var entry in context.ChangeTracker.Entries<IMultitenantEntity>())
-        {
+        foreach (EntityEntry<IMultitenantEntity> entry in context.ChangeTracker.Entries<IMultitenantEntity>())
             switch (entry.State)
             {
                 case EntityState.Added:
@@ -41,13 +43,9 @@ public class MultitenantSaveChangesInterceptor(IGetCurrentUserTenantIdUseCase ge
                 case EntityState.Deleted:
                     // Optional: forbid cross-tenant tampering
                     if (entry.Entity.TenantId != tenantId)
-                    {
                         throw new InvalidOperationException(
                             $"Cross-tenant modification detected for {entry.Metadata.Name}.");
-                    }
                     break;
             }
-        }
     }
-
 }

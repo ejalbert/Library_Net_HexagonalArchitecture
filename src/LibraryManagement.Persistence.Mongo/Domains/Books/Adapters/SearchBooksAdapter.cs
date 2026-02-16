@@ -21,10 +21,10 @@ public class SearchBooksAdapter(IBookCollection bookCollection, IBookEntityMappe
         IAsyncCursor<BookEntity>? searchRequest = await bookCollection.Collection.FindAsync(filter
             , new FindOptions<BookEntity> { Skip = 0, Limit = 10 });
 
-        return new()
+        return new SearchResult<Book>
         {
             Results = searchRequest.ToEnumerable().Select(mapper.ToDomain).ToList(),
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 PageIndex = pagination.PageIndex,
                 PageSize = pagination.PageSize,

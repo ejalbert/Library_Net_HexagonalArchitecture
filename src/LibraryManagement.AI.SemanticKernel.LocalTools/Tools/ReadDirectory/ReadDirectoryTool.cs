@@ -10,7 +10,7 @@ public class ReadDirectoryTool(HubConnection connection) : LocalToolBase(connect
     {
         Connection.On<string, string>(ToolName, async (corellationId, directoryPath) =>
         {
-            var entries = await ReadDirectoryAsync(directoryPath);
+            IEnumerable<DirectoryEntry> entries = await ReadDirectoryAsync(directoryPath);
             await SendToolResponseAsync(corellationId, ToolName, entries);
         });
 
@@ -19,27 +19,23 @@ public class ReadDirectoryTool(HubConnection connection) : LocalToolBase(connect
 
     public override Task UnregisterAsync(CancellationToken cancellationToken = default)
     {
-      Connection.Remove(ToolName);
+        Connection.Remove(ToolName);
 
-      return Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     private Task<IEnumerable<DirectoryEntry>> ReadDirectoryAsync(string? path)
     {
         ArgumentNullException.ThrowIfNull(path);
 
-        if (!Directory.Exists(path))
-        {
-            throw new DirectoryNotFoundException($"The directory '{path}' does not exist.");
-        }
+        if (!Directory.Exists(path)) throw new DirectoryNotFoundException($"The directory '{path}' does not exist.");
 
-        var entries = Directory.EnumerateFileSystemEntries(path)
-            .Select(entry => new DirectoryEntry(Path.GetFileName(entry), Directory.Exists(entry) ? "Directory" : "File"));
+        IEnumerable<DirectoryEntry> entries = Directory.EnumerateFileSystemEntries(path)
+            .Select(entry =>
+                new DirectoryEntry(Path.GetFileName(entry), Directory.Exists(entry) ? "Directory" : "File"));
 
         return Task.FromResult(entries);
     }
 
     private record DirectoryEntry(string Name, string Type);
 }
-
-

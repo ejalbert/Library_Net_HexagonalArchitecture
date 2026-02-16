@@ -1,4 +1,5 @@
 using LibraryManagement.Domain.Common.Searches;
+using LibraryManagement.Domain.Domains.Authors;
 using LibraryManagement.Persistence.Mongo.Domains.Authors;
 using LibraryManagement.Persistence.Mongo.Domains.Authors.Adapters;
 using LibraryManagement.Persistence.Mongo.Tests.Infrastructure;
@@ -23,10 +24,10 @@ public class SearchAuthorsAdapterTests
 
         SearchAuthorsAdapter adapter = BuildAdapter(seededAuthors, out _);
 
-        SearchResult<LibraryManagement.Domain.Domains.Authors.Author> results =
+        SearchResult<Author> results =
             await adapter.Search("George", new Pagination(0, 10));
 
-        var author = Assert.Single(results.Results);
+        Author author = Assert.Single(results.Results);
         Assert.Equal("George Martin", author.Name);
     }
 
@@ -41,7 +42,7 @@ public class SearchAuthorsAdapterTests
         FindOptions<AuthorEntity, AuthorEntity>? usedOptions = null;
         SearchAuthorsAdapter adapter = BuildAdapter(seededAuthors, out _, options => usedOptions = options);
 
-        SearchResult<LibraryManagement.Domain.Domains.Authors.Author> results =
+        SearchResult<Author> results =
             await adapter.Search(null, new Pagination(0, 10));
 
         Assert.Equal(10, results.Results.Count());
@@ -71,7 +72,8 @@ public class SearchAuthorsAdapterTests
                 if (options?.Skip is { } skip) filtered = filtered.Skip(skip);
                 if (options?.Limit is int limit) filtered = filtered.Take(limit);
 
-                return Task.FromResult<IAsyncCursor<AuthorEntity>>(new AsyncCursorStub<AuthorEntity>(filtered.ToList()));
+                return Task.FromResult<IAsyncCursor<AuthorEntity>>(
+                    new AsyncCursorStub<AuthorEntity>(filtered.ToList()));
             });
 
         Mock<IAuthorCollection> authorCollectionMock = new();

@@ -10,8 +10,6 @@ internal static class AiServiceRegistration
     {
         internal IServiceCollection AddAiServices()
         {
-
-
             return services.AddBookSuggestionServices();
         }
     }

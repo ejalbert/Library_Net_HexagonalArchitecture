@@ -67,16 +67,6 @@ internal class InMemoryBookPersistence :
         return Task.FromResult(updated);
     }
 
-    public void Seed(params Book[] books)
-    {
-        foreach (Book book in books) _books[book.Id] = book;
-    }
-
-    public void Reset()
-    {
-        _books.Clear();
-    }
-
     public Task<SearchResult<Book>> Search(string? searchTerm, Pagination pagination)
     {
         IEnumerable<Book> books = _books.Values;
@@ -87,15 +77,25 @@ internal class InMemoryBookPersistence :
 
         var results = books.ToList();
 
-        return Task.FromResult(new SearchResult<Book>()
+        return Task.FromResult(new SearchResult<Book>
         {
             Results = results,
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 TotalItems = results.Count,
                 PageIndex = pagination.PageIndex,
                 PageSize = pagination.PageSize
             }
         });
+    }
+
+    public void Seed(params Book[] books)
+    {
+        foreach (Book book in books) _books[book.Id] = book;
+    }
+
+    public void Reset()
+    {
+        _books.Clear();
     }
 }

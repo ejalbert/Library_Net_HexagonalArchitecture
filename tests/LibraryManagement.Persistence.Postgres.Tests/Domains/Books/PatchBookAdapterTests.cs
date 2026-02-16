@@ -20,7 +20,7 @@ public class PatchBookAdapterTests(PostgresDatabaseFixture fixture)
 
         await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
-        var authorId = context.Authors.JkRowling.Id;
+        Guid authorId = context.Authors.JkRowling.Id;
 
         BookEntity entity = new()
         {

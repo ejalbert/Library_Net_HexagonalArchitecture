@@ -31,7 +31,7 @@ public class SearchAuthorsControllerTests
             .ReturnsAsync(new SearchResult<Author>
             {
                 Results = new[] { authorOne, authorTwo },
-                Pagination = new() { TotalItems = 2, PageIndex = 0, PageSize = 10 }
+                Pagination = new PaginationInfo { TotalItems = 2, PageIndex = 0, PageSize = 10 }
             });
         Mock<IAuthorDtoMapper> mapperMock = new();
         mapperMock.Setup(x => x.ToDto(authorOne)).Returns(responseDtoOne);
@@ -50,7 +50,8 @@ public class SearchAuthorsControllerTests
             dto => Assert.Same(responseDtoOne, dto),
             dto => Assert.Same(responseDtoTwo, dto));
         useCaseMock.Verify(
-            x => x.Search(It.Is<SearchAuthorsCommand>(command => command == new SearchAuthorsCommand(request.SearchTerm, null))),
+            x => x.Search(It.Is<SearchAuthorsCommand>(command =>
+                command == new SearchAuthorsCommand(request.SearchTerm, null))),
             Times.Once);
         mapperMock.Verify(x => x.ToDto(authorOne), Times.Once);
         mapperMock.Verify(x => x.ToDto(authorTwo), Times.Once);

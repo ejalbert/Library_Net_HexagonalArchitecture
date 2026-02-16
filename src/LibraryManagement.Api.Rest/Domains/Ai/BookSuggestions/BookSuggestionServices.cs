@@ -16,8 +16,6 @@ internal static class BookSuggestionServices
     {
         internal IServiceCollection AddBookSuggestionServices()
         {
-
-
             return services.AddScoped<ICreateBookSuggestionController, CreateBookSuggestionController>();
         }
     }
@@ -26,7 +24,8 @@ internal static class BookSuggestionServices
     {
         internal WebApplication UseBookSuggestionServices()
         {
-            RouteGroupBuilder group = app.MapGroup("/api/v1/ai").MapGroup("/book-suggestions").WithTags("Book Suggestions");
+            RouteGroupBuilder group = app.MapGroup("/api/v1/ai").MapGroup("/book-suggestions")
+                .WithTags("Book Suggestions");
 
             group.MapPost("",
                     ([FromBody] CreateBookSuggestionRequestDto request, ICreateBookSuggestionController controller) =>

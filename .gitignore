@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+# Local generated packages (TypeScript .tgz and C# .nupkg)
+local-libraries/
+
 # IDE directories
 .idea/
 .vscode/

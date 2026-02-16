@@ -1,5 +1,6 @@
 using LibraryManagement.Api.Rest.Client;
 using LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions;
+using LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions.Create;
 using LibraryManagement.Api.Rest.Client.Domain.Books;
 using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
 
@@ -11,7 +12,7 @@ public partial class Home(IRestAPiClient restApiClient)
 
     private string BookSuggestionInput { get; set; } = string.Empty;
     private string BookSuggestionResult { get; set; } = string.Empty;
-    private bool IsLoadingSuggestions { get; set; } = false;
+    private bool IsLoadingSuggestions { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,7 +31,8 @@ public partial class Home(IRestAPiClient restApiClient)
 
         StateHasChanged();
 
-        var response = await restApiClient.BookSuggestions.GetBookSuggestion(BookSuggestionInput);
+        CreateBookSuggestionResponseDto response =
+            await restApiClient.BookSuggestions.GetBookSuggestion(BookSuggestionInput);
 
         BookSuggestionResult = response.Suggestion;
         IsLoadingSuggestions = false;

@@ -1,16 +1,16 @@
-.home-page{
-    .suggestion-panel{
+.home-page {
+    .suggestion-panel {
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 20px;
 
-        label{
+        label {
             display: flex;
             flex-direction: column;
             gap: 5px;
 
-            textarea{
+            textarea {
                 height: 150px;
             }
         }

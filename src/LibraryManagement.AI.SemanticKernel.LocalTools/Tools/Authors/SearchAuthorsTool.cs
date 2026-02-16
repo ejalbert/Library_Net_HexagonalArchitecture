@@ -1,4 +1,5 @@
 using LibraryManagement.Api.Rest.Client;
+using LibraryManagement.Api.Rest.Client.Common.Searches;
 using LibraryManagement.Api.Rest.Client.Domain.Authors;
 using LibraryManagement.Api.Rest.Client.Domain.Authors.Search;
 
@@ -8,10 +9,10 @@ namespace LibraryManagement.AI.SemanticKernel.LocalTools.Tools.Authors;
 
 public interface ISearchAuthorsTool : ILocalTool
 {
-
 }
 
-public class SearchAuthorsTool(HubConnection connection, IRestAPiClient client) : LocalToolBase(connection), ISearchAuthorsTool
+public class SearchAuthorsTool(HubConnection connection, IRestAPiClient client)
+    : LocalToolBase(connection), ISearchAuthorsTool
 {
     public const string ToolName = "search_authors";
 
@@ -19,7 +20,8 @@ public class SearchAuthorsTool(HubConnection connection, IRestAPiClient client) 
     {
         Connection.On<string, string, int, int>(ToolName, async (correlationId, searchTerm, pageIndex, pageSize) =>
         {
-            var result = await SearchAuthorsAsync(searchTerm, pageIndex, pageSize, cancellationToken);
+            SearchAuthorsResponseDto result =
+                await SearchAuthorsAsync(searchTerm, pageIndex, pageSize, cancellationToken);
 
             await SendToolResponseAsync(correlationId, ToolName, result);
         });
@@ -33,8 +35,10 @@ public class SearchAuthorsTool(HubConnection connection, IRestAPiClient client) 
         return Task.CompletedTask;
     }
 
-    private Task<SearchAuthorsResponseDto> SearchAuthorsAsync(string searchTerm,  int pageIndex, int pageSize, CancellationToken cancellationToken)
+    private Task<SearchAuthorsResponseDto> SearchAuthorsAsync(string searchTerm, int pageIndex, int pageSize,
+        CancellationToken cancellationToken)
     {
-        return client.Authors.Search(new SearchAuthorsRequestDto(searchTerm, new (pageIndex, pageSize)), cancellationToken);
+        return client.Authors.Search(new SearchAuthorsRequestDto(searchTerm, new PaginationDto(pageIndex, pageSize)),
+            cancellationToken);
     }
 }

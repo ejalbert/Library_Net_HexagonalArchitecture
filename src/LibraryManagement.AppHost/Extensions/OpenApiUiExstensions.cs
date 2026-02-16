@@ -6,23 +6,24 @@ namespace LibraryManagement.AppHost.Extensions;
 
 internal static class OpenApiUiExstensions
 {
-
-
     extension<T>(IResourceBuilder<T> builder) where T : IResourceWithEndpoints
     {
-        internal IResourceBuilder<T> WithSwagger(string name = "swagger-ui-docs", string displayName = "Swagger API Documentation", string path = "/swagger")
+        internal IResourceBuilder<T> WithSwagger(string name = "swagger-ui-docs",
+            string displayName = "Swagger API Documentation", string path = "/swagger")
         {
             return builder.WithOpenApiUi(name, displayName, path,
                 "Document", IconVariant.Filled);
         }
 
-        internal IResourceBuilder<T> WithRedoc(string name = "redoc-docs", string displayName = "ReDoc API Documentation", string path = "/api-docs")
+        internal IResourceBuilder<T> WithRedoc(string name = "redoc-docs",
+            string displayName = "ReDoc API Documentation", string path = "/api-docs")
         {
             return builder.WithOpenApiUi(name, displayName, path,
                 "Document", IconVariant.Filled);
         }
 
-        internal IResourceBuilder<T> WithScalar(string name = "scalar-docs", string displayName = "Scalar API Documentation", string path = "/scalar/v1")
+        internal IResourceBuilder<T> WithScalar(string name = "scalar-docs",
+            string displayName = "Scalar API Documentation", string path = "/scalar/v1")
         {
             return builder.WithOpenApiUi(name, displayName, path,
                 "Document", IconVariant.Filled);
@@ -31,15 +32,15 @@ internal static class OpenApiUiExstensions
         private IResourceBuilder<T> WithOpenApiUi(string name,
             string displayName, string path, string iconName, IconVariant iconVariant)
         {
-            return builder.WithCommand(name, displayName, executeCommand: _ =>
+            return builder.WithCommand(name, displayName, _ =>
             {
                 try
                 {
-                    var endpoint = builder.GetEndpoint("https");
+                    EndpointReference endpoint = builder.GetEndpoint("https");
 
-                    var url =  $"{endpoint.Url}{path}";
+                    var url = $"{endpoint.Url}{path}";
 
-                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true});
+                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
 
                     return Task.FromResult(new ExecuteCommandResult
                     {
@@ -48,13 +49,14 @@ internal static class OpenApiUiExstensions
                 }
                 catch (Exception ex)
                 {
-                    return Task.FromResult(new ExecuteCommandResult {Success = false, ErrorMessage = ex.ToString()});
+                    return Task.FromResult(new ExecuteCommandResult { Success = false, ErrorMessage = ex.ToString() });
                 }
-
-
-            }, new CommandOptions()
+            }, new CommandOptions
             {
-                UpdateState = context=>context.ResourceSnapshot.HealthStatus == HealthStatus.Healthy ? ResourceCommandState.Enabled : ResourceCommandState.Disabled,
+                UpdateState = context =>
+                    context.ResourceSnapshot.HealthStatus == HealthStatus.Healthy
+                        ? ResourceCommandState.Enabled
+                        : ResourceCommandState.Disabled,
                 IconName = iconName,
                 IconVariant = iconVariant
             });

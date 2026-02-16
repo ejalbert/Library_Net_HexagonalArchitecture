@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
-        <ProjectReference Include="..\..\LibraryManagement.ModuleBootstrapper.AspNetCore\LibraryManagement.ModuleBootstrapper.AspNetCore.csproj" />
-        <ProjectReference Include="..\LibraryManagement.Web.Client\LibraryManagement.Web.Client.csproj" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.3" />
+        <PackageReference Include="Riok.Mapperly" Version="4.3.1"/>
+        <ProjectReference Include="..\..\LibraryManagement.ModuleBootstrapper.AspNetCore\LibraryManagement.ModuleBootstrapper.AspNetCore.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Web.Client\LibraryManagement.Web.Client.csproj"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.3"/>
     </ItemGroup>
 
     <ItemGroup>

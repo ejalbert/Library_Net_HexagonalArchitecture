@@ -13,5 +13,4 @@ internal static class BookServiceRegistration
             return services.AddScoped<ISearchBooksPlugin, SearchBooksPlugin>();
         }
     }
-
 }

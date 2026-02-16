@@ -14,15 +14,19 @@ public interface ISingleUserPromptChatCompletion
     Task<string> ExecuteAsync(string initialContextPrompt, string userPrompt, params IDomainChatTool[] tools);
 }
 
-public class SingleUserPromptChatCompletion(ChatClient chatClient, ICreateAiConsumptionUseCase createAiConsumptionUseCase, ILogger<SingleUserPromptChatCompletion> logger) : ISingleUserPromptChatCompletion
+public class SingleUserPromptChatCompletion(
+    ChatClient chatClient,
+    ICreateAiConsumptionUseCase createAiConsumptionUseCase,
+    ILogger<SingleUserPromptChatCompletion> logger) : ISingleUserPromptChatCompletion
 {
     [Experimental("OPENAI001")]
-    public async Task<string> ExecuteAsync(string initialContextPrompt, string userPrompt, params IDomainChatTool[] tools)
+    public async Task<string> ExecuteAsync(string initialContextPrompt, string userPrompt,
+        params IDomainChatTool[] tools)
     {
         var toolMap = new Dictionary<string, IDomainChatTool>();
         var chatCompletionOptions = new ChatCompletionOptions();
 
-        foreach (var tool in tools)
+        foreach (IDomainChatTool tool in tools)
         {
             toolMap[tool.FunctionName] = tool;
             chatCompletionOptions.Tools.Add(tool.Tool);
@@ -49,14 +53,10 @@ public class SingleUserPromptChatCompletion(ChatClient chatClient, ICreateAiCons
                 ChatCompletion completion = await chatClient.CompleteChatAsync(conversation, chatCompletionOptions);
 
                 if (completion.Content.Count > 0)
-                {
                     foreach (ChatMessageContentPart chatMessageContentPart in completion.Content)
-                    {
                         logger.LogInformation("[Assistant]: {ContentPart}", chatMessageContentPart.Text);
-                    }
-                }
 
-                var usage = completion.Usage;
+                ChatTokenUsage? usage = completion.Usage;
 
                 inputTokens += usage.InputTokenCount;
                 outputTokes += usage.OutputTokenCount;
@@ -70,18 +70,12 @@ public class SingleUserPromptChatCompletion(ChatClient chatClient, ICreateAiCons
                     case ChatFinishReason.ToolCalls:
                         conversation.Add(new AssistantChatMessage(completion));
 
-                        foreach (var toolCall in completion.ToolCalls)
-                        {
-                            if (toolMap.TryGetValue(toolCall.FunctionName, out var tool))
-                            {
+                        foreach (ChatToolCall? toolCall in completion.ToolCalls)
+                            if (toolMap.TryGetValue(toolCall.FunctionName, out IDomainChatTool? tool))
                                 conversation.Add(new ToolChatMessage(toolCall.Id, await tool.InvokeAsync(toolCall)));
-                            }
                             else
-                            {
                                 conversation.Add(new ToolChatMessage(toolCall.Id,
                                     $"Error: Tool {toolCall.FunctionName} not found."));
-                            }
-                        }
 
                         requiresAction = true;
                         break;
@@ -98,7 +92,6 @@ public class SingleUserPromptChatCompletion(ChatClient chatClient, ICreateAiCons
                     default:
                         throw new Exception(completion.FinishReason.ToString());
                 }
-
             } while (requiresAction);
 
 
@@ -111,10 +104,13 @@ public class SingleUserPromptChatCompletion(ChatClient chatClient, ICreateAiCons
         }
         finally
         {
-            await createAiConsumptionUseCase.AddConsumptionAsync(new(inputTokens, outputTokes, totalTokens, chatClient.Model),
+            await createAiConsumptionUseCase.AddConsumptionAsync(
+                new CreateAiConsumptionCommand(inputTokens, outputTokes, totalTokens, chatClient.Model),
                 CancellationToken.None);
 
-            logger.LogInformation("Tokens used: Input={InputTokens}, Output={OutputTokes}, Total={TotalTokensComputed}, TotalReported={TotalTokensReported}", inputTokens, outputTokes, inputTokens + outputTokes, totalTokens);
+            logger.LogInformation(
+                "Tokens used: Input={InputTokens}, Output={OutputTokes}, Total={TotalTokensComputed}, TotalReported={TotalTokensReported}",
+                inputTokens, outputTokes, inputTokens + outputTokes, totalTokens);
         }
     }
 }

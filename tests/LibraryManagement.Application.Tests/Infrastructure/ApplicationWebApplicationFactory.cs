@@ -36,7 +36,8 @@ public class ApplicationWebApplicationFactory : WebApplicationFactory<Applicatio
             services.AddSingleton<InMemoryAuthorPersistence>();
             services.AddSingleton<InMemoryBookPersistence>();
             services.AddScoped<ICreateAuthorPort>(provider => provider.GetRequiredService<InMemoryAuthorPersistence>());
-            services.AddScoped<ISearchAuthorsPort>(provider => provider.GetRequiredService<InMemoryAuthorPersistence>());
+            services.AddScoped<ISearchAuthorsPort>(provider =>
+                provider.GetRequiredService<InMemoryAuthorPersistence>());
             services.AddScoped<ICreateNewBookPort>(ResolvePersistence);
             services.AddScoped<IDeleteBookPort>(ResolvePersistence);
             services.AddScoped<IGetSingleBookPort>(ResolvePersistence);

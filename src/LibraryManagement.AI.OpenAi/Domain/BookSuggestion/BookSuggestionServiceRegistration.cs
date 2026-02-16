@@ -11,7 +11,6 @@ internal static class BookSuggestionServiceRegistration
     {
         internal IServiceCollection AddBookSuggestionServices()
         {
-
             return services
                 .AddScoped<IBookSuggestionAgent, BookSuggestionAgent>()
                 .AddScoped<ICreateBookSuggestionPort, CreateBookSuggestionAdapter>();

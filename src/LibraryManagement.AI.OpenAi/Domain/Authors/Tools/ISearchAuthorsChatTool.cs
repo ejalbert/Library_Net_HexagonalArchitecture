@@ -4,5 +4,4 @@ namespace LibraryManagement.AI.OpenAi.Domain.Authors.Tools;
 
 public interface ISearchAuthorsChatTool : IDomainChatTool
 {
-
 }

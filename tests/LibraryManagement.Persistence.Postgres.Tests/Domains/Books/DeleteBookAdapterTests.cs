@@ -19,7 +19,7 @@ public class DeleteBookAdapterTests(PostgresDatabaseFixture fixture)
 
         await using LibraryManagementDbContext context = fixture.CreateDbContext().SeedAuthors();
 
-        Guid bookId = Guid.NewGuid();
+        var bookId = Guid.NewGuid();
         BookEntity entity = new()
         {
             Id = bookId,

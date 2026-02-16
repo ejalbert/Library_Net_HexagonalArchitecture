@@ -19,7 +19,7 @@ public class SearchAuthorsServiceTests
                 new Author { Id = "author-1", Name = "Kent Beck" },
                 new Author { Id = "author-2", Name = "Martin Fowler" }
             ],
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 TotalItems = 2,
                 PageIndex = 0,

@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper\LibraryManagement.ModuleBootstrapper.csproj" />
-        <ProjectReference Include="..\LibraryManagement.Persistence.Postgres\LibraryManagement.Persistence.Postgres.csproj" />
+        <ProjectReference Include="..\LibraryManagement.ModuleBootstrapper\LibraryManagement.ModuleBootstrapper.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Persistence.Postgres\LibraryManagement.Persistence.Postgres.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -17,11 +17,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+        <Folder Include="Migrations\"/>
     </ItemGroup>
 
 </Project>

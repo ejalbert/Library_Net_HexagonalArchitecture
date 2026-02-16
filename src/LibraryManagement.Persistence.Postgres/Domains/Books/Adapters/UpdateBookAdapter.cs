@@ -20,15 +20,13 @@ public class UpdateBookAdapter(IBookEntityMapper mapper, LibraryManagementDbCont
         entity.Description = description;
 
         entity.Keywords.Clear();
-        foreach (string keyword in keywords)
-        {
+        foreach (var keyword in keywords)
             entity.Keywords.Add(new BookKeywordEntity
             {
                 BookId = entity.Id,
                 Book = entity,
                 Keyword = keyword
             });
-        }
 
         await dbContext.SaveChangesAsync();
 

@@ -8,8 +8,7 @@ public class CreateAuthorAdapter(LibraryManagementDbContext context, IAuthorEnti
 {
     public async Task<Author> Create(string name)
     {
-
-        var author = new AuthorEntity()
+        var author = new AuthorEntity
         {
             Name = name
         };

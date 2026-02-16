@@ -23,11 +23,12 @@ public class SearchBooksServiceTests
                 },
                 new Book
                 {
-                    Id = "book-2", Title = "Domain-Driven Design", AuthorId = "author-2", Description = "DDD fundamentals",
+                    Id = "book-2", Title = "Domain-Driven Design", AuthorId = "author-2",
+                    Description = "DDD fundamentals",
                     Keywords = new[] { "ddd" }
                 }
             ],
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 TotalItems = 2,
                 PageIndex = 0,
@@ -40,7 +41,7 @@ public class SearchBooksServiceTests
 
         SearchBooksService service = new(portMock.Object);
 
-        var result = await service.Search(new SearchBooksCommand("code", new Pagination(0, 10)));
+        SearchResult<Book> result = await service.Search(new SearchBooksCommand("code", new Pagination(0, 10)));
 
         Assert.Same(expected, result);
         portMock.Verify(port => port.Search("code", new Pagination(0, 10)), Times.Once);

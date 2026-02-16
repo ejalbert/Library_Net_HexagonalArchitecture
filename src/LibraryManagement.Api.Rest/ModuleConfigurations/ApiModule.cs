@@ -72,11 +72,7 @@ public static class ApiModule
                 o.SpecUrl(openApiV1);
             });
 
-            app.MapScalarApiReference("dev-ui/scalar",o =>
-            {
-
-                o.WithOpenApiRoutePattern("/api/{documentName}.json");
-            });
+            app.MapScalarApiReference("dev-ui/scalar", o => { o.WithOpenApiRoutePattern("/api/{documentName}.json"); });
         }
 
         app.UseRouting();

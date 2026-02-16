@@ -11,7 +11,7 @@ public static class TenantSeeder
     {
         public TDbContext SeedTenants(IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
         {
-            var tenants = context.Set<TenantEntity>();
+            DbSet<TenantEntity> tenants = context.Set<TenantEntity>();
 
             if (tenants.Any())
             {

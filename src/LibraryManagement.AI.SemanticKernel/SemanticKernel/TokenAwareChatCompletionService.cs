@@ -15,21 +15,26 @@ using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
 namespace LibraryManagement.AI.SemanticKernel.SemanticKernel;
 
 public class TokenAwareChatCompletionService(
-    OpenAIChatCompletionService openAiChatCompletionService, ILogger<TokenAwareChatCompletionService> logger, ICreateAiConsumptionUseCase createAiConsumptionUseCase) : ITokenAwareChatCompletionService
+    OpenAIChatCompletionService openAiChatCompletionService,
+    ILogger<TokenAwareChatCompletionService> logger,
+    ICreateAiConsumptionUseCase createAiConsumptionUseCase) : ITokenAwareChatCompletionService
 {
     public IReadOnlyDictionary<string, object?> Attributes => openAiChatCompletionService.Attributes;
 
-    public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, PromptExecutionSettings? executionSettings = null,
+    public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory,
+        PromptExecutionSettings? executionSettings = null,
         Kernel? kernel = null, CancellationToken cancellationToken = new())
     {
-        var chatContents = await openAiChatCompletionService.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel, cancellationToken);
+        IReadOnlyList<ChatMessageContent> chatContents =
+            await openAiChatCompletionService.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel,
+                cancellationToken);
 
         long totalInputTokens = 0;
         long totalOutputTokens = 0;
         long totalTokens = 0;
 
 
-        foreach (var item in chatContents)
+        foreach (ChatMessageContent item in chatContents)
         {
             if (item.InnerContent is ChatCompletion chatCompletion)
             {
@@ -38,20 +43,20 @@ public class TokenAwareChatCompletionService(
                 totalTokens += chatCompletion.Usage.TotalTokenCount;
             }
 
-            if (!string.IsNullOrWhiteSpace(item.Content))
-            {
-                logger.LogDebug(item.Content);
-            }
+            if (!string.IsNullOrWhiteSpace(item.Content)) logger.LogDebug(item.Content);
         }
 
-        await createAiConsumptionUseCase.AddConsumptionAsync(new(totalInputTokens, totalOutputTokens, totalTokens, openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
+        await createAiConsumptionUseCase.AddConsumptionAsync(
+            new CreateAiConsumptionCommand(totalInputTokens, totalOutputTokens, totalTokens,
+                openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
 
         return chatContents;
     }
 
-    public async IAsyncEnumerable<StreamingChatMessageContent> GetStreamingChatMessageContentsAsync(ChatHistory chatHistory,
+    public async IAsyncEnumerable<StreamingChatMessageContent> GetStreamingChatMessageContentsAsync(
+        ChatHistory chatHistory,
         PromptExecutionSettings? executionSettings = null, Kernel? kernel = null,
-        [EnumeratorCancellation]CancellationToken cancellationToken = new())
+        [EnumeratorCancellation] CancellationToken cancellationToken = new())
     {
         long totalInputTokens = 0;
         long totalOutputTokens = 0;
@@ -59,9 +64,10 @@ public class TokenAwareChatCompletionService(
 
         try
         {
-            await foreach (var item in openAiChatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory,
-                               executionSettings, kernel,
-                               cancellationToken))
+            await foreach (StreamingChatMessageContent item in openAiChatCompletionService
+                               .GetStreamingChatMessageContentsAsync(chatHistory,
+                                   executionSettings, kernel,
+                                   cancellationToken))
             {
                 if (item.InnerContent is ChatCompletion chatCompletion)
                 {
@@ -75,22 +81,26 @@ public class TokenAwareChatCompletionService(
         }
         finally
         {
-            await createAiConsumptionUseCase.AddConsumptionAsync(new(totalInputTokens, totalOutputTokens, totalTokens, openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
+            await createAiConsumptionUseCase.AddConsumptionAsync(
+                new CreateAiConsumptionCommand(totalInputTokens, totalOutputTokens, totalTokens,
+                    openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
         }
-
     }
 
-    public async Task<IReadOnlyList<TextContent>> GetTextContentsAsync(string prompt, PromptExecutionSettings? executionSettings = null, Kernel? kernel = null,
-        CancellationToken cancellationToken = new CancellationToken())
+    public async Task<IReadOnlyList<TextContent>> GetTextContentsAsync(string prompt,
+        PromptExecutionSettings? executionSettings = null, Kernel? kernel = null,
+        CancellationToken cancellationToken = new())
     {
-        var chatContents = await openAiChatCompletionService.GetTextContentsAsync(prompt, executionSettings, kernel, cancellationToken);
+        IReadOnlyList<TextContent> chatContents =
+            await openAiChatCompletionService.GetTextContentsAsync(prompt, executionSettings, kernel,
+                cancellationToken);
 
         long totalInputTokens = 0;
         long totalOutputTokens = 0;
         long totalTokens = 0;
 
 
-        foreach (var item in chatContents)
+        foreach (TextContent item in chatContents)
         {
             if (item.InnerContent is ChatCompletion chatCompletion)
             {
@@ -99,19 +109,19 @@ public class TokenAwareChatCompletionService(
                 totalTokens += chatCompletion.Usage.TotalTokenCount;
             }
 
-            if (!string.IsNullOrWhiteSpace(item.Text))
-            {
-                logger.LogDebug(item.Text);
-            }
+            if (!string.IsNullOrWhiteSpace(item.Text)) logger.LogDebug(item.Text);
         }
 
-        await createAiConsumptionUseCase.AddConsumptionAsync(new(totalInputTokens, totalOutputTokens, totalTokens, openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
+        await createAiConsumptionUseCase.AddConsumptionAsync(
+            new CreateAiConsumptionCommand(totalInputTokens, totalOutputTokens, totalTokens,
+                openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
 
         return chatContents;
     }
 
-    public async IAsyncEnumerable<StreamingTextContent> GetStreamingTextContentsAsync(string prompt, PromptExecutionSettings? executionSettings = null,
-        Kernel? kernel = null, [EnumeratorCancellation]CancellationToken cancellationToken = new())
+    public async IAsyncEnumerable<StreamingTextContent> GetStreamingTextContentsAsync(string prompt,
+        PromptExecutionSettings? executionSettings = null,
+        Kernel? kernel = null, [EnumeratorCancellation] CancellationToken cancellationToken = new())
     {
         long totalInputTokens = 0;
         long totalOutputTokens = 0;
@@ -119,7 +129,8 @@ public class TokenAwareChatCompletionService(
 
         try
         {
-            await foreach (var item in openAiChatCompletionService.GetStreamingTextContentsAsync(prompt, executionSettings, kernel,
+            await foreach (StreamingTextContent item in openAiChatCompletionService.GetStreamingTextContentsAsync(
+                               prompt, executionSettings, kernel,
                                cancellationToken))
             {
                 if (item.InnerContent is ChatCompletion chatCompletion)
@@ -134,7 +145,9 @@ public class TokenAwareChatCompletionService(
         }
         finally
         {
-            await createAiConsumptionUseCase.AddConsumptionAsync(new(totalInputTokens, totalOutputTokens, totalTokens, openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
+            await createAiConsumptionUseCase.AddConsumptionAsync(
+                new CreateAiConsumptionCommand(totalInputTokens, totalOutputTokens, totalTokens,
+                    openAiChatCompletionService.GetModelId() ?? "unknown"), cancellationToken);
         }
     }
 }

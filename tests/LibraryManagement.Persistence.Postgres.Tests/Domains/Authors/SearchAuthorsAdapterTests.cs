@@ -32,7 +32,7 @@ public class SearchAuthorsAdapterTests(PostgresDatabaseFixture fixture)
         await fixture.ResetDatabaseAsync();
         await using LibraryManagementDbContext context = fixture.CreateDbContext();
 
-        var authors = Enumerable.Range(1, 12)
+        IEnumerable<AuthorEntity> authors = Enumerable.Range(1, 12)
             .Select(index => new AuthorEntity { Name = $"Author {index:00}" });
         context.Authors.AddRange(authors);
         await context.SaveChangesAsync();

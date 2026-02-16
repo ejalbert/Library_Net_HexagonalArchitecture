@@ -13,6 +13,8 @@ public sealed class MongoDbContainerFixture : IAsyncLifetime
 {
     private readonly MongoDbContainer _container;
 
+    private IMongoClient? _client;
+
     public MongoDbContainerFixture()
     {
         DockerApiCompatibility.EnsureDockerApiVersion();
@@ -22,8 +24,6 @@ public sealed class MongoDbContainerFixture : IAsyncLifetime
             .WithCleanUp(true)
             .Build();
     }
-
-    private IMongoClient? _client;
 
     public async Task InitializeAsync()
     {

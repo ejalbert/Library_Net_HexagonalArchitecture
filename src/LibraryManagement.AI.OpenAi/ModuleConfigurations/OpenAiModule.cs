@@ -35,7 +35,7 @@ public static class OpenAiModule
 
         moduleRegistrator.Services.AddSingleton<ChatClient>(sp =>
         {
-            var options = sp.GetRequiredService<IOptions<OpenAiModuleOptions>>().Value;
+            OpenAiModuleOptions options = sp.GetRequiredService<IOptions<OpenAiModuleOptions>>().Value;
 
             return new ChatClient(options.Model, new ApiKeyCredential(options.ApiKey));
         });

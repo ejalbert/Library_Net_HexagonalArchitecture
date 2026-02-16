@@ -17,23 +17,24 @@ public abstract class SearchChatToolBase<TResult>(string functionName, ChatTool 
 
         var hasSearchTerm =
             arguments.RootElement.TryGetProperty(nameof(SearchCommandBase.SearchTerm),
-                out var searchTermProperty);
+                out JsonElement searchTermProperty);
 
         var hasPagination =
             arguments.RootElement.TryGetProperty(nameof(SearchCommandBase.Pagination),
-                out var paginationProperty);
+                out JsonElement paginationProperty);
 
         var searchTerm = hasSearchTerm ? searchTermProperty.GetString() : null;
-        var pagination = hasPagination
+        Pagination? pagination = hasPagination
             ? new Pagination(
                 paginationProperty.GetProperty(nameof(Pagination.PageIndex)).GetInt32(),
                 paginationProperty.GetProperty(nameof(Pagination.PageSize)).GetInt32())
             : null;
 
-        var result = await ExecuteSearchAsync(searchTerm, pagination, arguments);
+        SearchResult<TResult> result = await ExecuteSearchAsync(searchTerm, pagination, arguments);
 
         return JsonSerializer.Serialize(result);
     }
 
-    protected abstract Task<SearchResult<TResult>> ExecuteSearchAsync(string? searchTerm, Pagination? pagination, JsonDocument arguments);
+    protected abstract Task<SearchResult<TResult>> ExecuteSearchAsync(string? searchTerm, Pagination? pagination,
+        JsonDocument arguments);
 }

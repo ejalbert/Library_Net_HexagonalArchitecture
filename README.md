@@ -103,6 +103,7 @@ dotnet test tests/LibraryManagement.Application.Tests/LibraryManagement.Applicat
 - MongoDB 7 (local instance or container) for manual testing; automated tests run against Testcontainers.
 - xUnit + FluentAssertions + Moq in most test projects; bUnit for component tests.
 - Mapperly generates DTO/entity mappers inside Domain and Persistence projects.
+- Local NuGet feed (`NuGet.config`) registers `./local-libraries`, so place private `.nupkg`/`.tgz` artifacts there and run `dotnet nuget list source` if a restore cannot find them.
 
 ## Documentation
 

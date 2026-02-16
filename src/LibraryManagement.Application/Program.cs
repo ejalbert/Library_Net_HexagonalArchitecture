@@ -6,6 +6,7 @@ using LibraryManagement.ModuleBootstrapper.AspNetCore.ModuleConfigurators;
 using LibraryManagement.ModuleBootstrapper.Extensions;
 using LibraryManagement.Persistence.Mongo.ModuleConfigurations;
 using LibraryManagement.Persistence.Postgres.ModuleConfiguration;
+using LibraryManagement.ServiceDefaults;
 using LibraryManagement.Web.ModuleConfigurations;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

@@ -2,5 +2,6 @@ namespace LibraryManagement.Domain.Domains.Ai.AiConsumptionTracking.CreateConsum
 
 public interface ICreateAiConsumptionPort
 {
-    Task AddConsumptionAsync(long inputTokens, long outputTokens, long totalTokens, string modelUsed, CancellationToken cancellationToken);
+    Task AddConsumptionAsync(long inputTokens, long outputTokens, long totalTokens, string modelUsed,
+        CancellationToken cancellationToken);
 }

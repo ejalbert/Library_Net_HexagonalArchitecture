@@ -4,22 +4,22 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-      <UserSecretsId>a4cd4563-7c7c-49c1-a2b6-068f67eed5a8</UserSecretsId>
-  </PropertyGroup>
+        <UserSecretsId>a4cd4563-7c7c-49c1-a2b6-068f67eed5a8</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="Dockerfile" />
+        <None Remove="Dockerfile"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LibraryManagement.AI.OpenAi\LibraryManagement.AI.OpenAi.csproj" />
-        <ProjectReference Include="..\LibraryManagement.AI.SemanticKernel\LibraryManagement.AI.SemanticKernel.csproj" />
-        <ProjectReference Include="..\LibraryManagement.Api.Rest\LibraryManagement.Api.Rest.csproj" />
-        <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
-        <ProjectReference Include="..\LibraryManagement.Persistence.Mongo\LibraryManagement.Persistence.Mongo.csproj" />
-        <ProjectReference Include="..\LibraryManagement.Persistence.Postgres\LibraryManagement.Persistence.Postgres.csproj" />
-        <ProjectReference Include="..\LibraryManagement.ServiceDefaults\LibraryManagement.ServiceDefaults.csproj" />
-        <ProjectReference Include="..\LibraryManagement.Web\LibraryManagement.Web\LibraryManagement.Web.csproj" />
+        <ProjectReference Include="..\LibraryManagement.AI.OpenAi\LibraryManagement.AI.OpenAi.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.AI.SemanticKernel\LibraryManagement.AI.SemanticKernel.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Api.Rest\LibraryManagement.Api.Rest.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Persistence.Mongo\LibraryManagement.Persistence.Mongo.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Persistence.Postgres\LibraryManagement.Persistence.Postgres.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.ServiceDefaults\LibraryManagement.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\LibraryManagement.Web\LibraryManagement.Web\LibraryManagement.Web.csproj"/>
     </ItemGroup>
 
 </Project>

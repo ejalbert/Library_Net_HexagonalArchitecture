@@ -10,7 +10,6 @@ public interface IAuthorEntityMapper
     AuthorEntity ToEntity(Author author);
 }
 
-
 [Mapper]
 public partial class AuthorEntityMapper : IAuthorEntityMapper
 {

@@ -10,19 +10,13 @@ public class GetSingleBookAdapter(LibraryManagementDbContext context, IBookEntit
 {
     public async Task<Book> GetById(string id)
     {
-        if (!Guid.TryParse(id, out Guid bookId))
-        {
-            throw new ArgumentException("Invalid book ID format.", nameof(id));
-        }
+        if (!Guid.TryParse(id, out Guid bookId)) throw new ArgumentException("Invalid book ID format.", nameof(id));
 
         BookEntity? book = await context.Books
             .Include(entity => entity.Keywords)
             .SingleOrDefaultAsync(entity => entity.Id == bookId);
 
-        if (book == null)
-        {
-            throw new InvalidOperationException($"Book with ID {id} not found.");
-        }
+        if (book == null) throw new InvalidOperationException($"Book with ID {id} not found.");
 
         return mapper.ToDomain(book);
     }

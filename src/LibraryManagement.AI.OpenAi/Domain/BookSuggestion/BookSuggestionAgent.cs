@@ -4,7 +4,10 @@ using LibraryManagement.AI.OpenAi.Domain.Common.Chat;
 
 namespace LibraryManagement.AI.OpenAi.Domain.BookSuggestion;
 
-public class BookSuggestionAgent(ISingleUserPromptChatCompletion singleUserPromptChatCompletion, ISearchBooksChatTool searchBooksChatTool, ISearchAuthorsChatTool searchAuthorsChatTool) : IBookSuggestionAgent
+public class BookSuggestionAgent(
+    ISingleUserPromptChatCompletion singleUserPromptChatCompletion,
+    ISearchBooksChatTool searchBooksChatTool,
+    ISearchAuthorsChatTool searchAuthorsChatTool) : IBookSuggestionAgent
 {
     public Task<string> SuggestBooksAsync(string userPrompt, CancellationToken cancellationToken = default)
     {

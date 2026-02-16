@@ -10,14 +10,15 @@ public interface ICreateBookSuggestionController
     Task<IResult> CreateBookSuggestion(CreateBookSuggestionRequestDto request);
 }
 
-public class CreateBookSuggestionController(ICreateBookSuggestionUseCase createBookSuggestionUseCase) : ICreateBookSuggestionController
+public class CreateBookSuggestionController(ICreateBookSuggestionUseCase createBookSuggestionUseCase)
+    : ICreateBookSuggestionController
 {
     public async Task<IResult> CreateBookSuggestion(CreateBookSuggestionRequestDto request)
     {
         var command = new CreateBookSuggestionCommand(request.Prompt);
 
 
-        string suggestion = await createBookSuggestionUseCase.SuggestAsync(command);
+        var suggestion = await createBookSuggestionUseCase.SuggestAsync(command);
 
         return Results.Ok(new CreateBookSuggestionResponseDto(suggestion));
     }

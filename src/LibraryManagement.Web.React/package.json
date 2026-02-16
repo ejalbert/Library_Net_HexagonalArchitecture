@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "axios": "^1.13.5",
-    "library-management-api-rest-client-generator": "file:library-management-api-rest-client-generator-0.0.1.tgz",
+    "library-management-api-rest-client-generator": "file:../../local-libraries/library-management-api-rest-client-generator-1.0.0.tgz",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

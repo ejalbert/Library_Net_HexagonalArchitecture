@@ -13,5 +13,4 @@ internal static class TenantServiceRegistration
             .AddHttpContextAccessor()
             .AddScoped<IGetCurrentUserTenantIdPort, GetCurrentUserTenantIdAdapter>();
     }
-
 }

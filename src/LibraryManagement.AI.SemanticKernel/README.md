@@ -1,11 +1,13 @@
 # LibraryManagement.AI.SemanticKernel
 
-Semantic Kernel–powered AI adapter that wires book suggestion prompts and function-calling plugins (books/authors search) into the domain. Registers chat completion services and bridges the `ICreateBookSuggestionPort` to an SK agent.
+Semantic Kernel–powered AI adapter that wires book suggestion prompts and function-calling plugins (books/authors
+search) into the domain. Registers chat completion services and bridges the `ICreateBookSuggestionPort` to an SK agent.
 
 ## Purpose
 
 - Provide a Semantic Kernel implementation for AI-driven book suggestions using OpenAI chat completions.
-- Expose SK plugins for searching books and authors via existing domain use cases so agents can ground responses in catalog data.
+- Expose SK plugins for searching books and authors via existing domain use cases so agents can ground responses in
+  catalog data.
 - Register chat completion services (token-aware wrapper + OpenAI connector) through the module bootstrapper.
 
 ## Dependencies
@@ -38,20 +40,23 @@ dotnet build
 
 ## Tests
 
-- No dedicated test project yet; add `{Project}.Tests` alongside this project to cover BookSuggestionAgent behaviour, plugin wiring, and option binding.
+- No dedicated test project yet; add `{Project}.Tests` alongside this project to cover BookSuggestionAgent behaviour,
+  plugin wiring, and option binding.
 
 ## Integration Points
 
 - Implements `ICreateBookSuggestionPort` via `CreateBookSuggestionAdapter` backed by `BookSuggestionAgent`.
 - Registers SK plugins: `search_books` (uses `ISearchBooksUseCase`) and `search_authors` (uses `ISearchAuthorsUseCase`).
-- Hosts obtain services through `AddSemanticKernelModule()`; also registers `IChatCompletionService` using the token-aware wrapper.
+- Hosts obtain services through `AddSemanticKernelModule()`; also registers `IChatCompletionService` using the
+  token-aware wrapper.
 
 ## Environment & Configuration
 
 - Reads `OpenAi` configuration section:
-  - `OpenAi:ApiKey` — required for chat completions (use user-secrets or env vars, never commit).
-  - `OpenAi:Model` — model id, defaults to `gpt-4.1-nano` when unset.
-- Options are bound inside `SemanticKernelModule`; you can override via the `configureOptions` delegate on `AddSemanticKernelModule(...)`.
+    - `OpenAi:ApiKey` — required for chat completions (use user-secrets or env vars, never commit).
+    - `OpenAi:Model` — model id, defaults to `gpt-4.1-nano` when unset.
+- Options are bound inside `SemanticKernelModule`; you can override via the `configureOptions` delegate on
+  `AddSemanticKernelModule(...)`.
 
 ## Related Documentation
 

@@ -15,7 +15,7 @@ public class PatchBookAdapter(IBookEntityMapper mapper, LibraryManagementDbConte
 
         if (entity is null) throw new InvalidOperationException($"Book '{id}' was not found.");
 
-        bool hasUpdates = false;
+        var hasUpdates = false;
 
         if (title is not null)
         {
@@ -38,15 +38,13 @@ public class PatchBookAdapter(IBookEntityMapper mapper, LibraryManagementDbConte
         if (keywords is not null)
         {
             entity.Keywords.Clear();
-            foreach (string keyword in keywords)
-            {
+            foreach (var keyword in keywords)
                 entity.Keywords.Add(new BookKeywordEntity
                 {
                     BookId = entity.Id,
                     Book = entity,
                     Keyword = keyword
                 });
-            }
 
             hasUpdates = true;
         }

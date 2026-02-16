@@ -31,6 +31,4 @@ internal static class BookSuggestionServiceRegistration
             return services;
         }
     }
-
-
 }

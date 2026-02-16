@@ -13,10 +13,10 @@ public class SearchAuthorsAdapter(LibraryManagementDbContext context, IAuthorEnt
 {
     public async Task<SearchResult<Author>> Search(string? searchTerm, Pagination pagination)
     {
-        string term = searchTerm ?? string.Empty;
+        var term = searchTerm ?? string.Empty;
         Expression<Func<AuthorEntity, bool>> filter = author => EF.Functions.ILike(author.Name, $"%{term}%");
 
-        long count = await context.Authors.LongCountAsync(filter);
+        var count = await context.Authors.LongCountAsync(filter);
 
         List<AuthorEntity> authors = await context.Authors
             .Where(filter)
@@ -27,7 +27,7 @@ public class SearchAuthorsAdapter(LibraryManagementDbContext context, IAuthorEnt
         return new SearchResult<Author>
         {
             Results = authors.Select(mapper.ToDomain),
-            Pagination = new()
+            Pagination = new PaginationInfo
             {
                 PageIndex = pagination.PageIndex,
                 PageSize = pagination.PageSize,

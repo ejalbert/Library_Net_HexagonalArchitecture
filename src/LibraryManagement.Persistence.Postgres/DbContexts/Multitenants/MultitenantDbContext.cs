@@ -5,18 +5,21 @@ using LibraryManagement.Persistence.Postgres.DbContexts.Multitenants.Domains.Ten
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LibraryManagement.Persistence.Postgres.DbContexts.Multitenants;
 
 public abstract class MultitenantDbContext : DbContext
 {
-    public DbSet<TenantEntity> Tenants { get; set; } = null!;
-
-    protected MultitenantDbContext(DbContextOptions options, IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
+    protected MultitenantDbContext(DbContextOptions options,
+        IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
         : base(options)
     {
-        CurrentTenantId = Guid.Parse(getCurrentUserTenantIdUseCase.GetTenantId(new()));
+        CurrentTenantId = Guid.Parse(getCurrentUserTenantIdUseCase.GetTenantId(new GetCurrentUserTenantIdCommand()));
     }
+
+    public DbSet<TenantEntity> Tenants { get; set; } = null!;
 
     internal Guid CurrentTenantId { get; }
 
@@ -32,11 +35,10 @@ public abstract class MultitenantDbContext : DbContext
 
         modelBuilder.ConfigureTenants();
 
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
+        foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
             if (typeof(IMultitenantEntity).IsAssignableFrom(entityType.ClrType))
             {
-                var typeBuilder = modelBuilder.Entity(entityType.ClrType);
+                EntityTypeBuilder typeBuilder = modelBuilder.Entity(entityType.ClrType);
 
 
                 typeBuilder.HasOne(nameof(IMultitenantEntity.Tenant))
@@ -44,17 +46,17 @@ public abstract class MultitenantDbContext : DbContext
                     .HasForeignKey(nameof(IMultitenantEntity.TenantId))
                     .IsRequired();
 
-                typeBuilder.HasQueryFilter("Filter by tenant", CreateTenantFilterExpression(entityType.ClrType, CurrentTenantId));
+                typeBuilder.HasQueryFilter("Filter by tenant",
+                    CreateTenantFilterExpression(entityType.ClrType, CurrentTenantId));
             }
-        }
     }
 
     private static LambdaExpression CreateTenantFilterExpression(Type entityType, Guid tenantId)
     {
-        var parameter = Expression.Parameter(entityType, "e");
-        var tenantIdProperty = Expression.Property(parameter, nameof(IMultitenantEntity.TenantId));
-        var currentTenantId = Expression.Constant(tenantId);
-        var equality = Expression.Equal(tenantIdProperty, currentTenantId);
+        ParameterExpression parameter = Expression.Parameter(entityType, "e");
+        MemberExpression tenantIdProperty = Expression.Property(parameter, nameof(IMultitenantEntity.TenantId));
+        ConstantExpression currentTenantId = Expression.Constant(tenantId);
+        BinaryExpression equality = Expression.Equal(tenantIdProperty, currentTenantId);
         return Expression.Lambda(equality, parameter);
     }
 }

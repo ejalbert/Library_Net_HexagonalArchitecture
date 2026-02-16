@@ -42,7 +42,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
         await _postgresContainer.StartAsync();
 
         int mappedPort = _postgresContainer.GetMappedPublicPort(5432);
-        string host = _postgresContainer.Hostname;
+        var host = _postgresContainer.Hostname;
 
         ConnectionString =
             $"Host={host};Port={mappedPort};Database=library_test;Username=postgres;Password=postgres";
@@ -54,7 +54,6 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
     {
         await _postgresContainer.DisposeAsync();
     }
-
 
 
     public LibraryManagementDbContext CreateDbContext(IGetCurrentUserTenantIdUseCase getCurrentUserTenantIdUseCase)
@@ -74,7 +73,8 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime
     public LibraryManagementDbContext CreateDbContext()
     {
         var useCaseMock = new Mock<IGetCurrentUserTenantIdUseCase>();
-        useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>())).Returns("11111111-2222-3333-4444-555555555555");
+        useCaseMock.Setup(uc => uc.GetTenantId(It.IsAny<GetCurrentUserTenantIdCommand>()))
+            .Returns("11111111-2222-3333-4444-555555555555");
 
         return CreateDbContext(useCaseMock.Object).SeedTenants(useCaseMock.Object);
     }
