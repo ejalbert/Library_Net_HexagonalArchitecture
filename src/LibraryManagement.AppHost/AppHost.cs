@@ -1,4 +1,3 @@
-using LibraryManagement.AppHost;
 using LibraryManagement.AppHost.Extensions;
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -51,7 +50,9 @@ builder.AddProject<Projects.LibraryManagement_Persistence_Postgres_Seeders>("pos
     .WithReference(postgresdb)
     .WaitFor(postgresService);
 
-builder.AddViteApp("react-client", "../LibraryManagement.Web.React").WithReference(application);
+var reactClient = builder.AddViteApp("react-client", "../LibraryManagement.Web.React")
+    .WithReference(application)
+    .WithGenerateApiClientCommand(application);
 
 
 var app = builder.Build();
