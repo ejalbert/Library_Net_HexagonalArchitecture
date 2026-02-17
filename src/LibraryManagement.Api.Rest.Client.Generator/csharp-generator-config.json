@@ -1,5 +1,5 @@
 {
-  "packageName": "LibraryManagement.Api.Rest.Client.Generated",
+  "packageName": "LibraryManagement.Api.Rest.Client",
   "packageTitle": "LibraryManagement REST API Client",
   "packageDescription": "Auto-generated C# client for the LibraryManagement REST API",
   "packageAuthors": "Etienne Jalbert",

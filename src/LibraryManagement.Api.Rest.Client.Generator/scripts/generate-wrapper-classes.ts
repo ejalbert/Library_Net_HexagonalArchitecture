@@ -349,6 +349,8 @@ function generateServiceCollectionExtensions(apis: ApiInfo[]): string {
 // Do not modify this file directly.
 // </auto-generated>
 
+#nullable enable
+
 using System;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -361,12 +363,12 @@ namespace LibraryManagement.Api.Rest.Client.Generated.Wrapper;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the REST API client to the service collection.
+    /// Adds the REST API HttpClient wrapper to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="configureClient">Optional action to configure the HttpClient.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddLibraryManagementRestApiClient(
+    public static IServiceCollection AddRestApiHttpClient(
         this IServiceCollection services,
         Action<HttpClient>? configureClient = null)
     {
@@ -382,32 +384,32 @@ ${interfaceRegistrations}
     }
 
     /// <summary>
-    /// Adds the REST API client to the service collection with a base address.
+    /// Adds the REST API HttpClient wrapper to the service collection with a base address.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="baseAddress">The base address of the API.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddLibraryManagementRestApiClient(
+    public static IServiceCollection AddRestApiHttpClient(
         this IServiceCollection services,
         string baseAddress)
     {
-        return services.AddLibraryManagementRestApiClient(client =>
+        return services.AddRestApiHttpClient(client =>
         {
             client.BaseAddress = new Uri(baseAddress);
         });
     }
 
     /// <summary>
-    /// Adds the REST API client to the service collection with a base URI.
+    /// Adds the REST API HttpClient wrapper to the service collection with a base URI.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="baseAddress">The base URI of the API.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddLibraryManagementRestApiClient(
+    public static IServiceCollection AddRestApiHttpClient(
         this IServiceCollection services,
         Uri baseAddress)
     {
-        return services.AddLibraryManagementRestApiClient(client =>
+        return services.AddRestApiHttpClient(client =>
         {
             client.BaseAddress = baseAddress;
         });
@@ -440,13 +442,23 @@ function patchCsprojFile(): void {
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />`;
 
-  // Find the last PackageReference and add after it
-  const lastPackageRefIndex = content.lastIndexOf('</PackageReference>');
-  if (lastPackageRefIndex !== -1) {
-    const insertPosition = lastPackageRefIndex + '</PackageReference>'.length;
+  // Find the last PackageReference and add after it (support self-closing tags)
+  const packageReferenceMatches = [...content.matchAll(/^[ \t]*<PackageReference\b[^>]*\/>/gm)];
+  if (packageReferenceMatches.length > 0) {
+    const lastMatch = packageReferenceMatches[packageReferenceMatches.length - 1];
+    const insertPosition = (lastMatch.index ?? 0) + lastMatch[0].length;
     content = content.slice(0, insertPosition) + packageReferencesToAdd + content.slice(insertPosition);
     fs.writeFileSync(csprojPath, content);
     console.log('  Added package references to csproj');
+    return;
+  }
+
+  // Fallback: insert into the first ItemGroup if no self-closing PackageReference lines were found
+  const firstItemGroupClose = content.indexOf('</ItemGroup>');
+  if (firstItemGroupClose !== -1) {
+    content = content.slice(0, firstItemGroupClose) + packageReferencesToAdd + content.slice(firstItemGroupClose);
+    fs.writeFileSync(csprojPath, content);
+    console.log('  Added package references to csproj (fallback ItemGroup insert)');
   }
 }
 

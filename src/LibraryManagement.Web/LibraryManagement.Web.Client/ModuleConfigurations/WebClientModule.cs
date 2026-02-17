@@ -1,3 +1,4 @@
+using LibraryManagement.Api.Rest.Client.Generated.Wrapper;
 using LibraryManagement.Api.Rest.Client.ModuleConfigurations;
 
 namespace LibraryManagement.Web.Client.ModuleConfigurations;

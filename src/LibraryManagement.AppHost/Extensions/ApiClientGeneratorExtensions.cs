@@ -49,7 +49,7 @@ internal static class ApiClientGeneratorExtensions
 
                     // Step 3: Build the TypeScript package
                     ExecuteCommandResult buildResult =
-                        await RunNpmCommand(generatorPath, "run build", context.CancellationToken);
+                        await RunNpmCommand(generatorPath, "run build:all", context.CancellationToken);
                     if (!buildResult.Success)
                         return buildResult;
 

@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <!-- Shared version for all projects in the solution -->
-        <LibraryManagementVersion>1.0.0.1</LibraryManagementVersion>
+        <LibraryManagementVersion>1.0.1</LibraryManagementVersion>
 
         <!-- Apply to all projects that want to use it -->
         <Version>$(LibraryManagementVersion)</Version>
