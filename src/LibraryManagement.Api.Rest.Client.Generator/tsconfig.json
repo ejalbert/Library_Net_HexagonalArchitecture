@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2018", // Modern ECMAScript target for better async/await support
+    "module": "esnext", // CommonJS modules for Node.js compatibility
+    "moduleResolution": "node",
+    "lib": ["es2018"], // Include ES2018 library for modern language features
+    "rootDir": "src", // Root directory of source files
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enables ES Modules compatibility
+
+    /* Advanced Options */
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in user's import paths
+
+    /* Additional Options for Library Development */
+    "composite": true, // Enable project compilation
+    "isolatedModules": true, // Ensure each file can be safely transpiled independently
+    "noEmitOnError": true, // Do not emit outputs if any errors were reported
+    "resolveJsonModule": true,
+    // output .d.ts declaration files for consumers
+    "declaration": true,
+    "declarationDir": "dist"
+  },
+  "include": [
+    "src/**/*" // Include all files in the src folder
+  ],
+  "exclude": [
+    "node_modules", // Exclude the node_modules directory
+    "lib" // Exclude the output directory
+  ]
+}

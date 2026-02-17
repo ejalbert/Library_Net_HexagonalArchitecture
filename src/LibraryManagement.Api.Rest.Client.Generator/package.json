@@ -1,0 +1,98 @@
+{
+  "type": "module",
+  "name": "library-management-api-rest-client-generator",
+  "version": "1.0.0.1",
+  "engines": {
+    "node": "20"
+  },
+  "description": "",
+  "main": "dist/index.cjs",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist && npm run codegen:ts",
+    "build": "rollup -c",
+    "prepare": "test -d node_modules/husky && husky install || echo \"husky is not installed\"",
+    "format": "prettier ./**/*.{ts*,js*,json} --write",
+    "format:check": "prettier ./**/*.{ts*,js*,json} --check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "download-moustache-template": "openapi-generator-cli author template -g typescript-axios -o scripts/openapi-generator-typescript-axios-templates",
+    "download-moustache-template:csharp": "openapi-generator-cli author template -g csharp -o scripts/openapi-generator-csharp-templates",
+    "retreive-openapi-spec": "npx tsx scripts/retreive-openapi-spec.ts",
+    "codegen-cleanup": "rimraf src",
+    "codegen-cleanup:csharp": "rimraf csharp-client",
+    "precodegen": "npm run codegen-cleanup",
+    "precodegen:ts": "npm run codegen-cleanup",
+    "precodegen:csharp": "npm run codegen-cleanup:csharp",
+    "codegen": "npm run codegen:ts && npm run codegen:csharp",
+    "codegen:ts": "npx tsx scripts/generate-typescript-client.ts",
+    "codegen:csharp": "npx tsx scripts/generate-csharp-client.ts",
+    "codegen:csharp-wrapper": "npx tsx scripts/generate-wrapper-classes.ts",
+    "build:csharp": "npm run codegen:csharp && npm run codegen:csharp-wrapper && dotnet build csharp-client/src/LibraryManagement.Api.Rest.Client.Generated/LibraryManagement.Api.Rest.Client.Generated.csproj -c Release",
+    "pack:csharp": "dotnet pack csharp-client/src/LibraryManagement.Api.Rest.Client.Generated/LibraryManagement.Api.Rest.Client.Generated.csproj -c Release -o ./nupkg",
+    "build:all": "npm run build && npm run build:csharp",
+    "semantic-release": "semantic-release"
+  },
+  "lint-staged": {
+    "src/**/*.{ts*,js*,css}": [
+      "prettier --write"
+    ],
+    "src/**/*.{ts*,js*}": [
+      "eslint --fix"
+    ],
+    "openapi-specs/*.json": [
+      "eslint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.15.3",
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-replace": "^6.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/gitlab": "^13.2.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "@types/node": "^22.10.0",
+    "@types/node-fetch": "^2.6.12",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-jsonc": "^2.19.1",
+    "husky": "^9.1.7",
+    "jsonc-eslint-parser": "^2.4.0",
+    "node-fetch": "^3.3.2",
+    "prettier": "^3.4.1",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.27.4",
+    "rollup-plugin-generate-package-json": "^3.2.0",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "semantic-release": "^24.2.0",
+    "tslib": "^2.8.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "axios": "^1.6.8"
+  }
+}

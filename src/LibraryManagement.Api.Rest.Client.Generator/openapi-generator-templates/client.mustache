@@ -1,0 +1,18 @@
+import { {{#apiInfo}}{{#apis}}{{classname}}, {{/apis}}{{/apiInfo}} } from './api';
+import { Configuration  } from './configuration';
+import { AxiosInstance } from 'axios';
+
+export class Client {
+{{#apiInfo}}{{#apis}}
+    private _{{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}?:{{classname}};{{/apis}}{{/apiInfo}}
+
+    constructor(private axios: AxiosInstance, private configuration?: Configuration) {}
+{{#apiInfo}}{{#apis}}
+    public get {{#lambda.camelcase}}{{classVarName}}{{/lambda.camelcase}}(): {{classname}} {
+        if (this._{{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}} === undefined) {
+            this._{{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}} = new {{classname}}(this.configuration, undefined, this.axios);
+        }
+        return this._{{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}};
+    }
+{{/apis}}{{/apiInfo}}
+}

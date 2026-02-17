@@ -1,0 +1,69 @@
+/* tslint:disable */
+/* eslint-disable */
+{{>licenseInfo}}
+
+export interface ConfigurationParameters {
+    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string) | ((name?: string, scopes?: string[]) => Promise<string>);
+    basePath?: string;
+}
+
+export class Configuration {
+    /**
+     * parameter for oauth2 security
+     * @param name security name
+     * @param scopes oauth2 scope
+     * @memberof Configuration
+     */
+    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string) | ((name?: string, scopes?: string[]) => Promise<string>);
+    /**
+     * override base path
+     *
+     * @type {string}
+     * @memberof Configuration
+     */
+    basePath?: string;
+
+    constructor(param: ConfigurationParameters = {}) {
+        this.accessToken = param.accessToken;
+        this.basePath = param.basePath;
+    }
+
+    public get apiKey(): undefined | string | Promise<string> | ((name: string) => string) | ((name: string) => Promise<string>) {
+        return undefined;
+    }
+
+    public get username(): undefined | string {
+        return undefined;
+    }
+
+    public get password(): undefined | string {
+        return undefined;
+    }
+
+    public get serverIndex(): undefined | number {
+        return undefined;
+    }
+
+    public get baseOptions(): undefined | any {
+        return undefined;
+    }
+
+    public get formDataCtor(): undefined | (new () => any) {
+        return undefined;
+    }
+
+    /**
+     * Check if the given MIME is a JSON MIME.
+     * JSON MIME examples:
+     *   application/json
+     *   application/json; charset=UTF8
+     *   APPLICATION/JSON
+     *   application/vnd.company+json
+     * @param mime - MIME (Multipurpose Internet Mail Extensions)
+     * @return True if the given MIME is JSON, false otherwise.
+     */
+    public isJsonMime(mime: string): boolean {
+        const jsonMime: RegExp = new RegExp('^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(;.*)?$', 'i');
+        return mime !== null && (jsonMime.test(mime) || mime.toLowerCase() === 'application/json-patch+json');
+    }
+}

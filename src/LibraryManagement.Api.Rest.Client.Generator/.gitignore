@@ -1,0 +1,35 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.tgz
+/.npmrc
+/.rollup.cache
+
+# CUSTOM:
+
+# generated code directory
+src
+# generated C# client directory
+csharp-client
+# Temporary config file with injected version
+csharp-generator-config.temp.json
+# NuGet package output
+nupkg
+# generated OpenAPI filtered Specifications
+scripts/openapi-specs-filtered
+# Moustache default template for typescript-axios
+scripts/openapi-generator-typescript-axios-templates
+# Moustache default template for csharp
+scripts/openapi-generator-csharp-templates

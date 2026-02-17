@@ -1,0 +1,609 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "LibraryManagement.Application | v1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:8087/"
+    }
+  ],
+  "paths": {
+    "/api/v1/authors": {
+      "post": {
+        "tags": ["Authors"],
+        "description": "Creates a new author entry",
+        "operationId": "Create Author",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAuthorRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/authors/search": {
+      "post": {
+        "tags": ["Authors"],
+        "description": "Search for authors in the library",
+        "operationId": "Search Authors",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchAuthorsRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchAuthorsResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/books": {
+      "post": {
+        "tags": ["Books"],
+        "description": "Create a new book in the library",
+        "operationId": "Create New Book",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNewBookRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/books/{id}": {
+      "get": {
+        "tags": ["Books"],
+        "description": "Get a single book by its unique identifier",
+        "operationId": "Get Book By Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Book identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Books"],
+        "description": "Update a book in the library",
+        "operationId": "Update Book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Book identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBookRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Books"],
+        "description": "Partially update a book in the library",
+        "operationId": "Patch Book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Book identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchBookRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Books"],
+        "description": "Delete a book from the library",
+        "operationId": "Delete Book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Book identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/books/search": {
+      "post": {
+        "tags": ["Books"],
+        "description": "Search for books in the library",
+        "operationId": "Search Books",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchBooksRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchBooksResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/book-suggestions": {
+      "post": {
+        "tags": ["Book Suggestions"],
+        "description": "Creates a new book suggestion entry",
+        "operationId": "Create Book Suggestion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookSuggestionRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthorDto": {
+        "required": ["id", "name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Author identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Author name"
+          }
+        },
+        "description": "Author DTO"
+      },
+      "BookDto": {
+        "required": ["id", "title", "authorId", "description", "keywords"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Book identifier"
+          },
+          "title": {
+            "type": "string",
+            "description": "Book title"
+          },
+          "authorId": {
+            "type": "string",
+            "description": "Author identifier for the book"
+          },
+          "description": {
+            "type": "string",
+            "description": "Book description"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Book keywords"
+          }
+        },
+        "description": "Book DTO"
+      },
+      "CreateAuthorRequestDto": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the author to create"
+          }
+        },
+        "description": "Request DTO for creating a new author"
+      },
+      "CreateBookSuggestionRequestDto": {
+        "required": ["prompt"],
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Prompt used to generate a book suggestion"
+          }
+        },
+        "description": "Request DTO for creating a book suggestion"
+      },
+      "CreateNewBookRequestDto": {
+        "required": ["title", "authorId", "description", "keywords"],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the book"
+          },
+          "authorId": {
+            "type": "string",
+            "description": "Author identifier for the book"
+          },
+          "description": {
+            "type": ["null", "string"],
+            "description": "Description of the book"
+          },
+          "keywords": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            },
+            "description": "Keywords for the book"
+          }
+        },
+        "description": "Request DTO for creating a new book"
+      },
+      "PaginationDto": {
+        "required": ["pageIndex", "pageSize"],
+        "type": "object",
+        "properties": {
+          "pageIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "description": "Page index to request",
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "description": "Page size to request",
+            "format": "int32"
+          }
+        },
+        "description": "Pagination request DTO"
+      },
+      "PaginationInfoDto": {
+        "required": ["pageIndex", "pageSize", "totalItems"],
+        "type": "object",
+        "properties": {
+          "pageIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "description": "Current page index",
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "description": "Current page size",
+            "format": "int32"
+          },
+          "totalItems": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "description": "Total number of available items",
+            "format": "int64"
+          }
+        },
+        "description": "Pagination info DTO"
+      },
+      "PatchBookRequestDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": ["null", "string"],
+            "description": "Updated title of the book"
+          },
+          "authorId": {
+            "type": ["null", "string"],
+            "description": "Updated author identifier for the book"
+          },
+          "description": {
+            "type": ["null", "string"],
+            "description": "Updated description of the book"
+          },
+          "keywords": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            },
+            "description": "Updated keywords for the book"
+          }
+        },
+        "description": "Request DTO for patching a book"
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "SearchAuthorsRequestDto": {
+        "type": "object",
+        "properties": {
+          "searchTerm": {
+            "type": ["null", "string"],
+            "description": "Search term to filter results"
+          },
+          "pagination": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Pagination options for the search",
+                "$ref": "#/components/schemas/PaginationDto"
+              }
+            ]
+          }
+        },
+        "description": "Request DTO for searching authors"
+      },
+      "SearchAuthorsResponseDto": {
+        "required": ["results", "pagination"],
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthorDto"
+            },
+            "description": "Search results"
+          },
+          "pagination": {
+            "description": "Pagination info for the results",
+            "$ref": "#/components/schemas/PaginationInfoDto"
+          }
+        },
+        "description": "Response DTO for searching authors"
+      },
+      "SearchBooksRequestDto": {
+        "type": "object",
+        "properties": {
+          "searchTerm": {
+            "type": ["null", "string"],
+            "description": "Search term to filter results"
+          },
+          "pagination": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Pagination options for the search",
+                "$ref": "#/components/schemas/PaginationDto"
+              }
+            ]
+          }
+        },
+        "description": "Request DTO for searching books"
+      },
+      "SearchBooksResponseDto": {
+        "required": ["results", "pagination"],
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookDto"
+            },
+            "description": "Search results"
+          },
+          "pagination": {
+            "description": "Pagination info for the results",
+            "$ref": "#/components/schemas/PaginationInfoDto"
+          }
+        },
+        "description": "Response DTO for searching books"
+      },
+      "UpdateBookRequestDto": {
+        "required": ["title", "authorId", "description", "keywords"],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the book"
+          },
+          "authorId": {
+            "type": "string",
+            "description": "Author identifier for the book"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the book"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Keywords for the book"
+          }
+        },
+        "description": "Request DTO for updating a book"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authors"
+    },
+    {
+      "name": "Books"
+    },
+    {
+      "name": "Book Suggestions"
+    }
+  ]
+}

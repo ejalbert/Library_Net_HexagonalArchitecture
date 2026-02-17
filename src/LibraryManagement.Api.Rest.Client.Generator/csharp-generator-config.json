@@ -1,0 +1,22 @@
+{
+  "packageName": "LibraryManagement.Api.Rest.Client.Generated",
+  "packageTitle": "LibraryManagement REST API Client",
+  "packageDescription": "Auto-generated C# client for the LibraryManagement REST API",
+  "packageAuthors": "Etienne Jalbert",
+  "packageTags": "openapi rest api client library-management",
+  "targetFramework": "net8.0",
+  "library": "httpclient",
+  "nullableReferenceTypes": true,
+  "useDateTimeOffset": false,
+  "useCollection": false,
+  "returnICollection": false,
+  "optionalEmitDefaultValues": false,
+  "conditionalSerialization": false,
+  "netCoreProjectFile": true,
+  "validatable": true,
+  "useCompareNetObjects": false,
+  "equatable": false,
+  "sourceFolder": "src"
+}
+
+
