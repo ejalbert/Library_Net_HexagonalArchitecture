@@ -4,9 +4,9 @@ namespace LibraryManagement.AppHost.Extensions;
 
 internal static class ApiClientGeneratorExtensions
 {
-    private const string GeneratorProjectPath = "src/LibraryManagement.Api.Rest.Client.Generator";
-    private const string ReactClientPath = "src/LibraryManagement.Web.React";
-    private const string LocalLibrariesPath = "local-libraries";
+    private static readonly string GeneratorProjectPath = $"src{Path.DirectorySeparatorChar}LibraryManagement.Api.Rest.Client.Generator";
+    private static readonly string ReactClientPath = $"src{Path.DirectorySeparatorChar}LibraryManagement.Web.React";
+    private static readonly string LocalLibrariesPath = "local-libraries";
 
     internal static IResourceBuilder<T> WithGenerateApiClientCommand<T>(
         this IResourceBuilder<T> builder,
@@ -126,13 +126,30 @@ internal static class ApiClientGeneratorExtensions
         CancellationToken cancellationToken,
         Dictionary<string, string>? environmentVariables = null)
     {
-        var startInfo = new ProcessStartInfo("npm", arguments)
+        ProcessStartInfo startInfo;
+
+        if (OperatingSystem.IsWindows())
         {
-            UseShellExecute = false,
-            WorkingDirectory = workingDirectory,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
-        };
+            // On Windows, use cmd.exe to execute npm commands
+            startInfo = new ProcessStartInfo("cmd.exe", $"/c npm {arguments}")
+            {
+                UseShellExecute = false,
+                WorkingDirectory = workingDirectory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+        }
+        else
+        {
+            // On Unix-like systems, npm should be in PATH
+            startInfo = new ProcessStartInfo("npm", arguments)
+            {
+                UseShellExecute = false,
+                WorkingDirectory = workingDirectory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+        }
 
         if (environmentVariables != null)
             foreach (var (key, value) in environmentVariables)
