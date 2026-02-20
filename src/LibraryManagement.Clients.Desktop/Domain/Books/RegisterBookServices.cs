@@ -10,7 +10,7 @@ internal static class RegisterBookServices
     {
         internal IServiceCollection AddBookServices()
         {
-            
+
             services.AddTransient<BookListViewModel>();
             return services;
         }

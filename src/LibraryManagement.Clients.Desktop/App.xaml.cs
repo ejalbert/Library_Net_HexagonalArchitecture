@@ -1,4 +1,3 @@
-using System;
 using System.Windows;
 
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -21,7 +20,7 @@ public partial class App : Application
     {
         var builder = Host.CreateApplicationBuilder();
 
-        builder.InitializeApplicationModuleConfiguration().AddDesktopModule();        
+        builder.InitializeApplicationModuleConfiguration().AddDesktopModule();
 
         _host = builder.Build();
         Ioc.Default.ConfigureServices(_host.Services);

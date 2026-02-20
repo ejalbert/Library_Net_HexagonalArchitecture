@@ -6,11 +6,11 @@ public partial class CreateAuthorForm : ComponentBase
 {
     private const string ComponentName = "author-form";
 
-    [Parameter] [EditorRequired] public AuthorModel Model { get; set; } = new();
+    [Parameter][EditorRequired] public AuthorModel Model { get; set; } = new();
 
-    [Parameter] [EditorRequired] public string SubmitButtonText { get; set; } = string.Empty;
+    [Parameter][EditorRequired] public string SubmitButtonText { get; set; } = string.Empty;
 
-    [Parameter] [EditorRequired] public EventCallback<AuthorModel> OnSubmit { get; set; }
+    [Parameter][EditorRequired] public EventCallback<AuthorModel> OnSubmit { get; set; }
 
     [Parameter] public string? FormName { get; set; }
 

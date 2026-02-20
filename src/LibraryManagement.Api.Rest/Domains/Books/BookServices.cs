@@ -49,14 +49,14 @@ internal static class BookServices
             .Produces<BookDto>();
 
         group.MapGet("{id}",
-                ([Required] [Description("Book identifier")] string id, IGetBookController controller) =>
+                ([Required][Description("Book identifier")] string id, IGetBookController controller) =>
                     controller.GetBookById(id))
             .WithName("Get Book By Id")
             .WithDescription("Get a single book by its unique identifier")
             .Produces<BookDto>();
 
         group.MapPut("{id}",
-                ([Required] [Description("Book identifier")] string id, [FromBody] UpdateBookRequestDto requestDto,
+                ([Required][Description("Book identifier")] string id, [FromBody] UpdateBookRequestDto requestDto,
                         IUpdateBookController controller) =>
                     controller.UpdateBook(id, requestDto))
             .WithName("Update Book")
@@ -64,7 +64,7 @@ internal static class BookServices
             .Produces<BookDto>();
 
         group.MapPatch("{id}",
-                ([Required] [Description("Book identifier")] string id, [FromBody] PatchBookRequestDto requestDto,
+                ([Required][Description("Book identifier")] string id, [FromBody] PatchBookRequestDto requestDto,
                         IPatchBookController controller) =>
                     controller.PatchBook(id, requestDto))
             .WithName("Patch Book")
@@ -79,7 +79,7 @@ internal static class BookServices
             .Produces<SearchBooksResponseDto>();
 
         group.MapDelete("{id}",
-                ([Required] [Description("Book identifier")] string id, IDeleteBookController controller) =>
+                ([Required][Description("Book identifier")] string id, IDeleteBookController controller) =>
                     controller.DeleteBook(id))
             .WithName("Delete Book")
             .WithDescription("Delete a book from the library")

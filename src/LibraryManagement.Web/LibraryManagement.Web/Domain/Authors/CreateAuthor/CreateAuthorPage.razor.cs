@@ -1,11 +1,10 @@
-using LibraryManagement.Api.Rest.Client;
-using LibraryManagement.Api.Rest.Client.Domain.Authors;
+using LibraryManagement.Api.Rest.Client.Generated.Wrapper;
 
 using Microsoft.AspNetCore.Components;
 
 namespace LibraryManagement.Web.Domain.Authors.CreateAuthor;
 
-public partial class CreateAuthorPage(IRestAPiClient restApiClient, IAuthorModelMapper mapper) : ComponentBase
+public partial class CreateAuthorPage(IRestApiClient restApiClient, IAuthorModelMapper mapper) : ComponentBase
 {
     private AuthorModel? FormModel { get; set; }
 
@@ -30,7 +29,7 @@ public partial class CreateAuthorPage(IRestAPiClient restApiClient, IAuthorModel
         try
         {
             var createAuthorRequestDto = mapper.ToCreateAuthorRequestDto(FormModel!);
-            LastCreatedAuthor = mapper.ToModel(await restApiClient.Authors.Create(createAuthorRequestDto));
+            LastCreatedAuthor = mapper.ToModel(await restApiClient.Authors.CreateAuthorAsync(createAuthorRequestDto));
             FormModel = new AuthorModel();
         }
         catch (Exception)

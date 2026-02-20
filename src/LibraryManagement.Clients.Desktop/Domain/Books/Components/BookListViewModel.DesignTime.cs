@@ -8,5 +8,5 @@ internal class BookListViewModelDesignTime
         [new() { Title = "Mon livre", AuthorId = "", Id = "", Description = "Ceci est mon livre", Keywords = [] },
     new() { Title = "Mon livre 2", AuthorId = "", Id = "", Description = "C'est la suite de mon livre", Keywords = [] }];
 
-    public bool IsLoading => false;    
+    public bool IsLoading => false;
 }

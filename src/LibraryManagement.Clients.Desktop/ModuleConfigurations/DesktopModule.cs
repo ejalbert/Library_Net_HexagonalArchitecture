@@ -17,7 +17,7 @@ internal static class DesktopModule
             .AddLocalization()
             .AddRestApiHttpClient(builder.ConfigurationManager)
             .AddBookServices();
-            
+
 
         return builder;
     }

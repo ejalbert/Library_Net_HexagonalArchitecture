@@ -1,5 +1,4 @@
-using LibraryManagement.Api.Rest.Client.Domain.Authors;
-using LibraryManagement.Api.Rest.Client.Domain.Authors.Create;
+using LibraryManagement.Api.Rest.Client.Generated.Model;
 
 using Riok.Mapperly.Abstractions;
 

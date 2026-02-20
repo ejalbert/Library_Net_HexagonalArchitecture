@@ -1,11 +1,11 @@
-using LibraryManagement.Api.Rest.Client;
-using LibraryManagement.Api.Rest.Client.Domain.Books;
+using LibraryManagement.Api.Rest.Client.Generated.Model;
+using LibraryManagement.Api.Rest.Client.Generated.Wrapper;
 
 using Microsoft.AspNetCore.Components;
 
 namespace LibraryManagement.Web.Domain.Books.ListBooks;
 
-public partial class Book(IRestAPiClient restClient) : ComponentBase
+public partial class Book(IRestApiClient restClient) : ComponentBase
 {
     [Parameter] public string BookId { get; set; } = string.Empty;
 
@@ -13,6 +13,6 @@ public partial class Book(IRestAPiClient restClient) : ComponentBase
 
     protected override async Task OnParametersSetAsync()
     {
-        BookDetails = await restClient.Books.Get(BookId);
+        BookDetails = await restClient.Books.GetBookByIdAsync(BookId);
     }
 }

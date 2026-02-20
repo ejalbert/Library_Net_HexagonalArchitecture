@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 
 using LibraryManagement.AI.SemanticKernel.LocalTools.Hub;
 using LibraryManagement.AI.SemanticKernel.LocalTools.ModuleConfiguration;

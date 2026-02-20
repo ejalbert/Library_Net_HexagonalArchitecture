@@ -10,6 +10,6 @@ namespace LibraryManagement.Clients.Desktop
         public MainWindow()
         {
             InitializeComponent();
-        }        
+        }
     }
 }

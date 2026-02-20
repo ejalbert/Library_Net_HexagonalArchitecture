@@ -1,12 +1,13 @@
-using LibraryManagement.Api.Rest.Client;
-using LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions;
-using LibraryManagement.Api.Rest.Client.Domain.Ai.BookSuggestions.Create;
-using LibraryManagement.Api.Rest.Client.Domain.Books;
-using LibraryManagement.Api.Rest.Client.Domain.Books.Search;
+
+using LibraryManagement.Api.Rest.Client.Generated.Wrapper;
+
+using BookDto = LibraryManagement.Api.Rest.Client.Generated.Model.BookDto;
+
+using SearchBooksRequestDto = LibraryManagement.Api.Rest.Client.Generated.Model.SearchBooksRequestDto;
 
 namespace LibraryManagement.Web.Components.Pages;
 
-public partial class Home(IRestAPiClient restApiClient)
+public partial class Home(IRestApiClient restApiClient)
 {
     private IEnumerable<BookDto> BookDetails { get; set; } = [];
 
@@ -16,7 +17,8 @@ public partial class Home(IRestAPiClient restApiClient)
 
     protected override async Task OnInitializedAsync()
     {
-        BookDetails = (await restApiClient.Books.Search(new SearchBooksRequestDto())).Results;
+        var response = await restApiClient.Books.SearchBooksAsync(new SearchBooksRequestDto());
+        BookDetails = response.Results;
     }
 
     private static string FormatKeywords(IEnumerable<string> keywords)
@@ -24,17 +26,22 @@ public partial class Home(IRestAPiClient restApiClient)
         return string.Join(", ", keywords ?? Array.Empty<string>());
     }
 
-    private async ValueTask GenerateBookSuggestions()
+    private ValueTask GenerateBookSuggestions()
     {
         IsLoadingSuggestions = true;
         BookSuggestionResult = string.Empty;
 
         StateHasChanged();
 
-        CreateBookSuggestionResponseDto response =
-            await restApiClient.BookSuggestions.GetBookSuggestion(BookSuggestionInput);
-
-        BookSuggestionResult = response.Suggestion;
+        // // var response =
+        // //     await restApiClient.BookSuggestions.CreateBookSuggestionAsync(
+        // //         new CreateBookSuggestionRequestDto(BookSuggestionInput));
+        // // CreateBookSuggestionResponseDto response =
+        // //     await restApiClient.BookSuggestions.GetBookSuggestion(BookSuggestionInput);
+        //
+        // BookSuggestionResult = response.Suggestion;
         IsLoadingSuggestions = false;
+
+        return ValueTask.CompletedTask;
     }
 }

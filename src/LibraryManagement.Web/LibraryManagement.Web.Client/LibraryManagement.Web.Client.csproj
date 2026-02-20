@@ -13,17 +13,13 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.3"/>
         <!--<PackageReference Include="Microsoft.DotNet.HotReload.WebAssembly.Browser" Version="10.0.103"/>-->
         <PackageReference Include="Riok.Mapperly" Version="4.3.1"/>
-        <!--<PackageReference Include="LibraryManagement.Api.Rest.Client.Generated" Version="1.0.1"/>-->
+        <PackageReference Include="LibraryManagement.Api.Rest.Client.Generated" Version="1.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="..\..\..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\LibraryManagement.Api.Rest.Client\LibraryManagement.Api.Rest.Client.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

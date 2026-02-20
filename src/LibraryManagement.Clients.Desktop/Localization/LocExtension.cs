@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Resources;
 using System.Windows;

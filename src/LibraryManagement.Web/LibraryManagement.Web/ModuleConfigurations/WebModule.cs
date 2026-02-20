@@ -13,8 +13,12 @@ public static class WebModule
     public static IModuleRegistrator<TApplicationBuilder> AddWebModule<TApplicationBuilder>(
         this IModuleRegistrator<TApplicationBuilder> builder) where TApplicationBuilder : IHostApplicationBuilder
     {
+        var baseAdresses = builder.ConfigurationManager["ASPNETCORE_URLS"]?.Split(";") ?? [];
+        var baseAdress = baseAdresses.FirstOrDefault(a => a.StartsWith("https://"),
+            baseAdresses.FirstOrDefault(a => a.StartsWith("http://"), null));
+
         builder.Services
-            .AddWebClientModule(builder.ConfigurationManager)
+            .AddWebClientModule(builder.ConfigurationManager, builder.ConfigurationManager.GetConnectionString("restApi") ?? baseAdress)
             .AddRazorComponents()
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();

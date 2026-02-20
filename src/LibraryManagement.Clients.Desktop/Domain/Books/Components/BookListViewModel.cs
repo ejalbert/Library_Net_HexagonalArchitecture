@@ -8,13 +8,13 @@ namespace LibraryManagement.Clients.Desktop.Domain.Books.Components;
 
 internal partial class BookListViewModel(IRestAPiClient restAPiClient) : ObservableRecipient
 {
-    
+
     [ObservableProperty]
     private IList<BookDto> _books = [];
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ToggleLoadBooksCommand))]
-    private bool _isLoading;    
+    private bool _isLoading;
 
     protected override void OnActivated()
     {

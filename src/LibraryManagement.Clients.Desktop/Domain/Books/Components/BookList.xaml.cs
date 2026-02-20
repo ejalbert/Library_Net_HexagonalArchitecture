@@ -9,7 +9,7 @@ public partial class BookList : UserControl
 {
     public BookList()
     {
-        InitializeComponent();        
+        InitializeComponent();
     }
 }
 
