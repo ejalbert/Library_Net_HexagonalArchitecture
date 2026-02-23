@@ -26,7 +26,7 @@ public partial class Home(IRestApiClient restApiClient)
         return string.Join(", ", keywords ?? Array.Empty<string>());
     }
 
-    private ValueTask GenerateBookSuggestions()
+    private Task GenerateBookSuggestions()
     {
         IsLoadingSuggestions = true;
         BookSuggestionResult = string.Empty;
@@ -42,6 +42,6 @@ public partial class Home(IRestApiClient restApiClient)
         // BookSuggestionResult = response.Suggestion;
         IsLoadingSuggestions = false;
 
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 }

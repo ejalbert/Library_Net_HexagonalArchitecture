@@ -1,4 +1,7 @@
 using LibraryManagement.Api.Rest.Client.Generated.Wrapper;
+
+using Microsoft.FluentUI.AspNetCore.Components;
+
 namespace LibraryManagement.Web.Client.ModuleConfigurations;
 
 public static class WebClientModule
@@ -7,7 +10,7 @@ public static class WebClientModule
         TConfigurationManager configurationManager, string? baseAdress = null) where TConfigurationManager : IConfiguration, IConfigurationBuilder
     {
         services.AddLibraryManagementRestApiClient(baseAdress ?? configurationManager.GetConnectionString("RestApi") ?? "");
-        //services.AddRestApiHttpClient(configurationManager);
+        services.AddFluentUIComponents();
 
         return services;
     }
